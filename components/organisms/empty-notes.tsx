@@ -1,0 +1,47 @@
+import { ArrowUpRightIcon, FolderInput } from 'lucide-react';
+
+import { Button } from '@/components/ui/button';
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from '@/components/ui/empty';
+import { DialogCreateProject } from './dialog-create-project';
+
+export function EmptyNotes() {
+  return (
+    <Empty>
+      <EmptyHeader>
+        <EmptyMedia variant="icon">
+          <FolderInput />
+        </EmptyMedia>
+        <EmptyTitle>Sin proyectos aún</EmptyTitle>
+        <EmptyDescription>
+          No has creado ningún proyecto todavía. Comienza creando tu primer
+          proyecto.
+        </EmptyDescription>
+      </EmptyHeader>
+      <EmptyContent>
+        <div className="flex gap-2">
+          <DialogCreateProject />
+          <Button variant="outline" disabled>
+            Unirse a un proyecto
+          </Button>
+        </div>
+      </EmptyContent>
+      <Button
+        variant="link"
+        asChild
+        className="text-muted-foreground"
+        size="sm"
+      >
+        <a href="#">
+          Learn More <ArrowUpRightIcon />
+        </a>
+      </Button>
+    </Empty>
+  );
+}
