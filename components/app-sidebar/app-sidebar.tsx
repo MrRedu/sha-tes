@@ -1,3 +1,4 @@
+'use client';
 import {
   Calendar,
   Home,
@@ -9,18 +10,16 @@ import {
 import {
   Sidebar,
   SidebarContent,
-  // SidebarFooter,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
+  SidebarFooter,
+  SidebarHeader,
   SidebarTrigger,
+  useSidebar,
 } from '@/components/ui/sidebar';
-import Link from 'next/link';
 
-// Menu items.
+import { NavUser } from './nav-user';
+import { ProjectSwitcher } from './project-switcher';
+import { NavMain } from './nav-main';
+
 const items = [
   {
     title: 'Home',
@@ -49,32 +48,54 @@ const items = [
   },
 ];
 
+const projects = [
+  {
+    name: 'Project Alpha',
+    logo: LayoutDashboard,
+    plan: 'Pro Plan',
+  },
+  {
+    name: 'Project Beta',
+    logo: Calendar,
+    plan: 'Free Plan',
+  },
+  {
+    name: 'Project Gamma',
+    logo: Settings,
+    plan: 'Enterprise Plan',
+  },
+];
+
+const user = {
+  name: 'Jane Smith',
+  email: 'janesmith@me.com',
+  avatar: '',
+};
+
 export function AppSidebar() {
+  const isLogged = false;
+  const { open: sideBarIsOpen } = useSidebar();
+
   return (
     <Sidebar collapsible="icon">
-      <SidebarTrigger /> {/* Acomodar trigger con el header */}
+      <SidebarHeader>
+        {isLogged ? (
+          <ProjectSwitcher projects={projects} />
+        ) : (
+          <div className="flex items-center">
+            {sideBarIsOpen ? (
+              <h3 className="text-lg font-bold ml-2">ShaTes</h3>
+            ) : null}
+            <SidebarTrigger variant="ghost" size="icon" className="ml-auto" />
+          </div>
+        )}
+      </SidebarHeader>
       <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupLabel>Application</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {items.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <Link href={item.url}>
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+        <NavMain items={items} />
       </SidebarContent>
-      {/* <SidebarFooter>
-        <div className="p-4 text-sm">© 2024 My Company</div>
-      </SidebarFooter> */}
+      <SidebarFooter>
+        <NavUser user={user} />
+      </SidebarFooter>
     </Sidebar>
   );
 }

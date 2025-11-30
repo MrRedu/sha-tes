@@ -7,10 +7,10 @@ export function Header() {
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground font-bold">
-              N
+              S
             </div>
             <span className="text-xl font-bold text-foreground">
-              NotesShare
+              ShareNotes
             </span>
           </div>
 
