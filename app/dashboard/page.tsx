@@ -1,16 +1,16 @@
-import { EmptyNotes } from '@/components/organisms/empty-notes';
+import { EmptyProjects } from '@/components/organisms/empty-projects';
 
 export default function DashboardPage() {
-  // Notes.length > 0;
-  const ARE_ANY_NOTES = false;
+  // projects.length > 0;
+  const ARE_ANY_PROJECTS = false;
 
-  if (ARE_ANY_NOTES) {
-    return <div>Dashboard with notes</div>;
+  if (ARE_ANY_PROJECTS) {
+    return <div>Dashboard with projects</div>;
   }
 
   return (
     <>
-      <EmptyNotes />
+      <EmptyProjects />
     </>
   );
 }

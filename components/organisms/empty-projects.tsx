@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/empty';
 import { DialogCreateProject } from './dialog-create-project';
 
-export function EmptyNotes() {
+export function EmptyProjects() {
   return (
     <Empty>
       <EmptyHeader>
