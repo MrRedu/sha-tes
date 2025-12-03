@@ -19,6 +19,7 @@ import {
 import { NavUser } from './nav-user';
 import { ProjectSwitcher } from './project-switcher';
 import { NavMain } from './nav-main';
+import { useAuth } from '../auth/AuthProvider';
 
 const items = [
   {
@@ -32,8 +33,8 @@ const items = [
     icon: LayoutDashboard,
   },
   {
-    title: 'Calendar',
-    url: '#',
+    title: 'Profile',
+    url: '/user',
     icon: Calendar,
   },
   {
@@ -66,14 +67,16 @@ const projects = [
   },
 ];
 
-const user = {
-  name: 'Jane Smith',
-  email: 'janesmith@me.com',
-  avatar: '',
-};
+// const user = {
+//   name: 'Jane Smith',
+//   email: 'janesmith@me.com',
+//   avatar: '',
+// };
 
 export function AppSidebar() {
-  const isLogged = false;
+  const { user } = useAuth();
+  const isLogged = Boolean(user);
+
   const { open: sideBarIsOpen } = useSidebar();
 
   return (
@@ -94,7 +97,13 @@ export function AppSidebar() {
         <NavMain items={items} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={user} />
+        <NavUser
+          user={{
+            name: user?.user_metadata?.name || 'Name Lastname',
+            email: user?.user_metadata?.email || 'example@me.com',
+            avatar: user?.user_metadata?.avatar || '',
+          }}
+        />
       </SidebarFooter>
     </Sidebar>
   );
