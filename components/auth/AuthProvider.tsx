@@ -53,8 +53,15 @@ export function AuthProvider({
   }, []);
 
   const signOut = async () => {
-    await supabase.auth.signOut();
-    // post-signout the onAuthStateChange will update state
+    try {
+      // Call server-side signout to ensure httpOnly cookies (set by server) are cleared
+      await fetch('/auth/signout', { method: 'POST' });
+      // Force navigation so middleware/server state updates immediately
+      window.location.href = '/';
+    } catch (err) {
+      // fallback to client signOut if server call fails
+      await supabase.auth.signOut();
+    }
   };
 
   const signInWithGoogle = async () => {

@@ -1,4 +1,6 @@
 import { Button } from '@/components/ui/button';
+import Link from 'next/link';
+import { HeaderActions } from './header-actions';
 
 export function Header() {
   return (
@@ -9,9 +11,7 @@ export function Header() {
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground font-bold">
               S
             </div>
-            <span className="text-xl font-bold text-foreground">
-              ShareNotes
-            </span>
+            <span className="text-xl font-bold text-foreground">ShaTes</span>
           </div>
 
           <nav className="hidden md:flex items-center gap-8">
@@ -36,19 +36,7 @@ export function Header() {
           </nav>
 
           <div className="flex items-center gap-3">
-            <Button
-              variant="outline"
-              size="sm"
-              className="hidden sm:inline-flex bg-transparent"
-            >
-              Iniciar Sesión
-            </Button>
-            <Button
-              size="sm"
-              className="bg-primary hover:bg-primary/90 text-primary-foreground"
-            >
-              Comenzar
-            </Button>
+            <HeaderActions />
           </div>
         </div>
       </div>

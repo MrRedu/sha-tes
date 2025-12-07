@@ -1,5 +1,6 @@
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
+import { isPublicPath } from './publicPaths';
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
@@ -41,11 +42,15 @@ export async function updateSession(request: NextRequest) {
 
   const user = data?.claims;
 
-  if (
-    !user &&
-    !request.nextUrl.pathname.startsWith('/login') &&
-    !request.nextUrl.pathname.startsWith('/auth')
-  ) {
+  // if the user is logged in, redirect to the home page
+  if (user && request.nextUrl.pathname === '/login') {
+    const url = request.nextUrl.clone();
+    url.pathname = '/';
+    return NextResponse.redirect(url);
+  }
+
+  // if the user is not logged in, redirect to the login page
+  if (!user && !isPublicPath(request.nextUrl.pathname)) {
     // no user, potentially respond by redirecting the user to the login page
     const url = request.nextUrl.clone();
     url.pathname = '/login';

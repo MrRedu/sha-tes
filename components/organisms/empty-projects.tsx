@@ -13,7 +13,7 @@ import { DialogCreateProject } from './dialog-create-project';
 
 export function EmptyProjects() {
   return (
-    <Empty>
+    <Empty className="w-full">
       <EmptyHeader>
         <EmptyMedia variant="icon">
           <FolderInput />

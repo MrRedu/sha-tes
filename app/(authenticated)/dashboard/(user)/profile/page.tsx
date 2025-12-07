@@ -1,18 +1,19 @@
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
 
-export default async function UserPage() {
+export default async function ProfilePage() {
   const supabase = await createClient();
 
   // Get session and user info from Supabase (server-side)
   const { data: userData, error: userError } = await supabase.auth.getUser();
-  // const { data: sessionData, error: sessionError } =
-  //   await supabase.auth.getSession();
+  // const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
   // const { data: claimsData } = await supabase.auth.getClaims();
 
   const user = userData?.user ?? null;
   // const session = sessionData?.session ?? null;
   // const claims = claimsData?.claims ?? null;
+
+  const { data: projects } = await supabase.from('tbl_projects').select('*');
 
   if (!user) {
     return (
@@ -45,6 +46,13 @@ export default async function UserPage() {
         <h2 className="font-medium">User</h2>
         <pre className="rounded bg-slate-50 p-4 overflow-auto">
           {JSON.stringify(user, null, 2)}
+        </pre>
+      </section>
+
+      <section className="mb-6">
+        <h2 className="font-medium">Projects</h2>
+        <pre className="rounded bg-slate-50 p-4 overflow-auto">
+          {JSON.stringify(projects, null, 2)}
         </pre>
       </section>
 
