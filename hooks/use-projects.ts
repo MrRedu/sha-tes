@@ -34,12 +34,6 @@ export function useCreateProjects() {
 
       const payload = {
         name: values.name.trim(),
-        owner_id: user.id,
-        // TODO: asegurar unicidad del join_code antes de insertarlo
-        join_code: crypto.randomUUID().split('-')[0],
-        members: [user.id],
-        pending_requests: [],
-        // created_at: new Date().toISOString(), // Supabase lo maneja automáticamente
       };
 
       const { data, error } = await supabase

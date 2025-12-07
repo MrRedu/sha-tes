@@ -1,23 +1,36 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { AvatarGroup } from '@/components/molecules/avatar-group';
+import { DialogManageUsers } from '@/components/molecules/dialog-manage-users';
+import { Button } from '@/components/ui/button';
+import { Typography } from '@/components/ui/typography';
 import { createClient } from '@/lib/supabase/server';
+import { Trash2Icon } from 'lucide-react';
 
-export default async function ProjectPage({
-  params,
-}: {
+interface ProjectPageProps {
   params: { projectId: string };
-}) {
+}
+
+export default async function ProjectPage({ params }: ProjectPageProps) {
+  const { projectId } = await params;
   const supabase = await createClient();
 
   const { data: project } = await supabase
     .from('tbl_projects')
     .select('*')
-    .eq('id', params.projectId)
+    .eq('id', projectId)
     .single();
 
-  const { data: notepads } = await supabase
-    .from('tbl_notepads')
+  const { data: users } = await supabase
+    .from('tbl_users')
     .select('*')
-    .eq('project_id', params.projectId);
+    .eq('id', project.pending_requests);
+
+  // TODO: Hay que agregar lo del RLS para que esto devuelva los usuarios pendientes
+  console.log(users);
+
+  // const { data: notepads } = await supabase
+  //   .from('tbl_notepads')
+  //   .select('*')
+  //   .eq('project_id', params.projectId);
 
   // TODO: Trabajar en esta excepción
   if (!project) {
@@ -29,53 +42,36 @@ export default async function ProjectPage({
     );
   }
 
+  const AvatarTest = [{ name: 'John Doe', imageUrl: undefined }];
+  const AvatarTest2 = [
+    { name: 'Alice Wonderland', imageUrl: undefined },
+    { name: 'Bob Builder', imageUrl: undefined },
+    { name: 'Charlie Chaplin', imageUrl: undefined },
+  ];
+
   return (
     <div>
-      <h2 className="text-2xl font-semibold mb-4">{project.name}</h2>
-      <p>Miembros</p>
-      {project.members.length === 1 && (
-        <Avatar>
-          <AvatarImage
-            src={`https://api.dicebear.com/6.x/initials/svg?seed=${project.members[0]}`}
-            alt={project.members[0]}
-          />
-          <AvatarFallback>
-            {project.members[0].slice(0, 2).toUpperCase()}
-          </AvatarFallback>
-        </Avatar>
-      )}
-      {project.members.length > 1 && (
-        <div className="*:data-[slot=avatar]:ring-background flex -space-x-2 *:data-[slot=avatar]:ring-2">
-          {/* TODO */}
-          {project.members.map((member: string[]) => (
-            <Avatar key={member.toString()}>
-              <AvatarImage
-                src={`https://api.dicebear.com/6.x/initials/svg?seed=${member}`}
-                alt={member.toString()}
-              />
-              <AvatarFallback>HP</AvatarFallback>
-            </Avatar>
-          ))}
+      <div className="w-full flex items-center justify-between mb-4 flex-col md:flex-row gap-4">
+        <div className="flex gap-2">
+          <Typography variant="h3">{project.name}</Typography>
+          <AvatarGroup members={AvatarTest2} />
         </div>
-      )}
-      <p>Dueño: {project.owner_id}</p>
-      <code>Código de invitación: {project.join_code}</code>
-      <p>Miembros pendientes:</p>
-      {project.pending_requests.length > 0 ? (
-        <ul>
-          {project.pending_requests.map((pending: string) => (
-            <li key={pending}>{pending}</li>
-          ))}
-        </ul>
-      ) : (
-        <p>No hay miembros pendientes.</p>
-      )}
+        <div className="flex gap-2">
+          <DialogManageUsers
+            joinCode={project.join_code}
+            pendingMembers={project.pending_requests}
+          />
+          <Button variant="destructive" size="icon">
+            <Trash2Icon />
+          </Button>
+        </div>
+      </div>
       {/* <pre>{JSON.stringify(project, null, 2)}</pre> */}
+      {/* <br />
       <br />
       <br />
-      <br />
-      <h3>Blocs de notas</h3>
-      <pre>{JSON.stringify(notepads, null, 2)}</pre>
+      <h3>Notepads</h3>
+      <pre>{JSON.stringify(notepads, null, 2)}</pre> */}
     </div>
   );
 }

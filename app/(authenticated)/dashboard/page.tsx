@@ -27,9 +27,15 @@ import Link from 'next/link';
 export default async function DashboardPage() {
   const supabase = await createClient();
   const { data: projects } = await supabase.from('tbl_projects').select('*');
+  // const { data: projects } = await supabase
+  //   .from('tbl_projects')
+  //   .select('*')
+  //   .eq('owner_id', user.id)
+  //   .order('updated_at', { ascending: false });  // ✅ Más reciente primero
+
   // const [position, setPosition] = useState("bottom")
 
-  if (!projects) {
+  if (projects?.length === 0) {
     return <EmptyProjects />;
   }
 

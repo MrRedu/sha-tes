@@ -14,6 +14,12 @@ export default async function ProfilePage() {
   // const claims = claimsData?.claims ?? null;
 
   const { data: projects } = await supabase.from('tbl_projects').select('*');
+  // Obtener proyectos ordenados por última actualización
+  // const { data: projects } = await supabase
+  //   .from('tbl_projects')
+  //   .select('*')
+  //   .eq('owner_id', user.id)
+  //   .order('updated_at', { ascending: false });  // ✅ Más reciente primero
 
   if (!user) {
     return (
