@@ -34,36 +34,38 @@ Necesitas al menos dos colecciones/tablas principales:
 
 ### 2\. Tabla de proyectos
 
-| **`projects`** | `id` | UUID/TEXT | **Primary Key** | ID único del proyecto. |
-| | `name` | TEXT | | Nombre del proyecto (ej: "Casa"). |
-| | **`owner_id`** | UUID/TEXT | Foreign Key $\to$ `users.id` | Propietario del proyecto. |
-| | **`join_code`** | TEXT | Unique | Código de 8 dígitos para unirse. |
-| | `members` | JSONB | | Array de `user_id`s (miembros aceptados). |
-| | `pending_requests` | JSONB | | Array de `user_id`s (solicitudes). |
+| Tabla          | Campo              | Tipo de Dato | Relación                     | Notas                                     |
+| :------------- | :----------------- | :----------- | :--------------------------- | :---------------------------------------- |
+| **`projects`** | `id`               | UUID/TEXT    | **Primary Key**              | ID único del proyecto.                    |
+|                | `name`             | TEXT         |                              | Nombre del proyecto (ej: "Casa").         |
+|                | **`owner_id`**     | UUID/TEXT    | Foreign Key $\to$ `users.id` | Propietario del proyecto.                 |
+|                | **`join_code`**    | TEXT         | Unique                       | Código de 8 dígitos para unirse.          |
+|                | `members`          | JSONB        |                              | Array de `user_id`s (miembros aceptados). |
+|                | `pending_requests` | JSONB        |                              | Array de `user_id`s (solicitudes).        |
 
 ### 3\. Tabla de "blocs de notas"
 
 Esta tabla actúa como el contenedor intermedio que organiza las notas dentro de un proyecto.
 
-| Tabla        | Campo            | Tipo de Dato | Relación                        | Notas                                             |
-| :----------- | :--------------- | :----------- | :------------------------------ | :------------------------------------------------ |
-| **`blocks`** | `id`             | UUID/TEXT    | **Primary Key**                 | ID único del bloc (ej: "Compras").                |
-|              | `name`           | TEXT         |                                 | Título del bloc (ej: "Compras", "Viajes").        |
-|              | **`project_id`** | UUID/TEXT    | Foreign Key $\to$ `projects.id` | **Clave crucial:** Vincula el bloc a su proyecto. |
-|              | `created_at`     | TIMESTAMP    |                                 | Fecha de creación.                                |
+| Tabla          | Campo            | Tipo de Dato | Relación                        | Notas                                             |
+| :------------- | :--------------- | :----------- | :------------------------------ | :------------------------------------------------ |
+| **`notepads`** | `id`             | UUID/TEXT    | **Primary Key**                 | ID único del bloc (ej: "Compras").                |
+|                | `name`           | TEXT         |                                 | Título del bloc (ej: "Compras", "Viajes").        |
+|                | **`project_id`** | UUID/TEXT    | Foreign Key $\to$ `projects.id` | **Clave crucial:** Vincula el bloc a su proyecto. |
+|                | `created_at`     | TIMESTAMP    |                                 | Fecha de creación.                                |
 
 ### 4\. Tabla de notas
 
 Esta tabla almacena el contenido real.
 
-| Tabla       | Campo          | Tipo de Dato | Relación                      | Notas                                               |
-| :---------- | :------------- | :----------- | :---------------------------- | :-------------------------------------------------- |
-| **`notes`** | `id`           | UUID/TEXT    | **Primary Key**               | ID único de la nota.                                |
-|             | `title`        | TEXT         |                               | Título de la nota.                                  |
-|             | `content`      | TEXT         |                               | Contenido de la nota (el cuerpo de texto).          |
-|             | **`block_id`** | UUID/TEXT    | Foreign Key $\to$ `blocks.id` | **Clave crucial:** Vincula la nota a su bloc.       |
-|             | `created_by`   | UUID/TEXT    | Foreign Key $\to$ `users.id`  | Quién creó la nota (útil en proyectos compartidos). |
-|             | `updated_at`   | TIMESTAMP    |                               | Para saber cuándo fue la última modificación.       |
+| Tabla       | Campo            | Tipo de Dato | Relación                        | Notas                                               |
+| :---------- | :--------------- | :----------- | :------------------------------ | :-------------------------------------------------- |
+| **`notes`** | `id`             | UUID/TEXT    | **Primary Key**                 | ID único de la nota.                                |
+|             | `title`          | TEXT         |                                 | Título de la nota.                                  |
+|             | `content`        | TEXT         |                                 | Contenido de la nota (el cuerpo de texto).          |
+|             | **`notepad_id`** | UUID/TEXT    | Foreign Key $\to$ `notepads.id` | **Clave crucial:** Vincula la nota a su bloc.       |
+|             | `created_by`     | UUID/TEXT    | Foreign Key $\to$ `users.id`    | Quién creó la nota (útil en proyectos compartidos). |
+|             | `updated_at`     | TIMESTAMP    |                                 | Para saber cuándo fue la última modificación.       |
 
 ## 3. Creación del proyecto y generación del código
 

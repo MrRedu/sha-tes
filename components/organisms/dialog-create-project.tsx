@@ -21,44 +21,21 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-
-const formSchema = z.object({
-  name: z
-    .string()
-    .min(3, {
-      message: 'Debe tener al menos 3 caracteres.',
-    })
-    .max(64, {
-      message: 'Debe tener como máximo 64 caracteres.',
-    }),
-});
+import { useCreateProjects } from '@/hooks/use-projects';
+import { PlusIcon } from 'lucide-react';
 
 export function DialogCreateProject() {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: '',
-    },
-  });
-
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
-    alert(JSON.stringify(values, null, 2));
-  }
-
-  const onSubmitWrapper = form.handleSubmit(onSubmit);
+  const { form, onSubmit } = useCreateProjects();
 
   return (
     <Dialog>
       <Form {...form}>
-        <form onSubmit={onSubmitWrapper}>
+        <form onSubmit={onSubmit}>
           <DialogTrigger asChild>
-            <Button>Crear proyecto</Button>
+            <Button>
+              <PlusIcon className="mr-2 h-4 w-4" />
+              Crear proyecto
+            </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
@@ -90,7 +67,7 @@ export function DialogCreateProject() {
               <DialogClose asChild>
                 <Button variant="outline">Cancelar</Button>
               </DialogClose>
-              <Button type="submit" onClick={onSubmitWrapper}>
+              <Button type="submit" onClick={onSubmit}>
                 Crear proyecto
               </Button>
             </DialogFooter>

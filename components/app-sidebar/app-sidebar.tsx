@@ -12,37 +12,36 @@ import {
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
-  SidebarTrigger,
-  useSidebar,
 } from '@/components/ui/sidebar';
 
 import { NavUser } from './nav-user';
 import { ProjectSwitcher } from './project-switcher';
 import { NavMain } from './nav-main';
+import { useAuth } from '../auth/AuthProvider';
 
 const items = [
   {
-    title: 'Home',
-    url: '/',
+    title: 'Panel principal',
+    url: '/dashboard',
     icon: Home,
   },
   {
-    title: 'Dashboard',
+    title: 'Proyectos',
     url: '/dashboard',
     icon: LayoutDashboard,
   },
   {
-    title: 'Calendar',
-    url: '#',
+    title: 'Perfil',
+    url: '/dashboard/profile',
     icon: Calendar,
   },
   {
-    title: 'Search',
+    title: 'Buscar',
     url: '#',
     icon: Search,
   },
   {
-    title: 'Settings',
+    title: 'Configuraciones',
     url: '#',
     icon: Settings,
   },
@@ -66,35 +65,28 @@ const projects = [
   },
 ];
 
-const user = {
-  name: 'Jane Smith',
-  email: 'janesmith@me.com',
-  avatar: '',
-};
-
 export function AppSidebar() {
-  const isLogged = false;
-  const { open: sideBarIsOpen } = useSidebar();
+  const { user } = useAuth();
 
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader>
-        {isLogged ? (
-          <ProjectSwitcher projects={projects} />
-        ) : (
-          <div className="flex items-center">
-            {sideBarIsOpen ? (
-              <h3 className="text-lg font-bold ml-2">ShaTes</h3>
-            ) : null}
-            <SidebarTrigger variant="ghost" size="icon" className="ml-auto" />
-          </div>
-        )}
+        <ProjectSwitcher projects={projects} />
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={items} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={user} />
+        <NavUser
+          user={{
+            name: user?.user_metadata?.name || 'Name Lastname',
+            email: user?.user_metadata?.email || 'example@me.com',
+            avatar: user?.user_metadata?.avatar_url || '',
+            avatarFallback: (user?.user_metadata?.name || 'NL')
+              .slice(0, 2)
+              .toUpperCase(), // First two letters of the name as fallback
+          }}
+        />
       </SidebarFooter>
     </Sidebar>
   );
