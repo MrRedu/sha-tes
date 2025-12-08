@@ -4,7 +4,10 @@ import { createClient } from '@/lib/supabase/client';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import z from 'zod';
-import { formCreateProject } from './validations/use-projects.schema';
+import {
+  formCreateProject,
+  formJoinProject,
+} from './validations/use-projects.schema';
 import { User } from '@/app/(authenticated)/dashboard/(projects)/projects/[projectId]/page';
 import { type ProjectProps } from '@/components/organisms/project';
 
@@ -28,6 +31,14 @@ export function useProject({
     if (!projectId) return;
     const supabase = createClient();
     await supabase.from('tbl_projects').update(fields).eq('id', projectId);
+  };
+
+  const deleteProject = async () => {
+    if (!projectId) return;
+    const supabase = createClient();
+    await supabase.from('tbl_projects').delete().eq('id', projectId);
+
+    // TODO: Redirección a la lista de proyectos
   };
 
   const handleRemoveMember = async (userId: string) => {
@@ -58,6 +69,7 @@ export function useProject({
   return {
     _members,
     _pendingMembers,
+    deleteProject,
     handleRemoveMember,
     handleAcceptPendingMember,
     handleRejectPendingMember,
@@ -107,6 +119,28 @@ export function useCreateProject() {
         }`
       );
     }
+  }
+
+  const onSubmitWrapper = form.handleSubmit(onSubmit);
+
+  return {
+    form,
+    onSubmit: onSubmitWrapper,
+  };
+}
+
+export function useJoinProject() {
+  // const supabase = createClient();
+  // const { user } = useAuth();
+  const form = useForm<z.infer<typeof formJoinProject>>({
+    resolver: zodResolver(formJoinProject),
+    defaultValues: {
+      joinCode: '',
+    },
+  });
+
+  async function onSubmit(values: z.infer<typeof formJoinProject>) {
+    alert(JSON.stringify(values, null, 2));
   }
 
   const onSubmitWrapper = form.handleSubmit(onSubmit);

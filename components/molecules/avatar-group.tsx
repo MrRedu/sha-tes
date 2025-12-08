@@ -25,11 +25,11 @@ export const AvatarGroup = ({ members }: AvatarGroupProps) => {
   return (
     <Avatar>
       <AvatarImage
-        src={members[0].avatar_url || ''}
-        alt={members[0].full_name}
+        src={members[0]?.avatar_url || ''}
+        alt={members[0]?.full_name}
       />
       <AvatarFallback>
-        {members[0].full_name.slice(0, 2).toUpperCase()}
+        {members[0]?.full_name.slice(0, 2).toUpperCase() || 'NL'}
       </AvatarFallback>
     </Avatar>
   );

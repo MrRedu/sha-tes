@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Typography } from '@/components/ui/typography';
 import { useProject } from '@/hooks/use-projects';
 import { Trash2Icon } from 'lucide-react';
+import { DialogDeleteProject } from '../molecules/dialog-delete-project';
 
 export interface ProjectProps {
   userId: string;
@@ -44,6 +45,7 @@ export const Project = ({
   const {
     _members,
     _pendingMembers,
+    deleteProject,
     handleRemoveMember,
     handleAcceptPendingMember,
     handleRejectPendingMember,
@@ -71,9 +73,10 @@ export const Project = ({
             onAccept={handleAcceptPendingMember}
             onReject={handleRejectPendingMember}
           />
-          <Button variant="destructive" size="icon">
-            <Trash2Icon />
-          </Button>
+          <DialogDeleteProject
+            projectName={project.name}
+            deleteProject={deleteProject}
+          />
         </div>
       </div>
 

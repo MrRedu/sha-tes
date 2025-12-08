@@ -1,14 +1,8 @@
-import { AvatarGroup } from '@/components/molecules/avatar-group';
+import { CardProject } from '@/components/molecules/card-project';
 import { DialogCreateProject } from '@/components/organisms/dialog-create-project';
 import { EmptyProjects } from '@/components/organisms/empty-projects';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from '@/components/ui/card';
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,7 +17,6 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { createClient } from '@/lib/supabase/server';
 import { LayoutPanelTop, SearchIcon } from 'lucide-react';
-import Link from 'next/link';
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -95,22 +88,11 @@ export default async function DashboardPage() {
             [];
 
           return (
-            <Link key={project.id} href={`/dashboard/projects/${project.id}`}>
-              <Card>
-                <CardHeader>
-                  <h3>{project.name}</h3>
-                </CardHeader>
-                <CardContent>
-                  <code>
-                    ID: {project.id} | Join: {project.join_code}
-                  </code>
-                </CardContent>
-                <CardFooter>
-                  <AvatarGroup members={projectMembers} />{' '}
-                  {/* ✅ Miembros completos */}
-                </CardFooter>
-              </Card>
-            </Link>
+            <CardProject
+              key={project.id}
+              project={project}
+              projectMembers={projectMembers}
+            />
           );
         })}
       </div>
