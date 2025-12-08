@@ -26,6 +26,7 @@ import {
   useSidebar,
 } from '@/components/ui/sidebar';
 import { useAuth } from '../auth/AuthProvider';
+import Link from 'next/link';
 
 export function NavUser({
   user,
@@ -89,9 +90,11 @@ export function NavUser({
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem disabled>
-                <BadgeCheck />
-                Cuenta
+              <DropdownMenuItem asChild>
+                <Link href="/dashboard/profile">
+                  <BadgeCheck />
+                  Cuenta
+                </Link>
               </DropdownMenuItem>
               <DropdownMenuItem disabled>
                 <CreditCard />

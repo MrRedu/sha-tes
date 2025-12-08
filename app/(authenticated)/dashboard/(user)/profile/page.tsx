@@ -4,22 +4,19 @@ import { createClient } from '@/lib/supabase/server';
 export default async function ProfilePage() {
   const supabase = await createClient();
 
-  // Get session and user info from Supabase (server-side)
   const { data: userData, error: userError } = await supabase.auth.getUser();
+  // const { data: profile } = await supabase
+  //   .from('tbl_users')
+  //   .select('*')
+  //   .eq('id', userData?.user?.id)
+  //   .single();
   // const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
   // const { data: claimsData } = await supabase.auth.getClaims();
 
   const user = userData?.user ?? null;
+  // console.log(profile);
   // const session = sessionData?.session ?? null;
   // const claims = claimsData?.claims ?? null;
-
-  const { data: projects } = await supabase.from('tbl_projects').select('*');
-  // Obtener proyectos ordenados por última actualización
-  // const { data: projects } = await supabase
-  //   .from('tbl_projects')
-  //   .select('*')
-  //   .eq('owner_id', user.id)
-  //   .order('updated_at', { ascending: false });  // ✅ Más reciente primero
 
   if (!user) {
     return (
@@ -43,7 +40,7 @@ export default async function ProfilePage() {
   }
 
   return (
-    <div className="p-6">
+    <div>
       <h1 className="text-2xl font-semibold mb-4">
         Información del usuario (Supabase)
       </h1>
@@ -52,13 +49,6 @@ export default async function ProfilePage() {
         <h2 className="font-medium">User</h2>
         <pre className="rounded bg-slate-50 p-4 overflow-auto">
           {JSON.stringify(user, null, 2)}
-        </pre>
-      </section>
-
-      <section className="mb-6">
-        <h2 className="font-medium">Projects</h2>
-        <pre className="rounded bg-slate-50 p-4 overflow-auto">
-          {JSON.stringify(projects, null, 2)}
         </pre>
       </section>
 
