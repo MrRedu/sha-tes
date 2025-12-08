@@ -2,21 +2,12 @@ import { CardProject } from '@/components/molecules/card-project';
 import { DialogCreateProject } from '@/components/organisms/dialog-create-project';
 import { EmptyProjects } from '@/components/organisms/empty-projects';
 import { Button } from '@/components/ui/button';
-
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+import { ButtonGroup } from '@/components/ui/button-group';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { createClient } from '@/lib/supabase/server';
-import { LayoutPanelTop, SearchIcon } from 'lucide-react';
+import { Grid3x3, Rows3, SearchIcon } from 'lucide-react';
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -49,7 +40,7 @@ export default async function DashboardPage() {
         <div className="flex gap-2">
           <div className="relative w-full max-w-sm">
             <SearchIcon className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <Input placeholder="Buscar" className="pl-10" />
+            <Input placeholder="Buscar" type="search" className="pl-10 " />
           </div>
           <div className="flex items-center space-x-2">
             <Switch id="shared" />
@@ -57,24 +48,14 @@ export default async function DashboardPage() {
           </div>
         </div>
         <div className="flex gap-2">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline">
-                <LayoutPanelTop /> Vista
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56">
-              <DropdownMenuLabel>Cambiar layout</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuRadioGroup
-                value={'grid'}
-                // onValueChange={setPosition}
-              >
-                <DropdownMenuRadioItem value="grid">Grid</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="list">List</DropdownMenuRadioItem>
-              </DropdownMenuRadioGroup>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <ButtonGroup>
+            <Button variant="outline" size="icon-sm" aria-label="List">
+              <Rows3 />
+            </Button>
+            <Button variant="outline" size="icon-sm" aria-label="Grid">
+              <Grid3x3 />
+            </Button>
+          </ButtonGroup>
 
           <DialogCreateProject />
         </div>

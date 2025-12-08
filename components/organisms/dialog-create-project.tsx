@@ -32,8 +32,8 @@ export function DialogCreateProject() {
       <Form {...form}>
         <form onSubmit={onSubmit}>
           <DialogTrigger asChild>
-            <Button>
-              <PlusIcon className="mr-2 h-4 w-4" />
+            <Button size="sm">
+              <PlusIcon className="mr-2 " />
               Crear proyecto
             </Button>
           </DialogTrigger>
