@@ -18,7 +18,6 @@ import { NavUser } from './nav-user';
 import { ProjectSwitcher } from './project-switcher';
 import { NavMain } from './nav-main';
 import { useAuth } from '../auth/AuthProvider';
-import { useEffect } from 'react';
 
 const items = [
   {
@@ -68,10 +67,6 @@ const projects = [
 
 export function AppSidebar() {
   const { user } = useAuth();
-
-  useEffect(() => {
-    console.log(user?.user_metadata);
-  }, [user]);
 
   return (
     <Sidebar collapsible="icon">

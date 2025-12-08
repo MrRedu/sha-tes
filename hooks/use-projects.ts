@@ -1,34 +1,80 @@
+import { useState } from 'react';
 import { useAuth } from '@/components/auth/AuthProvider';
 import { createClient } from '@/lib/supabase/client';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import z from 'zod';
+import { formCreateProject } from './validations/use-projects.schema';
+import { User } from '@/app/(authenticated)/dashboard/(projects)/projects/[projectId]/page';
+import { type ProjectProps } from '@/components/organisms/project';
 
-const formSchema = z.object({
-  name: z
-    .string()
-    .min(3, {
-      message: 'Debe tener al menos 3 caracteres.',
-    })
-    .max(64, {
-      message: 'Debe tener como máximo 64 caracteres.',
-    }),
-});
+type UseProjectParams = Omit<ProjectProps, 'userId' | 'project'> & {
+  projectId: string;
+};
 
-export function useCreateProjects() {
+export function useProject({
+  projectId,
+  members,
+  pendingMembers,
+}: UseProjectParams) {
+  const [_members, setMembers] = useState<User[]>(members || []);
+  const [_pendingMembers, setPendingMembers] = useState<User[]>(
+    pendingMembers || []
+  );
+
+  const updateProject = async (
+    fields: Partial<{ members: string[]; pending_requests: string[] }>
+  ) => {
+    if (!projectId) return;
+    const supabase = createClient();
+    await supabase.from('tbl_projects').update(fields).eq('id', projectId);
+  };
+
+  const handleRemoveMember = async (userId: string) => {
+    const newMembers = _members.filter((m) => m.id !== userId);
+    setMembers(newMembers);
+    await updateProject({ members: newMembers.map((m) => m.id) });
+  };
+
+  const handleAcceptPendingMember = async (userId: string) => {
+    const accepted = _pendingMembers.find((m) => m.id === userId);
+    if (!accepted) return;
+    const newPending = _pendingMembers.filter((m) => m.id !== userId);
+    const newMembers = [..._members, accepted];
+    setPendingMembers(newPending);
+    setMembers(newMembers);
+    await updateProject({
+      members: newMembers.map((m) => m.id),
+      pending_requests: newPending.map((m) => m.id),
+    });
+  };
+
+  const handleRejectPendingMember = async (userId: string) => {
+    const newPending = _pendingMembers.filter((m) => m.id !== userId);
+    setPendingMembers(newPending);
+    await updateProject({ pending_requests: newPending.map((m) => m.id) });
+  };
+
+  return {
+    _members,
+    _pendingMembers,
+    handleRemoveMember,
+    handleAcceptPendingMember,
+    handleRejectPendingMember,
+  };
+}
+
+export function useCreateProject() {
   const supabase = createClient();
   const { user } = useAuth();
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof formCreateProject>>({
+    resolver: zodResolver(formCreateProject),
     defaultValues: {
       name: '',
     },
   });
 
-  // CREATE POLICY "Users create own projects" ON tbl_projects
-  // FOR INSERT WITH CHECK (auth.uid() = owner_id);
-
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formCreateProject>) {
     try {
       if (!user?.id) throw new Error('Usuario no autenticado');
 

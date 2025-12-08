@@ -14,6 +14,7 @@ const typographyVariants = cva('', {
       lead: 'text-muted-foreground text-xl',
       large: 'text-lg font-semibold',
       small: 'text-sm leading-none font-medium',
+      xsmall: 'text-xs leading-none',
       muted: 'text-muted-foreground text-sm',
     },
   },
@@ -33,6 +34,7 @@ type POSSIBLE_VARIANTS =
   | 'lead'
   | 'large'
   | 'small'
+  | 'xsmall'
   | 'muted';
 
 interface TypographyProps {
@@ -52,6 +54,7 @@ const tagMap: Record<POSSIBLE_VARIANTS, keyof JSX.IntrinsicElements> = {
   lead: 'p',
   large: 'p',
   small: 'small',
+  xsmall: 'p',
   muted: 'p',
 };
 

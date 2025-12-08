@@ -1,27 +1,21 @@
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 
-type Member = {
-  name: string;
-  imageUrl?: string;
-};
+import { type User } from '@/app/(authenticated)/dashboard/(projects)/projects/[projectId]/page';
 
 interface AvatarGroupProps {
-  members: Member[];
+  members: User[];
 }
 
 export const AvatarGroup = ({ members }: AvatarGroupProps) => {
   if (members.length > 1) {
     return (
       <div className="*:data-[slot=avatar]:ring-background flex -space-x-2 *:data-[slot=avatar]:ring-2">
-        {members.map(({ name, imageUrl }) => (
-          <Avatar key={name}>
-            <AvatarImage
-              src={
-                imageUrl || `https://api.dicebear.com/6.x/initials/svg?seed=US`
-              }
-              alt={name}
-            />
-            <AvatarFallback>{}</AvatarFallback>
+        {members.map(({ full_name, avatar_url }) => (
+          <Avatar key={full_name}>
+            <AvatarImage src={avatar_url || ''} alt={full_name} />
+            <AvatarFallback>
+              {full_name.slice(0, 2).toUpperCase()}
+            </AvatarFallback>
           </Avatar>
         ))}
       </div>
@@ -31,11 +25,11 @@ export const AvatarGroup = ({ members }: AvatarGroupProps) => {
   return (
     <Avatar>
       <AvatarImage
-        src={`https://api.dicebear.com/6.x/initials/svg?seed=US`}
-        alt={members[0].name}
+        src={members[0].avatar_url || ''}
+        alt={members[0].full_name}
       />
       <AvatarFallback>
-        {members[0].name.slice(0, 2).toUpperCase()}
+        {members[0].full_name.slice(0, 2).toUpperCase()}
       </AvatarFallback>
     </Avatar>
   );

@@ -1,3 +1,4 @@
+import { AvatarGroup } from '@/components/molecules/avatar-group';
 import { DialogCreateProject } from '@/components/organisms/dialog-create-project';
 import { EmptyProjects } from '@/components/organisms/empty-projects';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -26,14 +27,22 @@ import Link from 'next/link';
 
 export default async function DashboardPage() {
   const supabase = await createClient();
-  const { data: projects } = await supabase.from('tbl_projects').select('*');
-  // const { data: projects } = await supabase
-  //   .from('tbl_projects')
-  //   .select('*')
-  //   .eq('owner_id', user.id)
-  //   .order('updated_at', { ascending: false });  // ✅ Más reciente primero
+  const { data: projects } = await supabase
+    .from('tbl_projects')
+    .select('*')
+    .order('updated_at', { ascending: false });
 
-  // const [position, setPosition] = useState("bottom")
+  // 2. Extraer todos los member IDs únicos
+  const allMemberIds =
+    projects?.flatMap((p) => p.members)?.filter(Boolean) || [];
+
+  // 3. Obtener todos los miembros únicos
+  const { data: members } = await supabase
+    .from('tbl_users')
+    .select('id, full_name, avatar_url, email')
+    .in('id', allMemberIds);
+
+  // const [position, setPosition] = useState("grid")
 
   if (projects?.length === 0) {
     return <EmptyProjects />;
@@ -79,47 +88,31 @@ export default async function DashboardPage() {
       </div>
       {/* Cards */}
       <div className="w-full grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {projects.map((project) => (
-          <Link key={project.id} href={`/dashboard/projects/${project.id}`}>
-            <Card>
-              <CardHeader>
-                <h3>{project.name}</h3>
-              </CardHeader>
-              <CardContent>
-                <code>
-                  ID: {project.id} | Join Code: {project.join_code}
-                </code>
-              </CardContent>
-              <CardFooter>
-                {project.members.length === 1 && (
-                  <Avatar>
-                    <AvatarImage
-                      src={`https://api.dicebear.com/6.x/initials/svg?seed=${project.members[0]}`}
-                      alt={project.members[0]}
-                    />
-                    <AvatarFallback>
-                      {project.members[0].slice(0, 2).toUpperCase()}
-                    </AvatarFallback>
-                  </Avatar>
-                )}
-                {project.members.length > 1 && (
-                  <div className="*:data-[slot=avatar]:ring-background flex -space-x-2 *:data-[slot=avatar]:ring-2">
-                    {/* TODO */}
-                    {project.members.map((member: string[]) => (
-                      <Avatar key={member.toString()}>
-                        <AvatarImage
-                          src={`https://api.dicebear.com/6.x/initials/svg?seed=${member}`}
-                          alt={member.toString()}
-                        />
-                        <AvatarFallback>HP</AvatarFallback>
-                      </Avatar>
-                    ))}
-                  </div>
-                )}
-              </CardFooter>
-            </Card>
-          </Link>
-        ))}
+        {projects?.map((project) => {
+          // Filtrar miembros específicos de este proyecto
+          const projectMembers =
+            members?.filter((member) => project.members?.includes(member.id)) ||
+            [];
+
+          return (
+            <Link key={project.id} href={`/dashboard/projects/${project.id}`}>
+              <Card>
+                <CardHeader>
+                  <h3>{project.name}</h3>
+                </CardHeader>
+                <CardContent>
+                  <code>
+                    ID: {project.id} | Join: {project.join_code}
+                  </code>
+                </CardContent>
+                <CardFooter>
+                  <AvatarGroup members={projectMembers} />{' '}
+                  {/* ✅ Miembros completos */}
+                </CardFooter>
+              </Card>
+            </Link>
+          );
+        })}
       </div>
     </div>
   );
