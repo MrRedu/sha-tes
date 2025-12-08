@@ -2,10 +2,8 @@
 
 import { AvatarGroup } from '@/components/molecules/avatar-group';
 import { DialogManageUsers } from '@/components/molecules/dialog-manage-users';
-import { Button } from '@/components/ui/button';
 import { Typography } from '@/components/ui/typography';
 import { useProject } from '@/hooks/use-projects';
-import { Trash2Icon } from 'lucide-react';
 import { DialogDeleteProject } from '../molecules/dialog-delete-project';
 
 export interface ProjectProps {
