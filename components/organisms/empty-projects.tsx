@@ -10,10 +10,11 @@ import {
   EmptyTitle,
 } from '@/components/ui/empty';
 import { DialogCreateProject } from './dialog-create-project';
+import { DialogJoinProject } from './dialog-join-project';
 
-export function EmptyNotes() {
+export function EmptyProjects() {
   return (
-    <Empty>
+    <Empty className="w-full">
       <EmptyHeader>
         <EmptyMedia variant="icon">
           <FolderInput />
@@ -27,9 +28,7 @@ export function EmptyNotes() {
       <EmptyContent>
         <div className="flex gap-2">
           <DialogCreateProject />
-          <Button variant="outline" disabled>
-            Unirse a un proyecto
-          </Button>
+          <DialogJoinProject />
         </div>
       </EmptyContent>
       <Button

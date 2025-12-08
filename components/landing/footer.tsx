@@ -1,110 +1,131 @@
-export function Footer() {
+import Image from 'next/image';
+
+interface MenuItem {
+  title: string;
+  links: {
+    text: string;
+    url: string;
+  }[];
+}
+
+interface FooterProps {
+  logo?: {
+    url: string;
+    src: string;
+    alt: string;
+    title: string;
+  };
+  tagline?: string;
+  menuItems?: MenuItem[];
+  copyright?: string;
+  bottomLinks?: {
+    text: string;
+    url: string;
+  }[];
+}
+
+export function Footer({
+  logo = {
+    src: 'https://deifkwefumgah.cloudfront.net/shadcnblocks/block/block-1.svg',
+    alt: '',
+    title: 'sha-tes.com',
+    url: '#',
+  },
+  tagline = 'Components made easy.',
+  menuItems = [
+    {
+      title: 'Product',
+      links: [
+        { text: 'Overview', url: '#' },
+        { text: 'Pricing', url: '#' },
+        { text: 'Marketplace', url: '#' },
+        { text: 'Features', url: '#' },
+        { text: 'Integrations', url: '#' },
+        { text: 'Pricing', url: '#' },
+      ],
+    },
+    {
+      title: 'Company',
+      links: [
+        { text: 'About', url: '#' },
+        { text: 'Team', url: '#' },
+        { text: 'Blog', url: '#' },
+        { text: 'Careers', url: '#' },
+        { text: 'Contact', url: '#' },
+        { text: 'Privacy', url: '#' },
+      ],
+    },
+    {
+      title: 'Resources',
+      links: [
+        { text: 'Help', url: '#' },
+        { text: 'Sales', url: '#' },
+        { text: 'Advertise', url: '#' },
+      ],
+    },
+    {
+      title: 'Social',
+      links: [
+        { text: 'Twitter', url: '#' },
+        { text: 'Instagram', url: '#' },
+        { text: 'LinkedIn', url: '#' },
+      ],
+    },
+  ],
+  copyright = '© 2025 sha-tes.com. All rights reserved.',
+  bottomLinks = [
+    { text: 'Terms and Conditions', url: '#' },
+    { text: 'Privacy Policy', url: '#' },
+  ],
+}: FooterProps) {
   return (
-    <footer className="border-t border-border bg-background/50 px-4 py-12 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-6xl">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-          <div>
-            <div className="flex items-center gap-2 mb-4">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground font-bold">
-                N
+    <section className="py-32 w-full">
+      <div className="container mx-auto">
+        <footer>
+          <div className="grid grid-cols-2 gap-8 lg:grid-cols-6">
+            <div className="col-span-2 mb-8 lg:mb-0">
+              <div className="flex items-center gap-2 lg:justify-start">
+                {/* <Logo url="https://shadcnblocks.com">
+                  <LogoImage
+                    src={logo.src}
+                    alt={logo.alt}
+                    title={logo.title}
+                    className="h-10 dark:invert"
+                  />
+                  <LogoText className="text-xl">{logo.title}</LogoText>
+                </Logo> */}
+                <Image src={logo.src} alt={logo.alt} width={100} height={100} />
               </div>
-              <span className="font-bold text-foreground">NotesShare</span>
+              <p className="mt-4 font-bold">{tagline}</p>
             </div>
-            <p className="text-sm text-muted-foreground">
-              La forma más segura de compartir notas con tu equipo.
-            </p>
+            {menuItems.map((section, sectionIdx) => (
+              <div key={sectionIdx}>
+                <h3 className="mb-4 font-bold">{section.title}</h3>
+                <ul className="text-muted-foreground space-y-4">
+                  {section.links.map((link, linkIdx) => (
+                    <li
+                      key={linkIdx}
+                      className="hover:text-primary font-medium"
+                    >
+                      <a href={link.url}>{link.text}</a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
           </div>
-
-          <div>
-            <h4 className="font-semibold text-foreground mb-4">Producto</h4>
-            <ul className="space-y-2 text-sm text-muted-foreground">
-              <li>
-                <a href="#" className="hover:text-foreground transition-colors">
-                  Características
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-foreground transition-colors">
-                  Precios
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-foreground transition-colors">
-                  Seguridad
-                </a>
-              </li>
+          <div className="text-muted-foreground mt-24 flex flex-col justify-between gap-4 border-t pt-8 text-sm font-medium md:flex-row md:items-center">
+            <p>{copyright}</p>
+            <ul className="flex gap-4">
+              {bottomLinks.map((link, linkIdx) => (
+                <li key={linkIdx} className="hover:text-primary underline">
+                  <a href={link.url}>{link.text}</a>
+                </li>
+              ))}
             </ul>
           </div>
-
-          <div>
-            <h4 className="font-semibold text-foreground mb-4">Empresa</h4>
-            <ul className="space-y-2 text-sm text-muted-foreground">
-              <li>
-                <a href="#" className="hover:text-foreground transition-colors">
-                  Sobre nosotros
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-foreground transition-colors">
-                  Blog
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-foreground transition-colors">
-                  Contacto
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <h4 className="font-semibold text-foreground mb-4">Legal</h4>
-            <ul className="space-y-2 text-sm text-muted-foreground">
-              <li>
-                <a href="#" className="hover:text-foreground transition-colors">
-                  Privacidad
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-foreground transition-colors">
-                  Términos
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-foreground transition-colors">
-                  Cookies
-                </a>
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        <div className="border-t border-border pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-sm text-muted-foreground">
-            © 2025 NotesShare. Todos los derechos reservados.
-          </p>
-          <div className="flex gap-6">
-            <a
-              href="#"
-              className="text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Twitter
-            </a>
-            <a
-              href="#"
-              className="text-muted-foreground hover:text-foreground transition-colors"
-            >
-              GitHub
-            </a>
-            <a
-              href="#"
-              className="text-muted-foreground hover:text-foreground transition-colors"
-            >
-              LinkedIn
-            </a>
-          </div>
-        </div>
+        </footer>
       </div>
-    </footer>
+    </section>
   );
 }

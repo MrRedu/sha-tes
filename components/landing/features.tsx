@@ -1,72 +1,88 @@
-import { Card } from '@/components/ui/card';
-import { Share2, Lock, Zap, Users } from 'lucide-react';
+import { GitPullRequest, Lock, Users, Zap } from 'lucide-react';
+import { Button } from '../ui/button';
+import { Badge } from '../ui/badge';
 
-const features = [
-  {
-    icon: Share2,
-    title: 'Comparte con un Código',
-    description:
-      'Genera códigos únicos de acceso para compartir tus notas. Sin necesidad de invitaciones complicadas.',
-  },
-  {
-    icon: Lock,
-    title: 'Seguridad Garantizada',
-    description:
-      'Encriptación end-to-end. Tus notas están protegidas en todo momento. Control total del acceso.',
-  },
-  {
-    icon: Zap,
-    title: 'Sincronización en Tiempo Real',
-    description:
-      'Los cambios se actualizan instantáneamente en todos los dispositivos conectados.',
-  },
-  {
-    icon: Users,
-    title: 'Colaboración Flexible',
-    description:
-      'Trabaja con tu equipo en las notas, comentarios y actualizaciones en vivo.',
-  },
-];
+interface Feature {
+  heading: string;
+  description: string;
+  icon: React.ReactNode;
+}
 
-export function Features() {
+interface FeatureProps {
+  label?: string;
+  title?: string;
+  features?: Feature[];
+  buttonText?: string;
+  buttonUrl?: string;
+}
+
+export function Features({
+  label = 'Features',
+  title = 'Todo lo que necesitas para compartir notas de forma segura y colaborar con tu equipo',
+  features = [
+    {
+      heading: 'Comparte',
+      description:
+        'Genera códigos únicos de acceso para compartir tus notas. Sin necesidad de invitaciones complicadas.',
+      icon: <GitPullRequest className="size-4 md:size-6" />,
+    },
+    {
+      heading: 'Seguridad',
+      description:
+        'Encriptación end-to-end. Tus notas están protegidas en todo momento. Control total del acceso.',
+      icon: <Lock className="size-4 md:size-6" />,
+    },
+    {
+      heading: 'Sincronización',
+      description:
+        'Los cambios se actualizan instantáneamente en todos los dispositivos conectados.',
+      icon: <Zap className="size-4 md:size-6" />,
+    },
+    {
+      heading: 'Colabora',
+      description:
+        'Trabaja con tu equipo en las notas, comentarios y actualizaciones en vivo.',
+      icon: <Users className="size-4 md:size-6" />,
+    },
+  ],
+  buttonText = undefined,
+  buttonUrl = undefined,
+}: FeatureProps) {
   return (
-    <section id="features" className="px-4 py-20 sm:px-6 lg:px-8 bg-card/50">
-      <div className="mx-auto max-w-6xl">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl sm:text-5xl font-bold mb-4 text-balance">
-            Características Poderosas
-          </h2>
-          <p className="text-lg text-muted-foreground text-balance max-w-2xl mx-auto">
-            Todo lo que necesitas para compartir notas de forma segura y
-            colaborar con tu equipo
-          </p>
+    <section id="features" className="py-32">
+      <div className="container">
+        {(label || title) && (
+          <div className="mb-12 flex max-w-3xl flex-col gap-4">
+            <Badge variant="secondary">{label}</Badge>
+            <h2 className="text-3xl font-medium md:text-4xl lg:text-5xl">
+              {title}
+            </h2>
+          </div>
+        )}
+        <div className="grid gap-12 md:grid-cols-2">
+          {features.map((feature, idx) => (
+            <div className="flex gap-6 space-y-4 rounded-lg md:block" key={idx}>
+              <span className="bg-accent flex size-10 shrink-0 items-center justify-center rounded-full md:size-12">
+                {feature.icon}
+              </span>
+              <div>
+                <h3 className="font-medium md:mb-2 md:text-xl">
+                  {feature.heading}
+                </h3>
+                <p className="text-muted-foreground text-sm md:text-base">
+                  {feature.description}
+                </p>
+              </div>
+            </div>
+          ))}
         </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {features.map((feature, index) => {
-            const Icon = feature.icon;
-            return (
-              <Card
-                key={index}
-                className="p-8 border-border bg-background hover:border-primary/50 transition-colors"
-              >
-                <div className="flex flex-col gap-4">
-                  <div className="w-12 h-12 rounded-lg bg-primary/20 flex items-center justify-center">
-                    <Icon className="w-6 h-6 text-primary" />
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-bold text-foreground mb-2">
-                      {feature.title}
-                    </h3>
-                    <p className="text-muted-foreground">
-                      {feature.description}
-                    </p>
-                  </div>
-                </div>
-              </Card>
-            );
-          })}
-        </div>
+        {buttonUrl && (
+          <div className="mt-16 flex justify-center">
+            <Button size="lg" asChild>
+              <a href={buttonUrl}>{buttonText}</a>
+            </Button>
+          </div>
+        )}
       </div>
     </section>
   );

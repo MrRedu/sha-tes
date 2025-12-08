@@ -1,4 +1,6 @@
-import { AppSidebar } from './app-sidebar/app-sidebar';
+'use client';
+
+import { AuthProvider } from './auth/AuthProvider';
 import { SidebarProvider } from './ui/sidebar';
 
 interface ProvidersProps {
@@ -7,12 +9,8 @@ interface ProvidersProps {
 
 export const Providers = ({ children }: ProvidersProps) => {
   return (
-    <>
-      <SidebarProvider defaultOpen={false}>
-        <AppSidebar />
-
-        {children}
-      </SidebarProvider>
-    </>
+    <AuthProvider>
+      <SidebarProvider defaultOpen={false}>{children}</SidebarProvider>
+    </AuthProvider>
   );
 };

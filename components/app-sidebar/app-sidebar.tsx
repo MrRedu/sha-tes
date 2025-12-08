@@ -1,80 +1,88 @@
+'use client';
 import {
   Calendar,
+  FolderKanban,
   Home,
   LayoutDashboard,
-  Search,
   Settings,
 } from 'lucide-react';
 
 import {
   Sidebar,
   SidebarContent,
-  // SidebarFooter,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarTrigger,
+  SidebarFooter,
+  SidebarHeader,
 } from '@/components/ui/sidebar';
-import Link from 'next/link';
 
-// Menu items.
+import { NavUser } from './nav-user';
+import { ProjectSwitcher } from './project-switcher';
+import { NavMain } from './nav-main';
+import { useAuth } from '../auth/AuthProvider';
+
 const items = [
   {
-    title: 'Home',
-    url: '/',
+    title: 'Panel principal',
+    url: '/dashboard',
     icon: Home,
   },
   {
-    title: 'Dashboard',
-    url: '/dashboard',
-    icon: LayoutDashboard,
+    title: 'Proyectos',
+    url: '/dashboard/projects',
+    icon: FolderKanban,
+  },
+  // {
+  //   title: 'Buscar',
+  //   url: '#',
+  //   icon: Search,
+  // },
+  // {
+  //   title: 'Configuraciones',
+  //   url: '#',
+  //   icon: Settings,
+  // },
+];
+
+const projects = [
+  {
+    name: 'Project Alpha',
+    logo: LayoutDashboard,
+    plan: 'Pro Plan',
   },
   {
-    title: 'Calendar',
-    url: '#',
-    icon: Calendar,
+    name: 'Project Beta',
+    logo: Calendar,
+    plan: 'Free Plan',
   },
   {
-    title: 'Search',
-    url: '#',
-    icon: Search,
-  },
-  {
-    title: 'Settings',
-    url: '#',
-    icon: Settings,
+    name: 'Project Gamma',
+    logo: Settings,
+    plan: 'Enterprise Plan',
   },
 ];
 
 export function AppSidebar() {
+  const { user } = useAuth();
+
   return (
     <Sidebar collapsible="icon">
-      <SidebarTrigger /> {/* Acomodar trigger con el header */}
+      <SidebarHeader>
+        <ProjectSwitcher projects={projects} />
+      </SidebarHeader>
       <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupLabel>Application</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {items.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <Link href={item.url}>
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+        <NavMain items={items} />
       </SidebarContent>
-      {/* <SidebarFooter>
-        <div className="p-4 text-sm">© 2024 My Company</div>
-      </SidebarFooter> */}
+      <SidebarFooter>
+        <NavUser
+          user={{
+            name: user?.user_metadata?.name || 'Name Lastname',
+            email: user?.user_metadata?.email || 'example@me.com',
+            avatar: user?.user_metadata?.avatar_url || '',
+            avatarFallback: (user?.user_metadata?.name || 'NL')
+              .slice(0, 2)
+              .toUpperCase(), // First two letters of the name as fallback
+          }}
+        />
+      </SidebarFooter>
     </Sidebar>
   );
 }
