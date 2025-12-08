@@ -3,18 +3,20 @@ import {
   Hero,
   Features,
   HowItWorks,
-  CTA,
+  // CTA,
   Footer,
+  Pricing,
 } from '@/components/landing';
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-background text-foreground mx-auto">
+    <main className="min-h-screen bg-background text-foreground mx-auto flex flex-col items-center">
       <Header />
       <Hero />
       <Features />
       <HowItWorks />
-      <CTA />
+      <Pricing />
+      {/* <CTA /> */}
       <Footer />
     </main>
   );
