@@ -1,9 +1,9 @@
 'use client';
 import {
   Calendar,
+  FolderKanban,
   Home,
   LayoutDashboard,
-  Search,
   Settings,
 } from 'lucide-react';
 
@@ -28,23 +28,18 @@ const items = [
   {
     title: 'Proyectos',
     url: '/dashboard',
-    icon: LayoutDashboard,
+    icon: FolderKanban,
   },
-  {
-    title: 'Perfil',
-    url: '/dashboard/profile',
-    icon: Calendar,
-  },
-  {
-    title: 'Buscar',
-    url: '#',
-    icon: Search,
-  },
-  {
-    title: 'Configuraciones',
-    url: '#',
-    icon: Settings,
-  },
+  // {
+  //   title: 'Buscar',
+  //   url: '#',
+  //   icon: Search,
+  // },
+  // {
+  //   title: 'Configuraciones',
+  //   url: '#',
+  //   icon: Settings,
+  // },
 ];
 
 const projects = [
