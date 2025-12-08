@@ -23,7 +23,7 @@ export function Header() {
               href="#how-it-works"
               className="text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
-              Cómo Funciona
+              ¿Cómo Funciona?
             </a>
             <a
               href="#pricing"

@@ -49,7 +49,7 @@ export function Features({
   buttonUrl = undefined,
 }: FeatureProps) {
   return (
-    <section className="py-32">
+    <section id="features" className="py-32">
       <div className="container">
         {(label || title) && (
           <div className="mb-12 flex max-w-3xl flex-col gap-4">

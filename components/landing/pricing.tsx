@@ -80,10 +80,10 @@ export function Pricing({
   const [isYearly, setIsYearly] = useState(false);
 
   return (
-    <section className="py-32">
+    <section id="pricing" className="py-32">
       <div className="container">
         <div className="mx-auto flex max-w-5xl flex-col items-center gap-6 text-center">
-          <h2 className="text-pretty text-4xl font-semibold lg:text-6xl">
+          <h2 className="text-3xl font-medium md:text-4xl lg:text-5xl">
             {heading}
           </h2>
           <p className="text-muted-foreground lg:text-xl">{description}</p>
