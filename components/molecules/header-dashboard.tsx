@@ -32,7 +32,11 @@ export const HeaderDashboard = () =>
               </BreadcrumbItem>
               <BreadcrumbSeparator className="hidden md:block" />
               <BreadcrumbItem>
-                <BreadcrumbPage>Project 1</BreadcrumbPage>
+                <BreadcrumbPage>
+                  <BreadcrumbLink asChild>
+                    <Link href="/dashboard/projects">Proyectos</Link>
+                  </BreadcrumbLink>
+                </BreadcrumbPage>
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>

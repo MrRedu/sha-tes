@@ -21,12 +21,14 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { useCreateProject } from '@/hooks/use-projects';
 import { PlusIcon } from 'lucide-react';
 
-export function DialogCreateProject() {
-  const { form, onSubmit } = useCreateProject();
+type ProjectsParams = {
+  form: any;
+  onSubmit: () => void;
+};
 
+export function DialogCreateProject({ form, onSubmit }: ProjectsParams) {
   return (
     <Dialog>
       <Form {...form}>

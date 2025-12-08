@@ -27,7 +27,7 @@ const items = [
   },
   {
     title: 'Proyectos',
-    url: '/dashboard/error-temporal',
+    url: '/dashboard/projects',
     icon: FolderKanban,
   },
   // {

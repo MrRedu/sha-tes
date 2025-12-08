@@ -10,10 +10,68 @@ import {
 } from './validations/use-projects.schema';
 import { User } from '@/app/(authenticated)/dashboard/(projects)/projects/[projectId]/page';
 import { type ProjectProps } from '@/components/organisms/project';
+import { type Project } from './types/types';
 
 type UseProjectParams = Omit<ProjectProps, 'userId' | 'project'> & {
   projectId: string;
 };
+
+type useProjectsParams = {
+  projects: Project[];
+};
+
+export function useProjects({ projects }: useProjectsParams) {
+  const supabase = createClient();
+  const { user } = useAuth();
+
+  const [_projects, setProjects] = useState(projects || []);
+
+  const form = useForm<z.infer<typeof formCreateProject>>({
+    resolver: zodResolver(formCreateProject),
+    defaultValues: {
+      name: '',
+    },
+  });
+
+  async function onSubmit(values: z.infer<typeof formCreateProject>) {
+    try {
+      if (!user?.id) throw new Error('Usuario no autenticado');
+
+      const payload = {
+        name: values.name.trim(),
+      };
+
+      const { data, error } = await supabase
+        .from('tbl_projects')
+        .insert(payload)
+        .select();
+
+      if (error) {
+        console.error('Error creating project:', error);
+        throw error;
+      }
+
+      console.log('Project created successfully:', data);
+      setProjects([..._projects, data[0]]);
+      form.reset();
+    } catch (err) {
+      console.error('Failed to create project:', err);
+      alert(
+        `No se pudo crear el proyecto: ${
+          err instanceof Error ? err.message : String(err)
+        }`
+      );
+    }
+  }
+
+  const onSubmitWrapper = form.handleSubmit(onSubmit);
+
+  return {
+    _projects,
+    form,
+    onSubmit: onSubmitWrapper,
+  };
+}
 
 export function useProject({
   projectId,
@@ -73,59 +131,6 @@ export function useProject({
     handleRemoveMember,
     handleAcceptPendingMember,
     handleRejectPendingMember,
-  };
-}
-
-export function useCreateProject() {
-  const supabase = createClient();
-  const { user } = useAuth();
-  const form = useForm<z.infer<typeof formCreateProject>>({
-    resolver: zodResolver(formCreateProject),
-    defaultValues: {
-      name: '',
-    },
-  });
-
-  async function onSubmit(values: z.infer<typeof formCreateProject>) {
-    try {
-      if (!user?.id) throw new Error('Usuario no autenticado');
-
-      const payload = {
-        name: values.name.trim(),
-      };
-
-      const { data, error } = await supabase
-        .from('tbl_projects')
-        .insert(payload)
-        .select();
-
-      if (error) {
-        console.error('Error creating project:', error);
-        throw error;
-      }
-
-      console.log('Project created successfully:', data);
-      // limpiar el formulario
-      form.reset();
-      // refrescar la página para que SSR refleje los cambios
-      if (typeof window !== 'undefined') {
-        window.location.reload();
-      }
-    } catch (err) {
-      console.error('Failed to create project:', err);
-      alert(
-        `No se pudo crear el proyecto: ${
-          err instanceof Error ? err.message : String(err)
-        }`
-      );
-    }
-  }
-
-  const onSubmitWrapper = form.handleSubmit(onSubmit);
-
-  return {
-    form,
-    onSubmit: onSubmitWrapper,
   };
 }
 
