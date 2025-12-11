@@ -5,68 +5,55 @@ import { DialogManageUsers } from '@/components/molecules/dialog-manage-users';
 import { Typography } from '@/components/ui/typography';
 import { useProject } from '@/hooks/use-projects';
 import { DialogDeleteProject } from '../molecules/dialog-delete-project';
+import type { ProjectWithMembers, User } from '@/types/types';
+import { DialogCreateNotebook } from '../molecules/dialog-create-notebook';
+import { FilePenLine } from 'lucide-react';
+import { Button } from '../ui/button';
+import { DialogManageProject } from '../molecules/dialog-manage-project';
 
 export interface ProjectProps {
-  userId: string;
-  project: {
-    id: string;
-    name: string;
-    owner_id: string;
-    join_code: string;
-    members: string[];
-    pending_requests: string[];
-  };
-  members:
-    | {
-        id: string;
-        email: string;
-        full_name: string;
-        avatar_url: string | null;
-      }[]
-    | null;
-  pendingMembers:
-    | {
-        id: string;
-        email: string;
-        full_name: string;
-        avatar_url: string | null;
-      }[]
-    | null;
+  userId: User['id'];
+  project: ProjectWithMembers;
 }
 
-export const Project = ({
-  userId,
-  project,
-  members,
-  pendingMembers,
-}: ProjectProps) => {
+export const Project = ({ userId, project }: ProjectProps) => {
   const {
-    _members,
-    _pendingMembers,
+    // members,
+    currentMembers,
+    pendingMembers,
+
+    formEditProject,
+    onSubmitEditProject,
+    projectName,
+    projectDescription,
+
     deleteProject,
     handleRemoveMember,
     handleAcceptPendingMember,
     handleRejectPendingMember,
   } = useProject({
-    projectId: project.id,
-    members,
-    pendingMembers,
+    project,
+    _members: project.members,
   });
 
   return (
     <>
       <div className="w-full flex items-center justify-between mb-4 flex-col md:flex-row gap-4">
         <div className="flex gap-2">
-          <Typography variant="h3">{project.name}</Typography>
-          <AvatarGroup members={_members} />
+          <Typography variant="h3">{projectName}</Typography>
+          <AvatarGroup members={currentMembers} />
         </div>
         <div className="flex gap-2">
+          <DialogManageProject
+            form={formEditProject}
+            onSubmit={onSubmitEditProject}
+          />
           <DialogManageUsers
+            joinCode={project.join_code}
             isProjectOwner={project.owner_id === userId}
             projectOwnerId={project.owner_id}
-            joinCode={project.join_code}
-            currentMembers={_members}
-            pendingMembers={_pendingMembers}
+            currentMembers={currentMembers}
+            pendingMembers={pendingMembers}
             onRemoveMember={handleRemoveMember}
             onAccept={handleAcceptPendingMember}
             onReject={handleRejectPendingMember}
@@ -76,6 +63,9 @@ export const Project = ({
             deleteProject={deleteProject}
           />
         </div>
+      </div>
+      <div className="w-full grid  sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
+        <DialogCreateNotebook />
       </div>
 
       <pre>{JSON.stringify(project, null, 2)}</pre>

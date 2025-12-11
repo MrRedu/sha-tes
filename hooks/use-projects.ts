@@ -8,23 +8,28 @@ import {
   formCreateProject,
   formJoinProject,
 } from './validations/use-projects.schema';
-import { User } from '@/app/(authenticated)/dashboard/(projects)/projects/[projectId]/page';
-import { type ProjectProps } from '@/components/organisms/project';
-import { type Project } from './types/types';
-
-type UseProjectParams = Omit<ProjectProps, 'userId' | 'project'> & {
-  projectId: string;
-};
+import type {
+  ProjectWithMembers,
+  Project,
+  Members,
+  MemberStatus,
+} from '../types/types';
+import { toast } from 'sonner';
 
 type useProjectsParams = {
-  projects: Project[];
+  _projects?: ProjectWithMembers[];
 };
 
-export function useProjects({ projects }: useProjectsParams) {
+type useProjectParams = {
+  project: Project;
+  _members: Members;
+};
+
+export function useProjects({ _projects = [] }: useProjectsParams = {}) {
   const supabase = createClient();
   const { user } = useAuth();
 
-  const [_projects, setProjects] = useState(projects || []);
+  const [projects, setProjects] = useState<ProjectWithMembers[]>(_projects);
 
   const form = useForm<z.infer<typeof formCreateProject>>({
     resolver: zodResolver(formCreateProject),
@@ -47,17 +52,20 @@ export function useProjects({ projects }: useProjectsParams) {
         .select();
 
       if (error) {
+        toast.error(`Error creando proyecto: ${error.message}`);
         console.error('Error creating project:', error);
         throw error;
       }
 
-      console.log('Project created successfully:', data);
-      setProjects([..._projects, data[0]]);
-      form.reset();
+      // console.log('Project created successfully:', data);
+      setProjects([...projects, data[0]]);
+      toast.success(`Proyecto "${data[0].name}" creado correctamente`);
+      // TODO: Redirigir con Next.js redirect() maybe
+      window.location.href = `${window.location.origin}/dashboard/projects/${data[0].id}`;
     } catch (err) {
       console.error('Failed to create project:', err);
-      alert(
-        `No se pudo crear el proyecto: ${
+      toast.error(
+        `Error creando proyecto: ${
           err instanceof Error ? err.message : String(err)
         }`
       );
@@ -67,66 +75,174 @@ export function useProjects({ projects }: useProjectsParams) {
   const onSubmitWrapper = form.handleSubmit(onSubmit);
 
   return {
-    _projects,
+    projects,
     form,
     onSubmit: onSubmitWrapper,
   };
 }
 
-export function useProject({
-  projectId,
-  members,
-  pendingMembers,
-}: UseProjectParams) {
-  const [_members, setMembers] = useState<User[]>(members || []);
-  const [_pendingMembers, setPendingMembers] = useState<User[]>(
-    pendingMembers || []
+const formEditProjectSchema = z.object({
+  name: z.string(),
+  description: z.string(),
+});
+
+export function useProject({ project, _members }: useProjectParams) {
+  const supabase = createClient();
+
+  const projectId = project?.id;
+
+  const [members, setMembers] = useState<Members>(_members);
+  const [projectName, setProjectName] = useState(project?.name || '');
+  const [projectDescription, setProjectDescription] = useState(
+    project?.description || ''
   );
 
-  const updateProject = async (
-    fields: Partial<{ members: string[]; pending_requests: string[] }>
+  const formEditProject = useForm<z.infer<typeof formEditProjectSchema>>({
+    resolver: zodResolver(formEditProjectSchema),
+    defaultValues: {
+      name: project?.name || '',
+      description: project?.description || '',
+    },
+  });
+
+  const onSubmitEditProject = formEditProject.handleSubmit(async (values) => {
+    try {
+      if (!projectId) return;
+
+      const payload = {
+        name: values.name.trim(),
+        description: values.description.trim(),
+      };
+
+      const { error } = await supabase
+        .from('tbl_projects')
+        .update(payload)
+        .eq('id', projectId);
+
+      if (error) throw error;
+
+      setProjectName(payload.name);
+      setProjectDescription(payload.description);
+      toast.success('Proyecto actualizado correctamente');
+    } catch (error) {
+      console.error('Error updating project:', error);
+      toast.error('Error al actualizar el proyecto.');
+    }
+  });
+
+  // --- Funciones de Utilidad ---
+  const updateMemberStatus = async (
+    userId: string,
+    newStatus: MemberStatus,
+    successMessage: string
   ) => {
-    if (!projectId) return;
-    const supabase = createClient();
-    await supabase.from('tbl_projects').update(fields).eq('id', projectId);
+    if (!projectId) return false;
+
+    try {
+      const { error } = await supabase
+        .from('tbl_project_members')
+        .update({ status: newStatus })
+        .eq('project_id', projectId)
+        .eq('user_id', userId);
+
+      if (error) throw error;
+
+      // 1. Actualizar el estado local (optimización de UI)
+      setMembers(
+        (prevMembers) =>
+          prevMembers?.map((member) =>
+            member.profile?.id === userId
+              ? { ...member, status: newStatus }
+              : member
+          ) || null
+      );
+
+      toast.success(successMessage);
+      return true;
+    } catch (error) {
+      console.error('Error updating member status:', error);
+      toast.error('Error al actualizar el estado del miembro.');
+      return false;
+    }
+  };
+
+  const removeMemberEntry = async (userId: string, successMessage: string) => {
+    if (!projectId) return false;
+
+    try {
+      // Borramos la fila de la tabla pivote
+      const { data, error } = await supabase
+        .from('tbl_project_members')
+        .delete()
+        .eq('project_id', projectId)
+        .eq('user_id', userId);
+
+      console.log(data);
+
+      if (error) throw error;
+
+      // 1. Actualizar el estado local (eliminamos el miembro del array)
+      setMembers(
+        (prevMembers) =>
+          prevMembers?.filter((member) => member.profile?.id !== userId) || null
+      );
+
+      toast.success(successMessage);
+      return true;
+    } catch (error) {
+      console.error('Error removing member:', error);
+      toast.error('Error al eliminar el miembro.');
+      return false;
+    }
+  };
+
+  // --- Funciones Exportadas ---
+
+  const handleAcceptPendingMember = (userId: string) => {
+    return updateMemberStatus(userId, 'member', 'Miembro aceptado. ');
+  };
+
+  const handleRejectPendingMember = (userId: string) => {
+    // Opción 1: Cambiar a 'rejected'
+    // return updateMemberStatus(userId, 'rejected', 'Solicitud rechazada.');
+
+    // Opción 2: Eliminar completamente la fila de la solicitud pendiente (si no necesitas el historial)
+    return removeMemberEntry(userId, 'Solicitud rechazada y eliminada.');
+  };
+
+  const handleRemoveMember = (userId: string) => {
+    return removeMemberEntry(userId, 'Miembro eliminado del proyecto.');
   };
 
   const deleteProject = async () => {
     if (!projectId) return;
-    const supabase = createClient();
-    await supabase.from('tbl_projects').delete().eq('id', projectId);
 
-    // TODO: Redirección a la lista de proyectos
+    try {
+      await supabase.from('tbl_projects').delete().eq('id', projectId);
+      toast.success('Proyecto eliminado correctamente');
+
+      // TODO: Redirigir con Next.js redirect()
+      window.location.href = `${window.location.origin}/dashboard/projects`;
+    } catch (error) {
+      console.error('Error deleting tasks:', error);
+    }
   };
 
-  const handleRemoveMember = async (userId: string) => {
-    const newMembers = _members.filter((m) => m.id !== userId);
-    setMembers(newMembers);
-    await updateProject({ members: newMembers.map((m) => m.id) });
-  };
-
-  const handleAcceptPendingMember = async (userId: string) => {
-    const accepted = _pendingMembers.find((m) => m.id === userId);
-    if (!accepted) return;
-    const newPending = _pendingMembers.filter((m) => m.id !== userId);
-    const newMembers = [..._members, accepted];
-    setPendingMembers(newPending);
-    setMembers(newMembers);
-    await updateProject({
-      members: newMembers.map((m) => m.id),
-      pending_requests: newPending.map((m) => m.id),
-    });
-  };
-
-  const handleRejectPendingMember = async (userId: string) => {
-    const newPending = _pendingMembers.filter((m) => m.id !== userId);
-    setPendingMembers(newPending);
-    await updateProject({ pending_requests: newPending.map((m) => m.id) });
-  };
+  const currentMembers =
+    members.filter((member) => member.status === 'member') || [];
+  const pendingMembers =
+    members.filter((member) => member.status === 'pending') || [];
 
   return {
-    _members,
-    _pendingMembers,
+    members,
+    currentMembers,
+    pendingMembers,
+
+    projectName,
+    projectDescription,
+    formEditProject,
+    onSubmitEditProject,
+
     deleteProject,
     handleRemoveMember,
     handleAcceptPendingMember,
@@ -134,9 +250,11 @@ export function useProject({
   };
 }
 
-export function useJoinProject() {
-  // const supabase = createClient();
-  // const { user } = useAuth();
+export function useJoinProject({ close }: { close: () => void }) {
+  const supabase = createClient();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>('');
+
   const form = useForm<z.infer<typeof formJoinProject>>({
     resolver: zodResolver(formJoinProject),
     defaultValues: {
@@ -145,13 +263,38 @@ export function useJoinProject() {
   });
 
   async function onSubmit(values: z.infer<typeof formJoinProject>) {
-    alert(JSON.stringify(values, null, 2));
-  }
+    setIsLoading(true);
+    setError('');
 
-  const onSubmitWrapper = form.handleSubmit(onSubmit);
+    try {
+      const { data, error } = await supabase.rpc('request_join_project', {
+        code_input: values.joinCode,
+      });
+
+      if (error) throw error;
+
+      // La función devuelve un objeto JSON custom
+      if (data && data.success) {
+        toast.success(`¡Éxito! ${data.message}`);
+        close();
+        form.reset();
+      } else {
+        toast.error(`¡Error! ${data?.message || 'No se pudo unir'}`);
+        setError(data?.message || 'Error desconocido');
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error('Error de conexión o servidor');
+      setError('Error de conexión o servidor');
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
   return {
     form,
-    onSubmit: onSubmitWrapper,
+    onSubmit: form.handleSubmit(onSubmit),
+    isLoading,
+    error,
   };
 }

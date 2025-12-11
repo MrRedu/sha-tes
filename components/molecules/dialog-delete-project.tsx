@@ -62,7 +62,7 @@ export function DialogDeleteProject({
   }, [watchedProjectName, watchedToConfirm, projectName]);
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log('¡Hello there!', values);
+    console.log('Deleted!', values);
   }
 
   return (
@@ -75,52 +75,47 @@ export function DialogDeleteProject({
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Eliminar proyecto</AlertDialogTitle>
-          <div>
-            <div className="space-y-6">
-              <AlertDialogDescription>
-                Esta acción no puede deshacerse. Esto eliminará permanentemente
-                tu proyecto y removerá tus datos de nuestros servidores.
-              </AlertDialogDescription>
-              <Form {...form}>
-                <form
-                  onSubmit={form.handleSubmit(onSubmit)}
-                  className="space-y-4 "
-                >
-                  <FormField
-                    control={form.control}
-                    name="projectName"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>{`Para confirmar, escribe "${projectName}"`}</FormLabel>
-                        <FormControl>
-                          <Input placeholder="" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="toConfirm"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>{`Para confirmar, escribe "eliminar mi proyecto"`}</FormLabel>
-                        <FormControl>
-                          <Input placeholder="" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </form>
-              </Form>
-              <Alert variant="destructive">
-                <AlertCircle />
-                <AlertTitle>¡Esta acción no se puede deshacer!</AlertTitle>
-              </Alert>
-            </div>
-          </div>
+          <AlertDialogDescription>
+            Esta acción no puede deshacerse. Esto eliminará permanentemente tu
+            proyecto y removerá tus datos de nuestros servidores.
+          </AlertDialogDescription>
         </AlertDialogHeader>
+        <div className="space-y-6">
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 ">
+              <FormField
+                control={form.control}
+                name="projectName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{`Para confirmar, escribe "${projectName}"`}</FormLabel>
+                    <FormControl>
+                      <Input placeholder="" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="toConfirm"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{`Para confirmar, escribe "eliminar mi proyecto"`}</FormLabel>
+                    <FormControl>
+                      <Input placeholder="" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </form>
+          </Form>
+          <Alert variant="destructive">
+            <AlertCircle />
+            <AlertTitle>¡Esta acción no se puede deshacer!</AlertTitle>
+          </Alert>
+        </div>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancelar</AlertDialogCancel>
           <AlertDialogAction

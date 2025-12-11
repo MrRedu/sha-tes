@@ -13,38 +13,41 @@ import { Button } from '../ui/button';
 import { UserMinus, UserPlus, Users, UserX } from 'lucide-react';
 import { formatCode } from '@/lib/utils';
 import { Typography } from '../ui/typography';
-import { type User } from '@/app/(authenticated)/dashboard/(projects)/projects/[projectId]/page';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import type { Members } from '@/types/types';
 
 interface DialogManageUsersProps {
   isProjectOwner: boolean;
   projectOwnerId: string;
   joinCode: string;
-  currentMembers: User[];
-  pendingMembers: User[];
+  currentMembers: Members;
+  pendingMembers: Members;
   onRemoveMember: (userId: string) => void;
   onAccept: (userId: string) => void;
   onReject: (userId: string) => void;
 }
 
-type CurrentMembersListProps = {
-  currentMembers: User[];
-  isProjectOwner: boolean;
-  projectOwnerId: string;
-};
 type PendingMembersListProps = {
-  pendingMembers: User[];
+  members: Members;
+  onAccept: (userId: string) => void;
+  onReject: (userId: string) => void;
 };
 
+type CurrentMembersListProps = {
+  members: Members;
+  isProjectOwner: boolean;
+  projectOwnerId: string;
+  onRemoveMember: (userId: string) => void;
+};
 const CurrentMembersList = ({
-  currentMembers,
+  members,
   isProjectOwner,
   projectOwnerId,
   onRemoveMember,
-}: CurrentMembersListProps & { onRemoveMember: (userId: string) => void }) => {
+}: CurrentMembersListProps) => {
   return (
     <ul className="space-y-2">
-      {currentMembers.map((member, index) => (
+      {members.map(({ profile: member }, index) => (
         <li key={index} className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Avatar>
@@ -84,16 +87,13 @@ const CurrentMembersList = ({
 };
 
 const PendingMembersList = ({
-  pendingMembers,
+  members,
   onAccept,
   onReject,
-}: PendingMembersListProps & {
-  onAccept: (userId: string) => void;
-  onReject: (userId: string) => void;
-}) => {
+}: PendingMembersListProps) => {
   return (
     <ul className="space-y-2">
-      {pendingMembers.map((member, index) => (
+      {members.map(({ profile: member }, index) => (
         <li key={index} className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Avatar>
@@ -135,11 +135,13 @@ const PendingMembersList = ({
 };
 
 export const DialogManageUsers = ({
+  joinCode,
   isProjectOwner,
   projectOwnerId,
-  joinCode,
+  // Data
   currentMembers,
   pendingMembers,
+  // Actions
   onRemoveMember,
   onAccept,
   onReject,
@@ -168,7 +170,7 @@ export const DialogManageUsers = ({
           </Typography>
           {currentMembers.length > 0 ? (
             <CurrentMembersList
-              currentMembers={currentMembers}
+              members={currentMembers}
               isProjectOwner={isProjectOwner}
               projectOwnerId={projectOwnerId}
               onRemoveMember={onRemoveMember}
@@ -184,7 +186,7 @@ export const DialogManageUsers = ({
               </Typography>
               {pendingMembers && pendingMembers.length > 0 ? (
                 <PendingMembersList
-                  pendingMembers={pendingMembers}
+                  members={pendingMembers}
                   onAccept={onAccept}
                   onReject={onReject}
                 />

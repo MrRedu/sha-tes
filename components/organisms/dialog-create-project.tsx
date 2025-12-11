@@ -22,6 +22,7 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { PlusIcon } from 'lucide-react';
+import { useDisclosure } from '@/hooks/use-disclosure';
 
 type ProjectsParams = {
   form: any;
@@ -29,8 +30,15 @@ type ProjectsParams = {
 };
 
 export function DialogCreateProject({ form, onSubmit }: ProjectsParams) {
+  const [isOpen, { open, close, toggle }] = useDisclosure();
+
+  const handleCreate = () => {
+    close();
+    onSubmit();
+  };
+
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={toggle}>
       <Form {...form}>
         <form onSubmit={onSubmit}>
           <DialogTrigger asChild>
@@ -69,7 +77,7 @@ export function DialogCreateProject({ form, onSubmit }: ProjectsParams) {
               <DialogClose asChild>
                 <Button variant="outline">Cancelar</Button>
               </DialogClose>
-              <Button type="submit" onClick={onSubmit}>
+              <Button type="submit" onClick={handleCreate}>
                 Crear proyecto
               </Button>
             </DialogFooter>
