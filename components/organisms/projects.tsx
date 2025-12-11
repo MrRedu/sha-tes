@@ -26,8 +26,6 @@ export const Projects = ({
   const [layout, setLayout] = useState<'grid' | 'list'>('grid');
   const handleLayout = (layout: 'grid' | 'list'): void => setLayout(layout);
 
-  console.log({ projects: projects, pending: _pendingProjectsRequests });
-
   const pendingCards =
     _pendingProjectsRequests?.length >= 1
       ? _pendingProjectsRequests.map((entry, index) => (

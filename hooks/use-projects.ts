@@ -171,13 +171,11 @@ export function useProject({ project, _members }: useProjectParams) {
 
     try {
       // Borramos la fila de la tabla pivote
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from('tbl_project_members')
         .delete()
         .eq('project_id', projectId)
         .eq('user_id', userId);
-
-      console.log(data);
 
       if (error) throw error;
 
