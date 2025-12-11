@@ -28,16 +28,22 @@ import {
   InputOTPSeparator,
   InputOTPSlot,
 } from '../ui/input-otp';
+import { useDisclosure } from '@/hooks/use-disclosure';
 
 export const DialogJoinProject = () => {
-  const { form, onSubmit } = useJoinProject();
+  const [isOpen, { close, toggle }] = useDisclosure();
+  const { form, onSubmit, isLoading } = useJoinProject({
+    close,
+  });
 
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={toggle}>
       <Form {...form}>
         <form onSubmit={onSubmit}>
           <DialogTrigger asChild>
-            <Button variant="outline">Unirse a un proyecto</Button>
+            <Button variant="outline" size="sm">
+              Unirse a un proyecto
+            </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
@@ -51,15 +57,17 @@ export const DialogJoinProject = () => {
                 control={form.control}
                 name="joinCode"
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Código de proyecto</FormLabel>
+                  <FormItem className="[&>:nth-child(3)]:justify-center mt-5">
+                    <FormLabel className="text-center block">
+                      Código único del proyecto
+                    </FormLabel>
                     <FormControl>
                       <InputOTP
                         {...field}
                         maxLength={8}
                         pattern={REGEXP_ONLY_DIGITS_AND_CHARS}
                       >
-                        <InputOTPGroup>
+                        <InputOTPGroup className="[">
                           <InputOTPSlot index={0} />
                           <InputOTPSlot index={1} />
                           <InputOTPSlot index={2} />
@@ -74,20 +82,28 @@ export const DialogJoinProject = () => {
                         </InputOTPGroup>
                       </InputOTP>
                     </FormControl>
-                    <FormDescription>
-                      Ingresa el código del proyecto al que deseas unirte.
+                    <FormDescription className="text-center">
+                      ¡El código es sensible a mayúsculas y minúsculas!
                     </FormDescription>
-                    <FormMessage />
+                    <FormMessage className="text-center" />
                   </FormItem>
                 )}
               />
+
+              {/* {error && (
+                <Alert variant="destructive">
+                  <AlertCircle />
+                  <AlertTitle>{error}</AlertTitle>
+                  <AlertDescription>{`Asegúrate de que el código sea correcto.`}</AlertDescription>
+                </Alert>
+              )} */}
             </div>
             <DialogFooter>
               <DialogClose asChild>
                 <Button variant="outline">Cancelar</Button>
               </DialogClose>
-              <Button type="submit" onClick={onSubmit}>
-                Unirse a un proyecto
+              <Button type="submit" onClick={onSubmit} disabled={isLoading}>
+                {isLoading ? 'Enviando...' : 'Unirse a un proyecto'}
               </Button>
             </DialogFooter>
           </DialogContent>

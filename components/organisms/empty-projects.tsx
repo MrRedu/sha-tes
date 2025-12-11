@@ -1,3 +1,4 @@
+'use client';
 import { ArrowUpRightIcon, FolderInput } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -12,7 +13,7 @@ import {
 import { DialogCreateProject } from './dialog-create-project';
 import { DialogJoinProject } from './dialog-join-project';
 
-export function EmptyProjects() {
+export function EmptyProjects({ form, onSubmit }: any) {
   return (
     <Empty className="w-full">
       <EmptyHeader>
@@ -27,7 +28,7 @@ export function EmptyProjects() {
       </EmptyHeader>
       <EmptyContent>
         <div className="flex gap-2">
-          <DialogCreateProject />
+          <DialogCreateProject form={form} onSubmit={onSubmit} />
           <DialogJoinProject />
         </div>
       </EmptyContent>

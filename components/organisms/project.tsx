@@ -5,41 +5,14 @@ import { DialogManageUsers } from '@/components/molecules/dialog-manage-users';
 import { Typography } from '@/components/ui/typography';
 import { useProject } from '@/hooks/use-projects';
 import { DialogDeleteProject } from '../molecules/dialog-delete-project';
+import type { Project, User } from '@/types/types';
 
 export interface ProjectProps {
-  userId: string;
-  project: {
-    id: string;
-    name: string;
-    owner_id: string;
-    join_code: string;
-    members: string[];
-    pending_requests: string[];
-  };
-  members:
-    | {
-        id: string;
-        email: string;
-        full_name: string;
-        avatar_url: string | null;
-      }[]
-    | null;
-  pendingMembers:
-    | {
-        id: string;
-        email: string;
-        full_name: string;
-        avatar_url: string | null;
-      }[]
-    | null;
+  userId: User['id'];
+  project: Project;
 }
 
-export const Project = ({
-  userId,
-  project,
-  members,
-  pendingMembers,
-}: ProjectProps) => {
+export const Project = ({ userId, project, members }: ProjectProps) => {
   const {
     _members,
     _pendingMembers,
@@ -50,7 +23,6 @@ export const Project = ({
   } = useProject({
     projectId: project.id,
     members,
-    pendingMembers,
   });
 
   return (
@@ -65,7 +37,7 @@ export const Project = ({
             isProjectOwner={project.owner_id === userId}
             projectOwnerId={project.owner_id}
             joinCode={project.join_code}
-            currentMembers={_members}
+            members={_members}
             pendingMembers={_pendingMembers}
             onRemoveMember={handleRemoveMember}
             onAccept={handleAcceptPendingMember}

@@ -8,23 +8,18 @@ import {
   formCreateProject,
   formJoinProject,
 } from './validations/use-projects.schema';
-import { User } from '@/app/(authenticated)/dashboard/(projects)/projects/[projectId]/page';
-import { type ProjectProps } from '@/components/organisms/project';
-import { type Project } from './types/types';
-
-type UseProjectParams = Omit<ProjectProps, 'userId' | 'project'> & {
-  projectId: string;
-};
+import type { User, ProjectWithMembers } from '../types/types';
+import { toast } from 'sonner';
 
 type useProjectsParams = {
-  projects: Project[];
+  _projects?: ProjectWithMembers[];
 };
 
-export function useProjects({ projects }: useProjectsParams) {
+export function useProjects({ _projects = [] }: useProjectsParams = {}) {
   const supabase = createClient();
   const { user } = useAuth();
 
-  const [_projects, setProjects] = useState(projects || []);
+  const [projects, setProjects] = useState<ProjectWithMembers[]>(_projects);
 
   const form = useForm<z.infer<typeof formCreateProject>>({
     resolver: zodResolver(formCreateProject),
@@ -52,7 +47,7 @@ export function useProjects({ projects }: useProjectsParams) {
       }
 
       console.log('Project created successfully:', data);
-      setProjects([..._projects, data[0]]);
+      setProjects([...projects, data[0]]);
       form.reset();
     } catch (err) {
       console.error('Failed to create project:', err);
@@ -67,21 +62,15 @@ export function useProjects({ projects }: useProjectsParams) {
   const onSubmitWrapper = form.handleSubmit(onSubmit);
 
   return {
-    _projects,
+    projects,
     form,
     onSubmit: onSubmitWrapper,
   };
 }
 
-export function useProject({
-  projectId,
-  members,
-  pendingMembers,
-}: UseProjectParams) {
-  const [_members, setMembers] = useState<User[]>(members || []);
-  const [_pendingMembers, setPendingMembers] = useState<User[]>(
-    pendingMembers || []
-  );
+export function useProject({ projectId, members = [] }: any) {
+  const [_members, setMembers] = useState<User[]>(members);
+  const [_pendingMembers, setPendingMembers] = useState<User[]>([]);
 
   const updateProject = async (
     fields: Partial<{ members: string[]; pending_requests: string[] }>
@@ -134,9 +123,11 @@ export function useProject({
   };
 }
 
-export function useJoinProject() {
-  // const supabase = createClient();
-  // const { user } = useAuth();
+export function useJoinProject({ close }: any) {
+  const supabase = createClient();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>('');
+
   const form = useForm<z.infer<typeof formJoinProject>>({
     resolver: zodResolver(formJoinProject),
     defaultValues: {
@@ -145,13 +136,36 @@ export function useJoinProject() {
   });
 
   async function onSubmit(values: z.infer<typeof formJoinProject>) {
-    alert(JSON.stringify(values, null, 2));
-  }
+    setIsLoading(true);
 
-  const onSubmitWrapper = form.handleSubmit(onSubmit);
+    try {
+      // Llamamos a la función RPC que creamos en SQL
+      const { data, error } = await supabase.rpc('request_join_project', {
+        code_input: values.joinCode,
+      });
+
+      if (error) throw error;
+
+      // La función devuelve un objeto JSON custom
+      if (data && data.success) {
+        toast.success(`¡Éxito! ${data.message}`);
+        close();
+        form.reset();
+      } else {
+        toast.error(`¡Error! ${data.message || 'No se pudo unir'}`);
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error('Error de conexión o servidor');
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
   return {
     form,
-    onSubmit: onSubmitWrapper,
+    onSubmit: form.handleSubmit(onSubmit),
+    isLoading,
+    error,
   };
 }

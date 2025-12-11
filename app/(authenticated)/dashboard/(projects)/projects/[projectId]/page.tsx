@@ -5,33 +5,39 @@ interface ProjectPageProps {
   params: { projectId: string };
 }
 
-export type User = {
-  id: string;
-  email: string;
-  full_name: string;
-  avatar_url: string | null;
-};
-
 export default async function ProjectPage({ params }: ProjectPageProps) {
   const { projectId } = await params;
   const supabase = await createClient();
   const { data: userData } = await supabase.auth.getUser();
-
   const { data: project } = await supabase
     .from('tbl_projects')
     .select('*')
     .eq('id', projectId)
     .single();
 
-  const { data: members } = await supabase
-    .from('tbl_users')
-    .select('id, email, full_name, avatar_url')
-    .in('id', project?.members);
+  const { data, error } = await supabase
+    .from('tbl_project_members')
+    .select(
+      `
+      status, 
+      created_at,
+      user:user_id ( 
+        id,
+        full_name,
+        email
+      )
+    `
+    )
+    // Filtramos para obtener solo las entradas de este proyecto
+    .eq('project_id', projectId);
+  // Opcional: Ordenamos por fecha de creación
+  // .order('created_at', { ascending: true });
 
-  const { data: pendingMembers } = await supabase
-    .from('tbl_users')
-    .select('id, email, full_name, avatar_url')
-    .in('id', project?.pending_requests);
+  // Procesamiento para separar miembros de pendientes en el frontend
+  // const members = data?.filter((item) => item.status === 'member');
+  // const pending = data?.filter((item) => item.status === 'pending');
+
+  console.log(data, error);
 
   // TODO: Trabajar en esta excepción
   if (!project) {
@@ -43,14 +49,5 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
     );
   }
 
-  return (
-    <div>
-      <Project
-        project={project}
-        members={members}
-        pendingMembers={pendingMembers}
-        userId={userData?.user?.id || ''}
-      />
-    </div>
-  );
+  return <Project project={project} userId={userData?.user?.id || ''} />;
 }

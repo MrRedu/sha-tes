@@ -1,29 +1,34 @@
 import Link from 'next/link';
 import { Card, CardContent, CardFooter, CardHeader } from '../ui/card';
 import { AvatarGroup } from './avatar-group';
-import type { Project, User } from '@/hooks/types/types';
+import type { Members, Project } from '@/types/types';
 
 interface CardProjectProps {
-  project: Project;
-  projectMembers: User[];
+  id: Project['id'];
+  name: Project['name'];
+  description: Project['description'];
+  members: Members;
 }
 
 export const CardProject = ({
-  project,
-  projectMembers = [],
+  id,
+  name,
+  description,
+  members,
 }: CardProjectProps) => {
   return (
-    <Link href={`/dashboard/projects/${project.id}`}>
+    <Link href={`/dashboard/projects/${id}`}>
       <Card>
         <CardHeader>
-          <h3>{project.name}</h3>
+          <h3>{name}</h3>
         </CardHeader>
-        <CardContent>
-          <code>ID: {project.id}</code> <br />
-          <code>Join: {project.join_code}</code>
-        </CardContent>
+        {description && (
+          <CardContent>
+            <p>{description}</p>
+          </CardContent>
+        )}
         <CardFooter>
-          <AvatarGroup members={projectMembers} />
+          <AvatarGroup members={members} />
         </CardFooter>
       </Card>
     </Link>

@@ -37,14 +37,14 @@ type PendingMembersListProps = {
 };
 
 const CurrentMembersList = ({
-  currentMembers,
+  members,
   isProjectOwner,
   projectOwnerId,
   onRemoveMember,
 }: CurrentMembersListProps & { onRemoveMember: (userId: string) => void }) => {
   return (
     <ul className="space-y-2">
-      {currentMembers.map((member, index) => (
+      {members.map((member, index) => (
         <li key={index} className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Avatar>
@@ -138,8 +138,7 @@ export const DialogManageUsers = ({
   isProjectOwner,
   projectOwnerId,
   joinCode,
-  currentMembers,
-  pendingMembers,
+  members,
   onRemoveMember,
   onAccept,
   onReject,
@@ -166,9 +165,9 @@ export const DialogManageUsers = ({
           <Typography variant="lead" className="mt-4 mb-2">
             {isProjectOwner ? 'Miembros actuales' : 'Miembros'}
           </Typography>
-          {currentMembers.length > 0 ? (
+          {members.length > 0 ? (
             <CurrentMembersList
-              currentMembers={currentMembers}
+              currentMembers={members}
               isProjectOwner={isProjectOwner}
               projectOwnerId={projectOwnerId}
               onRemoveMember={onRemoveMember}
@@ -177,7 +176,7 @@ export const DialogManageUsers = ({
             <div>No hay miembros en este proyecto.</div>
           )}
 
-          {isProjectOwner && (
+          {/* {isProjectOwner && (
             <>
               <Typography variant="lead" className="mt-4 mb-2">
                 Miembros pendientes
@@ -192,7 +191,7 @@ export const DialogManageUsers = ({
                 <div>No hay miembros pendientes.</div>
               )}
             </>
-          )}
+          )} */}
         </div>
         <DialogFooter>
           <DialogClose>Cerrar</DialogClose>

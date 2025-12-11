@@ -1,20 +1,23 @@
+import type { Members } from '@/types/types';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 
-import { type User } from '@/app/(authenticated)/dashboard/(projects)/projects/[projectId]/page';
-
 interface AvatarGroupProps {
-  members: User[];
+  members: Members;
 }
 
 export const AvatarGroup = ({ members }: AvatarGroupProps) => {
-  if (members.length > 1) {
+  console.log(members);
+  if (members?.length > 1) {
     return (
       <div className="*:data-[slot=avatar]:ring-background flex -space-x-2 *:data-[slot=avatar]:ring-2">
-        {members.map(({ full_name, avatar_url }) => (
-          <Avatar key={full_name}>
-            <AvatarImage src={avatar_url || ''} alt={full_name} />
+        {members.map(({ profile }) => (
+          <Avatar key={profile.full_name}>
+            <AvatarImage
+              src={profile.avatar_url || ''}
+              alt={profile.full_name}
+            />
             <AvatarFallback>
-              {full_name.slice(0, 2).toUpperCase()}
+              {profile.full_name.slice(0, 2).toUpperCase() || 'N'}
             </AvatarFallback>
           </Avatar>
         ))}
@@ -22,14 +25,16 @@ export const AvatarGroup = ({ members }: AvatarGroupProps) => {
     );
   }
 
+  const UNIQUE_MEMBER = members?.[0];
+
   return (
     <Avatar>
       <AvatarImage
-        src={members[0]?.avatar_url || ''}
-        alt={members[0]?.full_name}
+        src={UNIQUE_MEMBER?.profile?.avatar_url || ''}
+        alt={UNIQUE_MEMBER?.profile?.full_name}
       />
       <AvatarFallback>
-        {members[0]?.full_name.slice(0, 2).toUpperCase() || 'NL'}
+        {UNIQUE_MEMBER?.profile?.full_name?.slice(0, 2).toUpperCase() || ''}
       </AvatarFallback>
     </Avatar>
   );

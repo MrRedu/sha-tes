@@ -1,31 +1,36 @@
-import { EmptyProjects } from '@/components/organisms/empty-projects';
-import { Projects } from '@/components/organisms/projects';
-import { Project } from '@/hooks/types/types';
 import { createClient } from '@/lib/supabase/server';
 import { PostgrestSingleResponse } from '@supabase/supabase-js';
 
+import { Projects } from '@/components/organisms/projects';
+import type { ProjectsListResponse } from '@/types/types';
+
 export default async function ProjectsPage() {
   const supabase = await createClient();
-  const { data: projects }: PostgrestSingleResponse<Project[]> = await supabase
+
+  const {
+    data: projects,
+    error: projectsError,
+  }: PostgrestSingleResponse<ProjectsListResponse> = await supabase
     .from('tbl_projects')
-    .select('*')
+    .select(
+      `
+      *,
+      members:tbl_project_members (
+        status,
+        profile:tbl_users (
+          id,
+          full_name,
+          avatar_url,
+          email
+        )
+      )
+    `
+    )
     .order('updated_at', { ascending: false });
 
-  // 2. Extraer todos los member IDs únicos
-  const allMemberIds =
-    projects?.flatMap((p) => p.members)?.filter(Boolean) || [];
-
-  // 3. Obtener todos los miembros únicos
-  const { data: members } = await supabase
-    .from('tbl_users')
-    .select('id, full_name, avatar_url, email')
-    .in('id', allMemberIds);
-
-  // const [position, setPosition] = useState("grid")
-
-  if (projects?.length === 0) {
-    return <EmptyProjects />;
+  if (projectsError) {
+    console.error('Error cargando proyectos:', projectsError.message);
   }
 
-  return <Projects projects={projects || []} members={members || []} />;
+  return <Projects _projects={projects || []} />;
 }
