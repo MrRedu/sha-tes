@@ -23,7 +23,7 @@ export const CardPendingProject = ({
           Pending
         </Badge>
       </CardHeader>
-      <CardFooter>
+      <CardFooter className="mt-auto">
         <Avatar>
           <AvatarImage src={undefined} alt={undefined} />
           <AvatarFallback>

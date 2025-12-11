@@ -1,5 +1,11 @@
 import Link from 'next/link';
-import { Card, CardContent, CardFooter, CardHeader } from '../ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+} from '../ui/card';
 import { AvatarGroup } from './avatar-group';
 import type { Members, Project } from '@/types/types';
 import { Typography } from '../ui/typography';
@@ -19,16 +25,16 @@ export const CardProject = ({
 }: CardProjectProps) => {
   return (
     <Link href={`/dashboard/projects/${id}`}>
-      <Card>
+      <Card className="h-full">
         <CardHeader>
           <Typography variant="large">{name}</Typography>
         </CardHeader>
         {description && (
           <CardContent>
-            <p>{description}</p>
+            <CardDescription>{description}</CardDescription>
           </CardContent>
         )}
-        <CardFooter>
+        <CardFooter className="mt-auto">
           <AvatarGroup members={members} />
         </CardFooter>
       </Card>

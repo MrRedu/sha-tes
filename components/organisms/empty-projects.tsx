@@ -15,7 +15,7 @@ import { DialogJoinProject } from './dialog-join-project';
 
 export function EmptyProjects({ form, onSubmit }: any) {
   return (
-    <Empty className="w-full">
+    <Empty className="w-full  min-h-[calc(100svh-6rem)]">
       <EmptyHeader>
         <EmptyMedia variant="icon">
           <FolderInput />

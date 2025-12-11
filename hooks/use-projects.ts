@@ -21,7 +21,7 @@ type useProjectsParams = {
 };
 
 type useProjectParams = {
-  projectId: Project['id'];
+  project: Project;
   _members: Members;
 };
 
@@ -81,12 +81,56 @@ export function useProjects({ _projects = [] }: useProjectsParams = {}) {
   };
 }
 
-export function useProject({ projectId, _members }: useProjectParams) {
+const formEditProjectSchema = z.object({
+  name: z.string(),
+  description: z.string(),
+});
+
+export function useProject({ project, _members }: useProjectParams) {
   const supabase = createClient();
+
+  const projectId = project?.id;
+
   const [members, setMembers] = useState<Members>(_members);
+  const [projectName, setProjectName] = useState(project?.name || '');
+  const [projectDescription, setProjectDescription] = useState(
+    project?.description || ''
+  );
+
+  const formEditProject = useForm<z.infer<typeof formEditProjectSchema>>({
+    resolver: zodResolver(formEditProjectSchema),
+    defaultValues: {
+      name: project?.name || '',
+      description: project?.description || '',
+    },
+  });
+
+  const onSubmitEditProject = formEditProject.handleSubmit(async (values) => {
+    try {
+      if (!projectId) return;
+
+      const payload = {
+        name: values.name.trim(),
+        description: values.description.trim(),
+      };
+
+      const { error } = await supabase
+        .from('tbl_projects')
+        .update(payload)
+        .eq('id', projectId);
+
+      if (error) throw error;
+
+      setProjectName(payload.name);
+      setProjectDescription(payload.description);
+      toast.success('Proyecto actualizado correctamente');
+    } catch (error) {
+      console.error('Error updating project:', error);
+      toast.error('Error al actualizar el proyecto.');
+    }
+  });
 
   // --- Funciones de Utilidad ---
-
   const updateMemberStatus = async (
     userId: string,
     newStatus: MemberStatus,
@@ -193,6 +237,12 @@ export function useProject({ projectId, _members }: useProjectParams) {
     members,
     currentMembers,
     pendingMembers,
+
+    projectName,
+    projectDescription,
+    formEditProject,
+    onSubmitEditProject,
+
     deleteProject,
     handleRemoveMember,
     handleAcceptPendingMember,
