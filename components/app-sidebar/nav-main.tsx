@@ -23,7 +23,7 @@ export function NavMain({
     icon?: LucideIcon;
   }[];
 }) {
-  const { open: isSidebarOpen } = useSidebar();
+  const { open: isSidebarOpen, isMobile } = useSidebar();
 
   return (
     <SidebarGroup>
@@ -31,7 +31,7 @@ export function NavMain({
       <SidebarGroupContent>
         <SidebarMenu>
           {items.map((item) => {
-            if (!isSidebarOpen) {
+            if (!isSidebarOpen && !isMobile) {
               return (
                 <Tooltip key={item.title}>
                   <SidebarMenuItem key={item.title}>
