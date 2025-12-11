@@ -5,24 +5,25 @@ import { DialogManageUsers } from '@/components/molecules/dialog-manage-users';
 import { Typography } from '@/components/ui/typography';
 import { useProject } from '@/hooks/use-projects';
 import { DialogDeleteProject } from '../molecules/dialog-delete-project';
-import type { Project, User } from '@/types/types';
+import type { ProjectWithMembers, User } from '@/types/types';
 
 export interface ProjectProps {
   userId: User['id'];
-  project: Project;
+  project: ProjectWithMembers;
 }
 
-export const Project = ({ userId, project, members }: ProjectProps) => {
+export const Project = ({ userId, project }: ProjectProps) => {
   const {
-    _members,
-    _pendingMembers,
+    // members,
+    currentMembers,
+    pendingMembers,
     deleteProject,
     handleRemoveMember,
     handleAcceptPendingMember,
     handleRejectPendingMember,
   } = useProject({
     projectId: project.id,
-    members,
+    _members: project.members,
   });
 
   return (
@@ -30,15 +31,15 @@ export const Project = ({ userId, project, members }: ProjectProps) => {
       <div className="w-full flex items-center justify-between mb-4 flex-col md:flex-row gap-4">
         <div className="flex gap-2">
           <Typography variant="h3">{project.name}</Typography>
-          <AvatarGroup members={_members} />
+          <AvatarGroup members={currentMembers} />
         </div>
         <div className="flex gap-2">
           <DialogManageUsers
+            joinCode={project.join_code}
             isProjectOwner={project.owner_id === userId}
             projectOwnerId={project.owner_id}
-            joinCode={project.join_code}
-            members={_members}
-            pendingMembers={_pendingMembers}
+            currentMembers={currentMembers}
+            pendingMembers={pendingMembers}
             onRemoveMember={handleRemoveMember}
             onAccept={handleAcceptPendingMember}
             onReject={handleRejectPendingMember}

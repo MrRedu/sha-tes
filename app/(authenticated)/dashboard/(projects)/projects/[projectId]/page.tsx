@@ -1,5 +1,7 @@
 import { createClient } from '@/lib/supabase/server';
 import { Project } from '@/components/organisms/project';
+import { type PostgrestSingleResponse } from '@supabase/supabase-js';
+import type { ProjectResponse } from '@/types/types';
 
 interface ProjectPageProps {
   params: { projectId: string };
@@ -8,36 +10,35 @@ interface ProjectPageProps {
 export default async function ProjectPage({ params }: ProjectPageProps) {
   const { projectId } = await params;
   const supabase = await createClient();
+
   const { data: userData } = await supabase.auth.getUser();
-  const { data: project } = await supabase
+  const userId = userData?.user?.id || '';
+
+  const {
+    data: project,
+    error: projectError,
+  }: PostgrestSingleResponse<ProjectResponse> = await supabase
     .from('tbl_projects')
-    .select('*')
+    .select(
+      `
+        *,
+        members:tbl_project_members (
+          status,
+          profile:tbl_users (
+            id,
+            full_name,
+            avatar_url,
+            email
+          )
+        )
+      `
+    )
     .eq('id', projectId)
     .single();
 
-  const { data, error } = await supabase
-    .from('tbl_project_members')
-    .select(
-      `
-      status, 
-      created_at,
-      user:user_id ( 
-        id,
-        full_name,
-        email
-      )
-    `
-    )
-    // Filtramos para obtener solo las entradas de este proyecto
-    .eq('project_id', projectId);
-  // Opcional: Ordenamos por fecha de creación
-  // .order('created_at', { ascending: true });
-
-  // Procesamiento para separar miembros de pendientes en el frontend
-  // const members = data?.filter((item) => item.status === 'member');
-  // const pending = data?.filter((item) => item.status === 'pending');
-
-  console.log(data, error);
+  if (projectError) {
+    console.error('Error cargando el proyecto:', projectError.message);
+  }
 
   // TODO: Trabajar en esta excepción
   if (!project) {
@@ -49,5 +50,5 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
     );
   }
 
-  return <Project project={project} userId={userData?.user?.id || ''} />;
+  return <Project project={project} userId={userId} />;
 }

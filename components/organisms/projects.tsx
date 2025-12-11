@@ -6,13 +6,18 @@ import { useState } from 'react';
 import { EmptyProjects } from './empty-projects';
 import { HeaderProjects } from './header-projects';
 
-import type { ProjectWithMembers } from '@/types/types';
+import type { ProjectWithMembers, RpcPendingProject } from '@/types/types';
+import { CardPendingProject } from '../molecules/card-pending-project';
 
 interface ProjectsParams {
   _projects?: ProjectWithMembers[];
+  _pendingProjectsRequests?: RpcPendingProject[];
 }
 
-export const Projects = ({ _projects }: ProjectsParams) => {
+export const Projects = ({
+  _projects = [],
+  _pendingProjectsRequests = [],
+}: ProjectsParams) => {
   const { projects, form, onSubmit } = useProjects({
     _projects,
   });
@@ -21,7 +26,20 @@ export const Projects = ({ _projects }: ProjectsParams) => {
   const [layout, setLayout] = useState<'grid' | 'list'>('grid');
   const handleLayout = (layout: 'grid' | 'list'): void => setLayout(layout);
 
-  if (projects?.length === 0)
+  console.log({ projects: projects, pending: _pendingProjectsRequests });
+
+  const pendingCards =
+    _pendingProjectsRequests?.length >= 1
+      ? _pendingProjectsRequests.map((entry, index) => (
+          <CardPendingProject
+            key={`pending-${index}`}
+            name={entry?.project_name || ''}
+            ownerName={entry?.owner_full_name || ''}
+          />
+        ))
+      : null;
+
+  if (projects?.length === 0 && _pendingProjectsRequests?.length === 0)
     return <EmptyProjects form={form} onSubmit={onSubmit} />;
 
   return (
@@ -37,14 +55,17 @@ export const Projects = ({ _projects }: ProjectsParams) => {
       {/* Cards */}
       <div
         className={cn(
-          `w-full  gap-4`,
+          `w-full gap-4`,
           layout === 'grid'
             ? 'grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
             : 'flex flex-col'
         )}
       >
+        {/*
+           1. PROYECTOS ACTIVOS (Siempre al principio) 
+        */}
         {projects?.map((project) => {
-          // Filtrar miembros aceptados
+          // Filtrar miembros aceptados (Lógica de filtrado mantenida)
           const projectMembers = project?.members?.filter(
             (member) => member.status === 'member'
           );
@@ -59,6 +80,11 @@ export const Projects = ({ _projects }: ProjectsParams) => {
             />
           );
         })}
+
+        {/* 
+          2. PROYECTOS PENDIENTES (Siempre al final) 
+        */}
+        {pendingCards}
       </div>
     </div>
   );

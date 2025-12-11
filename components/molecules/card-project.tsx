@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { Card, CardContent, CardFooter, CardHeader } from '../ui/card';
 import { AvatarGroup } from './avatar-group';
 import type { Members, Project } from '@/types/types';
+import { Typography } from '../ui/typography';
 
 interface CardProjectProps {
   id: Project['id'];
@@ -20,7 +21,7 @@ export const CardProject = ({
     <Link href={`/dashboard/projects/${id}`}>
       <Card>
         <CardHeader>
-          <h3>{name}</h3>
+          <Typography variant="large">{name}</Typography>
         </CardHeader>
         {description && (
           <CardContent>

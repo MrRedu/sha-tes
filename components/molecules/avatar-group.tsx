@@ -6,7 +6,6 @@ interface AvatarGroupProps {
 }
 
 export const AvatarGroup = ({ members }: AvatarGroupProps) => {
-  console.log(members);
   if (members?.length > 1) {
     return (
       <div className="*:data-[slot=avatar]:ring-background flex -space-x-2 *:data-[slot=avatar]:ring-2">
