@@ -31,7 +31,9 @@ export const CardProject = ({
         </CardHeader>
         {description && (
           <CardContent>
-            <CardDescription>{description}</CardDescription>
+            <CardDescription className="line-clamp-2">
+              {description}
+            </CardDescription>
           </CardContent>
         )}
         <CardFooter className="mt-auto">

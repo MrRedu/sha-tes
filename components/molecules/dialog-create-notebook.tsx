@@ -1,22 +1,30 @@
-import { FilePlusCorner } from 'lucide-react';
-import { Card, CardContent, CardFooter, CardHeader } from '../ui/card';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
+  DialogClose,
   DialogContent,
-  DialogTrigger,
-  DialogHeader,
-  DialogTitle,
   DialogDescription,
   DialogFooter,
-  DialogClose,
-} from '../ui/dialog';
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Card, CardContent, CardFooter, CardHeader } from '../ui/card';
+import { FilePlusCorner } from 'lucide-react';
 import { Typography } from '../ui/typography';
 import {
   useDisclosure,
   type UseDisclosureHandlers,
 } from '@/hooks/use-disclosure';
-
-interface DialogCreateNotebookProps {}
 
 const TriggerUI = ({
   handleOpen,
@@ -24,7 +32,10 @@ const TriggerUI = ({
   handleOpen: UseDisclosureHandlers['open'];
 }) => {
   return (
-    <Card className="cursor-pointer opacity-75" onClick={handleOpen}>
+    <Card
+      className="cursor-pointer opacity-50 border-dashed border-2 hover:opacity-100 transition-opacity duration-300 ease-in-out"
+      onClick={handleOpen}
+    >
       <CardHeader className="text-center">
         <Typography variant="large">Crear Notebook</Typography>
       </CardHeader>
@@ -38,30 +49,78 @@ const TriggerUI = ({
   );
 };
 
-export const DialogCreateNotebook = (props: DialogCreateNotebookProps) => {
+interface DialogCreateNotebookProps {
+  form: any;
+  onSubmit: () => void;
+}
+
+export const DialogCreateNotebook = ({
+  form,
+  onSubmit,
+}: DialogCreateNotebookProps) => {
   const [isOpen, { open, close, toggle }] = useDisclosure();
+
+  const handleCreate = () => {
+    close();
+    onSubmit();
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={toggle}>
-      <DialogTrigger asChild>
-        <TriggerUI handleOpen={open} />
-      </DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Gestionar usuarios</DialogTitle>
-          <DialogDescription>
-            Aquí puedes gestionar los usuarios para este proyecto.
-          </DialogDescription>
-        </DialogHeader>
-        <div>
-          <Typography variant="lead" className="mb-2">
-            Código de invitación
-          </Typography>
-        </div>
-        <DialogFooter>
-          <DialogClose>Cerrar</DialogClose>
-        </DialogFooter>
-      </DialogContent>
+      <Form {...form}>
+        <form onSubmit={onSubmit}>
+          <DialogTrigger asChild>
+            <TriggerUI handleOpen={open} />
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>Crear bloc de notas</DialogTitle>
+              <DialogDescription>
+                {`¡Crea tu bloc de notas; rápido y sencillo!`}
+              </DialogDescription>
+            </DialogHeader>
+            <div className="grid gap-4">
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Nombre</FormLabel>
+                    <FormControl>
+                      <Input placeholder="🛒 Hogar" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Descripción</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Lista de compras para el hogar"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <DialogFooter>
+              <DialogClose asChild>
+                <Button variant="outline">Cancelar</Button>
+              </DialogClose>
+              <Button type="submit" onClick={handleCreate}>
+                Crear bloc de notas
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </form>
+      </Form>
     </Dialog>
   );
 };

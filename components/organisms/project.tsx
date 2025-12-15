@@ -5,35 +5,42 @@ import { DialogManageUsers } from '@/components/molecules/dialog-manage-users';
 import { Typography } from '@/components/ui/typography';
 import { useProject } from '@/hooks/use-projects';
 import { DialogDeleteProject } from '../molecules/dialog-delete-project';
-import type { ProjectWithMembers, User } from '@/types/types';
+import type { ProjectWithMembersAndNotebooks, User } from '@/types/types';
 import { DialogCreateNotebook } from '../molecules/dialog-create-notebook';
-import { FilePenLine } from 'lucide-react';
-import { Button } from '../ui/button';
 import { DialogManageProject } from '../molecules/dialog-manage-project';
+import { CardNotebook } from '../molecules/card-notebook';
 
 export interface ProjectProps {
   userId: User['id'];
-  project: ProjectWithMembers;
+  _project: ProjectWithMembersAndNotebooks;
 }
 
-export const Project = ({ userId, project }: ProjectProps) => {
+export const Project = ({ userId, _project }: ProjectProps) => {
   const {
-    // members,
-    currentMembers,
-    pendingMembers,
+    project,
+    notebooks,
 
-    formEditProject,
-    onSubmitEditProject,
+    // Project properties
     projectName,
     projectDescription,
+    // Actions project properties
+    formEditProject,
+    onSubmitEditProject,
 
-    deleteProject,
+    // Members
+    currentMembers,
+    pendingMembers,
+    // Actions members
     handleRemoveMember,
     handleAcceptPendingMember,
     handleRejectPendingMember,
+
+    deleteProject,
+
+    formCreateNotebook,
+    onSubmitCreateNotebook,
   } = useProject({
-    project,
-    _members: project.members,
+    _project,
   });
 
   return (
@@ -64,11 +71,20 @@ export const Project = ({ userId, project }: ProjectProps) => {
           />
         </div>
       </div>
-      <div className="w-full grid  sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
-        <DialogCreateNotebook />
+      <div className="w-full grid sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
+        {notebooks.map((notebook) => (
+          <CardNotebook
+            key={notebook.id}
+            name={notebook.name}
+            description={notebook.description}
+          />
+        ))}
+        <DialogCreateNotebook
+          form={formCreateNotebook}
+          onSubmit={onSubmitCreateNotebook}
+        />
       </div>
-
-      <pre>{JSON.stringify(project, null, 2)}</pre>
+      <pre>{JSON.stringify(_project, null, 2)}</pre>
     </>
   );
 };

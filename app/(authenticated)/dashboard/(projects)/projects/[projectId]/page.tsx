@@ -1,7 +1,5 @@
 import { createClient } from '@/lib/supabase/server';
 import { Project } from '@/components/organisms/project';
-import { type PostgrestSingleResponse } from '@supabase/supabase-js';
-import type { ProjectResponse } from '@/types/types';
 
 interface ProjectPageProps {
   params: { projectId: string };
@@ -14,24 +12,23 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   const { data: userData } = await supabase.auth.getUser();
   const userId = userData?.user?.id || '';
 
-  const {
-    data: project,
-    error: projectError,
-  }: PostgrestSingleResponse<ProjectResponse> = await supabase
+  const { data: project, error: projectError } = await supabase
     .from('tbl_projects')
     .select(
       `
-        *,
-        members:tbl_project_members (
-          status,
-          profile:tbl_users (
-            id,
-            full_name,
-            avatar_url,
-            email
-          )
-        )
-      `
+    *,
+    members:tbl_project_members (
+      status,
+      profile:tbl_users ( id, full_name, email, avatar_url )
+    ),
+    notebooks:tbl_notebooks (
+      id,
+      name,
+      description,
+      created_at,
+      creator:creator_id ( id, full_name, avatar_url )
+    )
+  `
     )
     .eq('id', projectId)
     .single();
@@ -50,5 +47,5 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
     );
   }
 
-  return <Project project={project} userId={userId} />;
+  return <Project _project={project} userId={userId} />;
 }
