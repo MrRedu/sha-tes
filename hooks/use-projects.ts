@@ -5,14 +5,17 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import z from 'zod';
 import {
+  formCreateNotebookSchema,
   formCreateProject,
+  formEditProjectSchema,
   formJoinProject,
 } from './validations/use-projects.schema';
 import type {
   ProjectWithMembers,
-  Project,
-  Members,
   MemberStatus,
+  ProjectWithMembersAndNotebooks,
+  Member,
+  Notebook,
 } from '../types/types';
 import { toast } from 'sonner';
 
@@ -21,8 +24,7 @@ type useProjectsParams = {
 };
 
 type useProjectParams = {
-  project: Project;
-  _members: Members;
+  _project: ProjectWithMembersAndNotebooks;
 };
 
 export function useProjects({ _projects = [] }: useProjectsParams = {}) {
@@ -81,27 +83,33 @@ export function useProjects({ _projects = [] }: useProjectsParams = {}) {
   };
 }
 
-const formEditProjectSchema = z.object({
-  name: z.string(),
-  description: z.string(),
-});
-
-export function useProject({ project, _members }: useProjectParams) {
+export function useProject({ _project }: useProjectParams) {
+  const { user } = useAuth();
   const supabase = createClient();
 
-  const projectId = project?.id;
+  const projectId = _project?.id;
 
-  const [members, setMembers] = useState<Members>(_members);
-  const [projectName, setProjectName] = useState(project?.name || '');
+  const [project, setProject] = useState(_project);
+  const [members, setMembers] = useState<Member[]>(_project.members);
+  const [notebooks, setNotebooks] = useState<Notebook[]>(_project.notebooks);
+  const [projectName, setProjectName] = useState(_project?.name || '');
   const [projectDescription, setProjectDescription] = useState(
-    project?.description || ''
+    _project?.description || ''
   );
 
   const formEditProject = useForm<z.infer<typeof formEditProjectSchema>>({
     resolver: zodResolver(formEditProjectSchema),
     defaultValues: {
-      name: project?.name || '',
-      description: project?.description || '',
+      name: _project?.name || '',
+      description: _project?.description || '',
+    },
+  });
+
+  const formCreateNotebook = useForm<z.infer<typeof formCreateNotebookSchema>>({
+    resolver: zodResolver(formCreateNotebookSchema),
+    defaultValues: {
+      name: '',
+      description: '',
     },
   });
 
@@ -129,6 +137,38 @@ export function useProject({ project, _members }: useProjectParams) {
       toast.error('Error al actualizar el proyecto.');
     }
   });
+
+  const onSubmitCreateNotebook = formCreateNotebook.handleSubmit(
+    async (values) => {
+      // return alert(JSON.stringify(values, null, 2));
+      try {
+        if (!projectId) return;
+
+        const payload = {
+          name: values.name.trim(),
+          description: values.description.trim(),
+          project_id: projectId,
+          creator_id: user?.id,
+        };
+
+        const { data, error } = await supabase
+          .from('tbl_notebooks')
+          .insert(payload)
+          .select()
+          .single();
+
+        if (error) throw error;
+
+        setNotebooks([...notebooks, data]);
+        formCreateNotebook.reset();
+
+        toast.success('Notebook creado correctamente');
+      } catch (error) {
+        console.error('Error creating notebook:', error);
+        toast.error('Error al crear el notebook.');
+      }
+    }
+  );
 
   // --- Funciones de Utilidad ---
   const updateMemberStatus = async (
@@ -232,6 +272,9 @@ export function useProject({ project, _members }: useProjectParams) {
     members.filter((member) => member.status === 'pending') || [];
 
   return {
+    project,
+    notebooks,
+
     members,
     currentMembers,
     pendingMembers,
@@ -245,6 +288,9 @@ export function useProject({ project, _members }: useProjectParams) {
     handleRemoveMember,
     handleAcceptPendingMember,
     handleRejectPendingMember,
+
+    formCreateNotebook,
+    onSubmitCreateNotebook,
   };
 }
 

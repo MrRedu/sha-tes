@@ -15,6 +15,9 @@ import { formatCode } from '@/lib/utils';
 import { Typography } from '../ui/typography';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import type { Members } from '@/types/types';
+import { Badge } from '../ui/badge';
+import { WithBadge } from '../atoms/with-badge';
+import { useDisclosure } from '@/hooks/use-disclosure';
 
 interface DialogManageUsersProps {
   isProjectOwner: boolean;
@@ -39,6 +42,7 @@ type CurrentMembersListProps = {
   projectOwnerId: string;
   onRemoveMember: (userId: string) => void;
 };
+
 const CurrentMembersList = ({
   members,
   isProjectOwner,
@@ -146,12 +150,21 @@ export const DialogManageUsers = ({
   onAccept,
   onReject,
 }: DialogManageUsersProps & { projectId?: string }) => {
+  const [isOpen, { open, toggle }] = useDisclosure();
+
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={toggle}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="icon">
-          <Users />
-        </Button>
+        <WithBadge count={pendingMembers.length}>
+          <Button
+            variant="outline"
+            size="icon"
+            aria-label="Manage users"
+            onClick={open}
+          >
+            <Users />
+          </Button>
+        </WithBadge>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

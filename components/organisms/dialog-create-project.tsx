@@ -8,7 +8,6 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -24,10 +23,10 @@ import { Input } from '@/components/ui/input';
 import { PlusIcon } from 'lucide-react';
 import { useDisclosure } from '@/hooks/use-disclosure';
 
-type ProjectsParams = {
+interface ProjectsParams {
   form: any;
   onSubmit: () => void;
-};
+}
 
 export function DialogCreateProject({ form, onSubmit }: ProjectsParams) {
   const [isOpen, { open, close, toggle }] = useDisclosure();
