@@ -7,7 +7,7 @@
     "build": "next build --turbopack",
     "start": "next start",
     "lint": "eslint",
-    "gen:types": "npx supabase gen types typescript zlumbmmxvgdtmfrtauoy ./types/database.ts"
+    "gen:types": "npx supabase gen types typescript zlumbmmxvgdtmfrtauoy > ./types/database.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

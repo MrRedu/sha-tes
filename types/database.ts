@@ -14,6 +14,51 @@ export type Database = {
   };
   public: {
     Tables: {
+      tbl_notebooks: {
+        Row: {
+          created_at: string;
+          creator_id: string;
+          description: string | null;
+          id: string;
+          name: string;
+          project_id: string;
+          updated_at: string;
+        };
+        Insert: {
+          created_at?: string;
+          creator_id: string;
+          description?: string | null;
+          id?: string;
+          name: string;
+          project_id: string;
+          updated_at?: string;
+        };
+        Update: {
+          created_at?: string;
+          creator_id?: string;
+          description?: string | null;
+          id?: string;
+          name?: string;
+          project_id?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'tbl_notebooks_creator_id_fkey';
+            columns: ['creator_id'];
+            isOneToOne: false;
+            referencedRelation: 'tbl_users';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'tbl_notebooks_project_id_fkey';
+            columns: ['project_id'];
+            isOneToOne: false;
+            referencedRelation: 'tbl_projects';
+            referencedColumns: ['id'];
+          }
+        ];
+      };
       tbl_project_members: {
         Row: {
           created_at: string | null;
@@ -120,7 +165,43 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
-      [_ in never]: never;
+      get_pending_projects: {
+        Args: never;
+        Returns: {
+          owner_full_name: string;
+          owner_id: string;
+          project_description: string;
+          project_id: string;
+          project_name: string;
+        }[];
+      };
+      get_project_details: {
+        Args: { project_id_input: string };
+        Returns: {
+          created_at: string;
+          description: string | null;
+          id: string;
+          join_code: string;
+          name: string;
+          owner_id: string;
+          updated_at: string;
+        }[];
+        SetofOptions: {
+          from: '*';
+          to: 'tbl_projects';
+          isOneToOne: false;
+          isSetofReturn: true;
+        };
+      };
+      is_project_member: {
+        Args: { project_id_input: string; user_id_input: string };
+        Returns: boolean;
+      };
+      is_project_pending: {
+        Args: { project_id_input: string; user_id_input: string };
+        Returns: boolean;
+      };
+      request_join_project: { Args: { code_input: string }; Returns: Json };
     };
     Enums: {
       [_ in never]: never;
