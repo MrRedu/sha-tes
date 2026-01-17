@@ -1,68 +1,92 @@
 'use client';
 
-import { type LucideIcon } from 'lucide-react';
+import { ChevronRight, type LucideIcon } from 'lucide-react';
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from '@/components/ui/collapsible';
 import {
   SidebarGroup,
-  SidebarGroupContent,
   SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  useSidebar,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
 } from '@/components/ui/sidebar';
-
 import Link from 'next/link';
-import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
 
 export function NavMain({
   items,
+  label,
 }: {
   items: {
     title: string;
     url: string;
     icon?: LucideIcon;
+    isActive?: boolean;
+    items?: {
+      title: string;
+      url: string;
+    }[];
   }[];
+  label?: string;
 }) {
-  const { open: isSidebarOpen, isMobile } = useSidebar();
-
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>General</SidebarGroupLabel>
-      <SidebarGroupContent>
-        <SidebarMenu>
-          {items.map((item) => {
-            if (!isSidebarOpen && !isMobile) {
-              return (
-                <Tooltip key={item.title}>
-                  <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild>
-                      <TooltipTrigger asChild>
-                        <Link href={item.url}>
-                          <item.icon className="size-4 " />
-                        </Link>
-                      </TooltipTrigger>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                  <TooltipContent side="right">
-                    <p>{item.title}</p>
-                  </TooltipContent>
-                </Tooltip>
-              );
-            }
+      {label && <SidebarGroupLabel>{label}</SidebarGroupLabel>}
+      <SidebarMenu>
+        {items.map((item) => {
+          const hasItems = item.items && item.items.length > 0;
 
+          if (!hasItems) {
             return (
               <SidebarMenuItem key={item.title}>
-                <SidebarMenuButton asChild>
+                <SidebarMenuButton asChild tooltip={item.title}>
                   <Link href={item.url}>
-                    <item.icon className="size-4 mr-2" />
+                    {item.icon && <item.icon />}
                     <span>{item.title}</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             );
-          })}
-        </SidebarMenu>
-      </SidebarGroupContent>
+          }
+
+          return (
+            <Collapsible
+              key={item.title}
+              asChild
+              defaultOpen={item.isActive}
+              className="group/collapsible"
+            >
+              <SidebarMenuItem>
+                <CollapsibleTrigger asChild>
+                  <SidebarMenuButton tooltip={item.title}>
+                    {item.icon && <item.icon />}
+                    <span>{item.title}</span>
+                    <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+                  </SidebarMenuButton>
+                </CollapsibleTrigger>
+                <CollapsibleContent>
+                  <SidebarMenuSub>
+                    {item.items?.map((subItem) => (
+                      <SidebarMenuSubItem key={subItem.title}>
+                        <SidebarMenuSubButton asChild>
+                          <Link href={subItem.url}>
+                            <span>{subItem.title}</span>
+                          </Link>
+                        </SidebarMenuSubButton>
+                      </SidebarMenuSubItem>
+                    ))}
+                  </SidebarMenuSub>
+                </CollapsibleContent>
+              </SidebarMenuItem>
+            </Collapsible>
+          );
+        })}
+      </SidebarMenu>
     </SidebarGroup>
   );
 }
