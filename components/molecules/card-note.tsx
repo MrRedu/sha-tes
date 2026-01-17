@@ -38,7 +38,7 @@ export const CardNote = ({
   return (
     <Card
       className={`h-full transition-all ${note.is_completed ? 'opacity-60' : ''}`}
-      style={{ backgroundColor: note.color }}
+      style={{ backgroundColor: note.color  }}
     >
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between gap-2">
