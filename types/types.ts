@@ -43,6 +43,17 @@ export type RpcPendingProject = {
 
 export type Notebook = Database['public']['Tables']['tbl_notebooks']['Row'];
 
+// Note
+export type Note = Database['public']['Tables']['tbl_notes']['Row'];
+export type NotebookWithNotes = Notebook & {
+  notes: Note[];
+  creator: {
+    id: string;
+    full_name: string;
+    avatar_url: string;
+  };
+};
+
 // Project
 export type Project = Database['public']['Tables']['tbl_projects']['Row'];
 export type ProjectWithMembersAndNotebooks = Project & {
