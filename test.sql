@@ -1,6 +1,18 @@
 -- WARNING: This schema is for context only and is not meant to be run.
 -- Table order and constraints may not be valid for execution.
 
+CREATE TABLE public.tbl_notebooks (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  project_id uuid NOT NULL,
+  creator_id uuid NOT NULL,
+  name text NOT NULL,
+  description text,
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  updated_at timestamp with time zone NOT NULL DEFAULT now(),
+  CONSTRAINT tbl_notebooks_pkey PRIMARY KEY (id),
+  CONSTRAINT tbl_notebooks_project_id_fkey FOREIGN KEY (project_id) REFERENCES public.tbl_projects(id),
+  CONSTRAINT tbl_notebooks_creator_id_fkey FOREIGN KEY (creator_id) REFERENCES public.tbl_users(id)
+);
 CREATE TABLE public.tbl_project_members (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
   project_id uuid NOT NULL,
@@ -9,7 +21,7 @@ CREATE TABLE public.tbl_project_members (
   created_at timestamp with time zone DEFAULT now(),
   CONSTRAINT tbl_project_members_pkey PRIMARY KEY (id),
   CONSTRAINT tbl_project_members_project_id_fkey FOREIGN KEY (project_id) REFERENCES public.tbl_projects(id),
-  CONSTRAINT tbl_project_members_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id)
+  CONSTRAINT tbl_project_members_user_id_fkey1 FOREIGN KEY (user_id) REFERENCES public.tbl_users(id)
 );
 CREATE TABLE public.tbl_projects (
   id uuid NOT NULL DEFAULT gen_random_uuid(),

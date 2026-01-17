@@ -6,7 +6,7 @@ import {
   // CTA,
   Footer,
   Pricing,
-} from '@/components/landing';
+} from '@/app/_components';
 
 export default function Home() {
   return (

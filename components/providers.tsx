@@ -9,9 +9,10 @@ import { ThemeProvider as NextThemesProvider } from 'next-themes';
 
 interface ProvidersProps {
   children: React.ReactNode;
+  sidebarIsOpen?: boolean;
 }
 
-export const Providers = ({ children }: ProvidersProps) => {
+export const Providers = ({ children, sidebarIsOpen }: ProvidersProps) => {
   return (
     <>
       <AuthProvider>
@@ -21,7 +22,7 @@ export const Providers = ({ children }: ProvidersProps) => {
           enableSystem
           disableTransitionOnChange
         >
-          <SidebarProvider defaultOpen={false}>
+          <SidebarProvider defaultOpen={sidebarIsOpen}>
             <>{children}</>
           </SidebarProvider>
         </NextThemesProvider>

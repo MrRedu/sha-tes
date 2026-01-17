@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link';
-import { Button } from '../ui/button';
-import { useAuth } from '../auth/AuthProvider';
+import { Button } from '../../components/ui/button';
+import { useAuth } from '../../components/auth/AuthProvider';
 
 export const HeaderActions = () => {
   const { user } = useAuth();

@@ -1,4 +1,4 @@
-import { Timeline } from '../molecules/timeline';
+import { Timeline } from '../../components/molecules/timeline';
 
 const timelineData = [
   {

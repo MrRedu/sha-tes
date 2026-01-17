@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server';
 import { Project } from '@/components/organisms/project';
+import { BreadcrumbRegistry } from '@/context/breadcrumb-context';
 
 interface ProjectPageProps {
   params: { projectId: string };
@@ -28,7 +29,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
       created_at,
       creator:creator_id ( id, full_name, avatar_url )
     )
-  `
+  `,
     )
     .eq('id', projectId)
     .single();
@@ -47,5 +48,10 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
     );
   }
 
-  return <Project _project={project} userId={userId} />;
+  return (
+    <>
+      <BreadcrumbRegistry id={project.id} label={project.name} />
+      <Project _project={project} userId={userId} />
+    </>
+  );
 }

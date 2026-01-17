@@ -75,6 +75,8 @@ export const Project = ({ userId, _project }: ProjectProps) => {
         {notebooks.map((notebook) => (
           <CardNotebook
             key={notebook.id}
+            projectId={project.id}
+            notebookId={notebook.id}
             name={notebook.name}
             description={notebook.description}
           />
