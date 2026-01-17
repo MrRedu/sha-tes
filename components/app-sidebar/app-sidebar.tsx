@@ -10,7 +10,6 @@ import {
 } from '@/components/ui/sidebar';
 
 import { NavUser } from './nav-user';
-import { ProjectSwitcher } from './project-switcher';
 import { NavMain } from './nav-main';
 import { useAuth } from '../auth/AuthProvider';
 import { useEffect, useState } from 'react';
@@ -92,10 +91,8 @@ export function AppSidebar() {
       <SidebarContent className="flex flex-col gap-0 overflow-hidden">
         <NavMain items={navGeneral} label="General" />
 
-        <ScrollArea className="flex-1 px-1 ">
-          <div className="max-h-[300px]">
-            <NavMain items={navProjects} label="Proyectos" />
-          </div>
+        <ScrollArea className="flex-1 px-1 max-h-[calc(50vh)] p-0">
+          <NavMain items={navProjects} label="Proyectos" />
         </ScrollArea>
       </SidebarContent>
 

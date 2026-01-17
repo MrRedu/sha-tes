@@ -1,18 +1,26 @@
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
+import { Architects_Daughter } from 'next/font/google';
 import './globals.css';
 import { Providers } from '@/components/providers';
 import { cookies } from 'next/headers';
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
+const architectsDaughter = Architects_Daughter({
+  variable: '--font-architects-daughter',
+  weight: ['400'],
   subsets: ['latin'],
 });
 
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin'],
-});
+// const timesNewRoman = Times_New_Roman({
+//   variable: '--font-times-new-roman',
+//   weight: ['400'],
+//   subsets: ['latin'],
+// });
+
+// const courierNew = Courier_New({
+//   variable: '--font-courier-new',
+//   weight: ['400'],
+//   subsets: ['latin'],
+// });
 
 export const metadata: Metadata = {
   title: 'ShaTes',
@@ -29,9 +37,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={`${architectsDaughter.variable} antialiased`}>
         <Providers sidebarIsOpen={defaultOpen}>{children}</Providers>
       </body>
     </html>
