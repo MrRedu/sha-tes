@@ -61,9 +61,9 @@ export const Notebook = ({ userId, projectId, _notebook }: NotebookProps) => {
     formUpdateNote.reset({
       title: note.title || '',
       content: note.content,
-      color: note.color,
+      color: note.color || '#ffffff',
       priority: note.priority as 'low' | 'normal' | 'high' | 'urgent',
-      is_completed: note.is_completed,
+      is_completed: note.is_completed || false,
     });
   };
 
