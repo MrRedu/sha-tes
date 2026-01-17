@@ -24,6 +24,8 @@ import { PlusIcon } from 'lucide-react';
 import { useDisclosure } from '@/hooks/use-disclosure';
 
 interface ProjectsParams {
+  // TODO: fix types
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   form: any;
   onSubmit: () => void;
 }

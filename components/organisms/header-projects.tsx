@@ -11,6 +11,7 @@ interface HeaderProjectsProps {
   layout: 'grid' | 'list';
   handleLayout: (layout: 'grid' | 'list') => void;
   // TODO
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   form: any;
   onSubmit: () => void;
 }

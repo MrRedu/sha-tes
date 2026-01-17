@@ -12,8 +12,16 @@ import {
 } from '@/components/ui/empty';
 import { DialogCreateProject } from './dialog-create-project';
 import { DialogJoinProject } from './dialog-join-project';
+import Link from 'next/link';
 
-export function EmptyProjects({ form, onSubmit }: any) {
+interface EmptyProjectsProps {
+  // TODO: fix types
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  form: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  onSubmit: any;
+}
+export function EmptyProjects({ form, onSubmit }: EmptyProjectsProps) {
   return (
     <Empty className="w-full  min-h-[calc(100svh-6rem)]">
       <EmptyHeader>
@@ -38,9 +46,9 @@ export function EmptyProjects({ form, onSubmit }: any) {
         className="text-muted-foreground"
         size="sm"
       >
-        <a href="#">
+        <Link href="#">
           Learn More <ArrowUpRightIcon />
-        </a>
+        </Link>
       </Button>
     </Empty>
   );
