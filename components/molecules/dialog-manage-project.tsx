@@ -24,7 +24,10 @@ import { Input } from '../ui/input';
 import { Textarea } from '../ui/textarea';
 
 interface DialogManageProjectProps {
+  // TODO: fix types
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   form: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onSubmit: any;
 }
 

@@ -15,7 +15,6 @@ import { formatCode } from '@/lib/utils';
 import { Typography } from '../ui/typography';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import type { Members } from '@/types/types';
-import { Badge } from '../ui/badge';
 import { WithBadge } from '../atoms/with-badge';
 import { useDisclosure } from '@/hooks/use-disclosure';
 

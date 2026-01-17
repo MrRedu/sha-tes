@@ -59,6 +59,73 @@ export type Database = {
           },
         ];
       };
+      tbl_notes: {
+        Row: {
+          color: string | null;
+          content: string;
+          created_at: string;
+          creator_id: string;
+          id: string;
+          is_completed: boolean | null;
+          last_edited_by: string | null;
+          notebook_id: string;
+          position: number | null;
+          priority: string | null;
+          title: string | null;
+          updated_at: string;
+        };
+        Insert: {
+          color?: string | null;
+          content: string;
+          created_at?: string;
+          creator_id: string;
+          id?: string;
+          is_completed?: boolean | null;
+          last_edited_by?: string | null;
+          notebook_id: string;
+          position?: number | null;
+          priority?: string | null;
+          title?: string | null;
+          updated_at?: string;
+        };
+        Update: {
+          color?: string | null;
+          content?: string;
+          created_at?: string;
+          creator_id?: string;
+          id?: string;
+          is_completed?: boolean | null;
+          last_edited_by?: string | null;
+          notebook_id?: string;
+          position?: number | null;
+          priority?: string | null;
+          title?: string | null;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'tbl_notes_creator_id_fkey';
+            columns: ['creator_id'];
+            isOneToOne: false;
+            referencedRelation: 'tbl_users';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'tbl_notes_last_edited_by_fkey';
+            columns: ['last_edited_by'];
+            isOneToOne: false;
+            referencedRelation: 'tbl_users';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'tbl_notes_notebook_id_fkey';
+            columns: ['notebook_id'];
+            isOneToOne: false;
+            referencedRelation: 'tbl_notebooks';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       tbl_project_members: {
         Row: {
           created_at: string | null;

@@ -50,7 +50,10 @@ const TriggerUI = ({
 };
 
 interface DialogCreateNotebookProps {
+  // TODO: fix types
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   form: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onSubmit: () => void;
 }
 
