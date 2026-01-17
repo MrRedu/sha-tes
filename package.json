@@ -7,6 +7,8 @@
     "build": "next build --turbopack",
     "start": "next start",
     "lint": "eslint",
+    "lint:fix": "eslint --fix",
+    "type-check": "tsc --noEmit",
     "gen:types": "npx supabase gen types typescript zlumbmmxvgdtmfrtauoy > ./types/database.ts"
   },
   "dependencies": {
