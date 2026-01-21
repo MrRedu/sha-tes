@@ -27,19 +27,19 @@ interface HeroProps {
 export function Hero({
   badge = '✨ Colaboración sin límites',
   heading = 'Comparte tus notas al instante',
-  description = 'NotesShare te permite compartir notas con un simple código. Colabora en tiempo real, sincroniza cambios automáticamente y controla quién accede a tus notas.',
+  description = 'ShaTes es la forma más sencilla de compartir notas y colaborar en tiempo real. Genera un código único, compártelo y empieza a trabajar con tu equipo al instante.',
   buttons = {
     primary: {
       text: 'Empieza gratis',
-      url: '#',
+      url: '/login',
     },
     secondary: {
-      text: 'Ver demo',
-      url: '#',
+      text: 'Ver características',
+      url: '#features',
     },
   },
   image = {
-    src: 'https://deifkwefumgah.cloudfront.net/shadcnblocks/block/placeholder-1.svg',
+    src: '/sha-tes.svg',
     alt: 'Hero section demo image showing interface components',
   },
 }: HeroProps) {
@@ -54,7 +54,7 @@ export function Hero({
                 <ArrowUpRight className="ml-2 size-4" />
               </Badge>
             )}
-            <h1 className="my-6 text-pretty text-4xl font-bold lg:text-6xl">
+            <h1 className="my-6 text-balance text-4xl font-bold lg:text-6xl">
               {heading}
             </h1>
             <p className="text-muted-foreground mb-8 max-w-xl lg:text-xl">
@@ -81,7 +81,7 @@ export function Hero({
             alt={image.alt}
             width={500}
             height={500}
-            className="max-h-96 w-full rounded-md object-cover"
+            className="max-h-96 w-full rounded-md bg-secondary"
           />
         </div>
       </div>

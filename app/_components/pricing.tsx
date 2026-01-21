@@ -38,41 +38,42 @@ interface PricingProps {
 }
 
 export function Pricing({
-  heading = 'Pricing',
-  description = 'Check out our affordable pricing plans',
+  heading = 'Planes de Precios',
+  description = 'Elige el plan que mejor se adapte a tus necesidades de colaboración',
   plans = [
     {
-      id: 'plus',
-      name: 'Plus',
-      description: 'For personal use',
-      monthlyPrice: '$19',
-      yearlyPrice: '$179',
+      id: 'free',
+      name: 'Gratis',
+      description: 'Ideal para uso personal y pequeños proyectos',
+      monthlyPrice: '$0',
+      yearlyPrice: '$0',
       features: [
-        { text: 'Up to 5 team members' },
-        { text: 'Basic components library' },
-        { text: 'Community support' },
-        { text: '1GB storage space' },
+        { text: 'Hasta 5 notebooks' },
+        { text: 'Notas ilimitadas' },
+        { text: 'Códigos de acceso temporales' },
+        { text: 'Sincronización básica' },
       ],
       button: {
-        text: 'Purchase',
-        url: '#',
+        text: 'Empezar ya',
+        url: '/login',
       },
     },
     {
       id: 'pro',
       name: 'Pro',
-      description: 'For professionals',
-      monthlyPrice: '$49',
-      yearlyPrice: '$359',
+      description: 'Para profesionales y equipos colaborativos',
+      monthlyPrice: '$12',
+      yearlyPrice: '$99',
       features: [
-        { text: 'Unlimited team members' },
-        { text: 'Advanced components' },
-        { text: 'Priority support' },
-        { text: 'Unlimited storage' },
+        { text: 'Notebooks ilimitados' },
+        { text: 'Códigos personalizados' },
+        { text: 'Historial de versiones' },
+        { text: 'Soporte prioritario' },
+        { text: 'Exportación avanzada (PDF/MD)' },
       ],
       button: {
-        text: 'Purchase',
-        url: '#',
+        text: 'Obtener Pro',
+        url: '/login',
       },
     },
   ],
@@ -88,12 +89,12 @@ export function Pricing({
           </h2>
           <p className="text-muted-foreground lg:text-xl">{description}</p>
           <div className="flex items-center gap-3 text-lg">
-            Monthly
+            Mensual
             <Switch
               checked={isYearly}
               onCheckedChange={() => setIsYearly(!isYearly)}
             />
-            Yearly
+            Anual
           </div>
           <div className="flex flex-col items-stretch gap-6 md:flex-row">
             {plans.map((plan) => (
@@ -121,7 +122,7 @@ export function Pricing({
                   <Separator className="mb-6" />
                   {plan.id === 'pro' && (
                     <p className="mb-3 font-semibold">
-                      Everything in Plus, and:
+                      Todo lo de Gratis, más:
                     </p>
                   )}
                   <ul className="space-y-4">
@@ -138,9 +139,7 @@ export function Pricing({
                 </CardContent>
                 <CardFooter className="mt-auto">
                   <Button asChild className="w-full">
-                    <a href={plan.button.url} target="_blank">
-                      {plan.button.text}
-                    </a>
+                    <a href={plan.button.url}>{plan.button.text}</a>
                   </Button>
                 </CardFooter>
               </Card>

@@ -26,41 +26,38 @@ interface FooterProps {
 
 export function Footer({
   logo = {
-    src: 'https://deifkwefumgah.cloudfront.net/shadcnblocks/block/block-1.svg',
-    alt: '',
-    title: 'sha-tes.com',
-    url: '#',
+    src: '/sha-tes.svg',
+    alt: 'ShaTes Logo',
+    title: 'ShaTes',
+    url: '/',
   },
-  tagline = 'Components made easy.',
+  tagline = 'Comparte con un solo clic.',
   menuItems = [
     {
-      title: 'Product',
+      title: 'Producto',
       links: [
-        { text: 'Overview', url: '#' },
-        { text: 'Pricing', url: '#' },
-        { text: 'Marketplace', url: '#' },
-        { text: 'Features', url: '#' },
-        { text: 'Integrations', url: '#' },
-        { text: 'Pricing', url: '#' },
+        { text: 'Características', url: '#features' },
+        { text: 'Cómo funciona', url: '#how-it-works' },
+        { text: 'Precios', url: '#pricing' },
+        { text: 'API', url: '#' },
       ],
     },
     {
-      title: 'Company',
+      title: 'Compañía',
       links: [
-        { text: 'About', url: '#' },
-        { text: 'Team', url: '#' },
+        { text: 'Sobre nosotros', url: '#' },
         { text: 'Blog', url: '#' },
-        { text: 'Careers', url: '#' },
-        { text: 'Contact', url: '#' },
-        { text: 'Privacy', url: '#' },
+        { text: 'Carreras', url: '#' },
+        { text: 'Contacto', url: '#' },
       ],
     },
     {
-      title: 'Resources',
+      title: 'Recursos',
       links: [
-        { text: 'Help', url: '#' },
-        { text: 'Sales', url: '#' },
-        { text: 'Advertise', url: '#' },
+        { text: 'Ayuda', url: '#' },
+        { text: 'Comunidad', url: '#' },
+        { text: 'Privacidad', url: '#' },
+        { text: 'Términos', url: '#' },
       ],
     },
     {
@@ -72,10 +69,10 @@ export function Footer({
       ],
     },
   ],
-  copyright = '© 2025 sha-tes.com. All rights reserved.',
+  copyright = `© ${new Date().getFullYear()} ShaTes. Todos los derechos reservados.`,
   bottomLinks = [
-    { text: 'Terms and Conditions', url: '#' },
-    { text: 'Privacy Policy', url: '#' },
+    { text: 'Términos y Condiciones', url: '#' },
+    { text: 'Política de Privacidad', url: '#' },
   ],
 }: FooterProps) {
   return (
@@ -85,18 +82,9 @@ export function Footer({
           <div className="grid grid-cols-2 gap-8 lg:grid-cols-6">
             <div className="col-span-2 mb-8 lg:mb-0">
               <div className="flex items-center gap-2 lg:justify-start">
-                {/* <Logo url="https://shadcnblocks.com">
-                  <LogoImage
-                    src={logo.src}
-                    alt={logo.alt}
-                    title={logo.title}
-                    className="h-10 dark:invert"
-                  />
-                  <LogoText className="text-xl">{logo.title}</LogoText>
-                </Logo> */}
                 <Image src={logo.src} alt={logo.alt} width={100} height={100} />
               </div>
-              <p className="mt-4 font-bold">{tagline}</p>
+              <p className="mt-4 font-bold text-balance">{tagline}</p>
             </div>
             {menuItems.map((section, sectionIdx) => (
               <div key={sectionIdx}>
