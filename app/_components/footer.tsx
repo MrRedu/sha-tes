@@ -79,7 +79,7 @@ export function Footer({
   ],
 }: FooterProps) {
   return (
-    <section className="py-32 w-full">
+    <section className="py-32 w-full px-4 sm:px-6 lg:px-8">
       <div className="container mx-auto">
         <footer>
           <div className="grid grid-cols-2 gap-8 lg:grid-cols-6">

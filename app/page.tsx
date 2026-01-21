@@ -10,14 +10,16 @@ import {
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-background text-foreground mx-auto flex flex-col items-center w-full">
+    <div className="min-h-screen bg-background text-foreground mx-auto flex flex-col items-center w-full ">
       <Header />
-      <Hero />
-      <Features />
-      <HowItWorks />
-      <Pricing />
-      {/* <CTA /> */}
+      <main className="flex flex-1 flex-col items-center justify-center w-full px-4 sm:px-6 lg:px-8">
+        <Hero />
+        <Features />
+        <HowItWorks />
+        <Pricing />
+        {/* <CTA /> */}
+      </main>
       <Footer />
-    </main>
+    </div>
   );
 }
