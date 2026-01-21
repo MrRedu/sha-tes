@@ -14,8 +14,9 @@ export const AvatarGroup = ({ members }: AvatarGroupProps) => {
             <AvatarImage
               src={profile.avatar_url || ''}
               alt={profile.full_name}
+              title={profile.full_name}
             />
-            <AvatarFallback>
+            <AvatarFallback title={profile.full_name}>
               {profile.full_name.slice(0, 2).toUpperCase() || 'N'}
             </AvatarFallback>
           </Avatar>

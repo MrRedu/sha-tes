@@ -25,10 +25,13 @@ export const CardNotebook = ({
     <Link
       href={`/dashboard/projects/${projectId}/notebooks/${notebookId}`}
       className="block h-full transition-transform hover:scale-105"
+      // title={name}
     >
       <Card className="h-full gap-0 cursor-pointer hover:shadow-lg transition-shadow">
-        <CardHeader>
-          <Typography variant="large">{name}</Typography>
+        <CardHeader className="pb-0">
+          <Typography variant="large" className="line-clamp-2">
+            {name}
+          </Typography>
         </CardHeader>
         {description && (
           <CardContent>

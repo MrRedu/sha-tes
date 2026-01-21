@@ -10,8 +10,11 @@ import { DialogCreateNotebook } from '../molecules/dialog-create-notebook';
 import { DialogManageProject } from '../molecules/dialog-manage-project';
 import { CardNotebook } from '../molecules/card-notebook';
 import { EmptyNotebooks } from './empty-notebooks';
-import Link from 'next/link';
-import { ArrowLeft } from 'lucide-react';
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from '../ui/hover-card';
 
 export interface ProjectProps {
   userId: User['id'];
@@ -47,15 +50,30 @@ export const Project = ({ userId, _project }: ProjectProps) => {
   });
 
   return (
-    <>
-      <div className="w-full flex items-center justify-between mb-4 flex-col md:flex-row gap-4">
-        <div className="flex gap-2 items-center">
-          <Typography variant="h1" className="text-2xl!">
-            {projectName}
-          </Typography>
+    <section className="space-y-4">
+      <div className="w-full flex items-center md:justify-between flex-col md:flex-row gap-4">
+        <div className="flex gap-2 items-center w-full justify-start">
+          <HoverCard openDelay={10} closeDelay={100}>
+            <HoverCardTrigger>
+              <Typography variant="h1" className="text-2xl!">
+                {projectName}
+              </Typography>
+            </HoverCardTrigger>
+            {projectDescription && (
+              <HoverCardContent side="bottom" align="start">
+                <Typography
+                  variant="p"
+                  className="text-sm leading-relaxed text-muted-foreground mt-0! text-pretty"
+                >
+                  {projectDescription}
+                </Typography>
+              </HoverCardContent>
+            )}
+          </HoverCard>
           <AvatarGroup members={currentMembers} />
         </div>
-        <div className="flex gap-2">
+
+        <div className="flex gap-2 w-full justify-end">
           <DialogManageProject
             form={formEditProject}
             onSubmit={onSubmitEditProject}
@@ -102,6 +120,6 @@ export const Project = ({ userId, _project }: ProjectProps) => {
         </div>
       )}
       {/* <pre>{JSON.stringify(_project, null, 2)}</pre> */}
-    </>
+    </section>
   );
 };

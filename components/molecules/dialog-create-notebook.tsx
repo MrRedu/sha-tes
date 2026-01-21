@@ -33,18 +33,18 @@ const TriggerUI = ({
 }) => {
   return (
     <Card
-      className="cursor-pointer opacity-50 border-dashed border-2 hover:opacity-100 transition-opacity duration-300 ease-in-out"
+      className="cursor-pointer opacity-50 border-dashed border-2 hover:opacity-100 transition-opacity duration-300 ease-in-out gap-0 h-full"
       onClick={handleOpen}
     >
       <CardHeader className="text-center">
         <Typography variant="large">Crear Notebook</Typography>
       </CardHeader>
       <CardContent className="flex items-center justify-center">
-        <FilePlusCorner size={48} />
+        <FilePlusCorner size={32} />
       </CardContent>
-      <CardFooter className="flex items-center justify-center text-center">
+      {/* <CardFooter className="flex items-center justify-center text-center">
         <Typography variant="muted">Crea un nuevo notebook</Typography>
-      </CardFooter>
+      </CardFooter> */}
     </Card>
   );
 };
@@ -71,7 +71,7 @@ export const DialogCreateNotebook = ({
   return (
     <Dialog open={isOpen} onOpenChange={toggle}>
       <Form {...form}>
-        <form onSubmit={onSubmit}>
+        <form onSubmit={onSubmit} className="w-full max-w-xs">
           <DialogTrigger asChild>
             <TriggerUI handleOpen={open} />
           </DialogTrigger>

@@ -10,7 +10,7 @@ import { CardNote } from '../molecules/card-note';
 import { DialogCreateNote } from '../molecules/dialog-create-note';
 import { DialogEditNote } from '../molecules/dialog-edit-note';
 import { Button } from '../ui/button';
-import { ArrowLeft, GripVertical } from 'lucide-react';
+import {  ChevronLeft, GripVertical } from 'lucide-react';
 import Link from 'next/link';
 import {
   AlertDialog,
@@ -30,6 +30,11 @@ import {
 } from '@hello-pangea/dnd';
 import { createClient } from '@/lib/supabase/client';
 import { toast } from 'sonner';
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from '../ui/hover-card';
 
 export interface NotebookProps {
   userId: User['id'];
@@ -112,24 +117,35 @@ export const Notebook = ({ userId, projectId, _notebook }: NotebookProps) => {
   };
 
   return (
-    <>
-      <div className="w-full flex items-center justify-between mb-6 flex-col md:flex-row gap-4">
+    <section className="space-y-4">
+      <div className="w-full flex items-center justify-between flex-col md:flex-row gap-4">
         <div className="flex items-center gap-4">
-          <Link href={`/dashboard/projects/${projectId}`}>
+          <Link
+            href={`/dashboard/projects/${projectId}`}
+            title="Back to project"
+          >
             <Button variant="ghost" size="icon">
-              <ArrowLeft className="h-5 w-5" />
+              <ChevronLeft />
             </Button>
           </Link>
-          <div>
-            <div className="flex items-center gap-2">
-              <Typography variant="h3">{notebook.name}</Typography>
-            </div>
-            {notebook.description && (
-              <Typography variant="muted" className="mt-1">
-                {notebook.description}
+
+          <HoverCard openDelay={10} closeDelay={100}>
+            <HoverCardTrigger>
+              <Typography variant="h1" className="text-2xl!">
+                {notebook.name}
               </Typography>
+            </HoverCardTrigger>
+            {notebook.description && (
+              <HoverCardContent side="bottom" align="start">
+                <Typography
+                  variant="p"
+                  className="text-sm leading-relaxed text-muted-foreground mt-0! text-pretty"
+                >
+                  {notebook.description}
+                </Typography>
+              </HoverCardContent>
             )}
-          </div>
+          </HoverCard>
         </div>
         <div className="flex items-center gap-2">
           <Typography variant="small" className="text-muted-foreground ml-2">
@@ -218,6 +234,6 @@ export const Notebook = ({ userId, projectId, _notebook }: NotebookProps) => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </>
+    </section>
   );
 };
