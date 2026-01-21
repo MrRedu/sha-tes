@@ -9,7 +9,8 @@ import type { ProjectWithMembersAndNotebooks, User } from '@/types/types';
 import { DialogCreateNotebook } from '../molecules/dialog-create-notebook';
 import { DialogManageProject } from '../molecules/dialog-manage-project';
 import { CardNotebook } from '../molecules/card-notebook';
-import { EmptyNotebooks } from './empty-notebooks';
+import { EmptyState } from './empty-state';
+import { FilePlusCorner } from 'lucide-react';
 import {
   HoverCard,
   HoverCardContent,
@@ -50,7 +51,7 @@ export const Project = ({ userId, _project }: ProjectProps) => {
   });
 
   return (
-    <section className="space-y-4">
+    <section className="space-y-4 p-4 md:p-6">
       <div className="w-full flex items-center md:justify-between flex-col md:flex-row gap-4">
         <div className="flex gap-2 items-center w-full justify-start">
           <HoverCard openDelay={10} closeDelay={100}>
@@ -96,9 +97,16 @@ export const Project = ({ userId, _project }: ProjectProps) => {
       </div>
       {notebooks?.length === 0 && (
         <section className="w-full flex items-center justify-center min-h-[calc(100vh-200px)]">
-          <EmptyNotebooks
-            form={formCreateNotebook}
-            onSubmit={onSubmitCreateNotebook}
+          <EmptyState
+            icon={FilePlusCorner}
+            title="Sin notebooks aún"
+            description="No has creado ningún notebook dentro de tu proyecto. Comienza creando tu primer notebook."
+            action={
+              <DialogCreateNotebook
+                form={formCreateNotebook}
+                onSubmit={onSubmitCreateNotebook}
+              />
+            }
           />
         </section>
       )}

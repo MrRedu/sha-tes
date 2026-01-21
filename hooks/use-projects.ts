@@ -86,7 +86,6 @@ export function useProjects({ _projects = [] }: useProjectsParams = {}) {
 export function useProject({ _project }: useProjectParams) {
   const { user } = useAuth();
   const supabase = createClient();
-
   const projectId = _project?.id;
 
   const [project, setProject] = useState(_project);

@@ -2,6 +2,11 @@ import { createClient } from '@/lib/supabase/server';
 
 import { Projects } from '@/components/organisms/projects';
 import type { ProjectWithMembers } from '@/types/types';
+import { type Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Proyectos',
+};
 
 export default async function ProjectsPage() {
   const supabase = await createClient();
