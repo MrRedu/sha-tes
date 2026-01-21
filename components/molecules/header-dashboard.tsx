@@ -55,11 +55,13 @@ export const HeaderDashboard = () => {
             }
 
             return (
-              <div key={path} className="flex items-center gap-2">
-                <BreadcrumbSeparator className="hidden md:block" />
+              <div key={path} className="flex items-center">
+                <BreadcrumbSeparator className="hidden md:block [&>svg]:size-4" />
                 <BreadcrumbItem>
                   {isLast ? (
-                    <BreadcrumbPage>{label}</BreadcrumbPage>
+                    <BreadcrumbPage className="font-bold">
+                      {label}
+                    </BreadcrumbPage>
                   ) : (
                     <BreadcrumbLink asChild>
                       <Link href={path}>{label}</Link>

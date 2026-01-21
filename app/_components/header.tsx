@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { HeaderActions } from './header-actions';
 
 export function Header() {
@@ -13,24 +14,24 @@ export function Header() {
           </div>
 
           <nav className="hidden md:flex items-center gap-8">
-            <a
+            <Link
               href="#features"
               className="text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
               Características
-            </a>
-            <a
+            </Link>
+            <Link
               href="#how-it-works"
               className="text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
               ¿Cómo Funciona?
-            </a>
-            <a
+            </Link>
+            <Link
               href="#pricing"
               className="text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
               Precios
-            </a>
+            </Link>
           </nav>
 
           <div className="flex items-center gap-3">

@@ -23,19 +23,19 @@ export const HeaderProjects = ({
   onSubmit,
 }: HeaderProjectsProps) => {
   return (
-    <div className="w-full flex items-center justify-between mb-4 flex-col md:flex-row gap-4">
-      <div className="flex gap-2">
-        <div className="relative w-full max-w-sm">
+    <div className="w-full flex items-center justify-between flex-col md:flex-row gap-4">
+      <div className="flex gap-2 w-full">
+        <div className="relative w-full max-w-xs">
           <SearchIcon className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <Input placeholder="Buscar" type="search" className="pl-10 " />
+          <Input placeholder="Buscar" type="search" className="pl-10" />
         </div>
         <div className="flex items-center space-x-2">
           <Switch id="shared" />
           <Label htmlFor="shared">Compartidos</Label>
         </div>
       </div>
-      <div className="flex gap-2">
-        <ButtonGroup>
+      <div className="flex gap-2 flex-col md:flex-row w-full md:w-auto">
+        <ButtonGroup className="hidden md:flex">
           <Button
             type="button"
             onClick={() => handleLayout('list')}
@@ -55,8 +55,10 @@ export const HeaderProjects = ({
             <Grid3x3 />
           </Button>
         </ButtonGroup>
-        <DialogJoinProject />
-        <DialogCreateProject form={form} onSubmit={onSubmit} />
+        <div className="flex gap-2">
+          <DialogJoinProject />
+          <DialogCreateProject form={form} onSubmit={onSubmit} />
+        </div>
       </div>
     </div>
   );

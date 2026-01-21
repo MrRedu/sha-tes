@@ -15,7 +15,6 @@ import { useAuth } from '../auth/AuthProvider';
 import { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { Project, Notebook } from '@/types/types';
-import { ScrollArea } from '../ui/scroll-area';
 
 type SidebarProject = Pick<Project, 'id' | 'name'> & {
   notebooks: Pick<Notebook, 'id' | 'name'>[];
@@ -62,14 +61,14 @@ export function AppSidebar() {
     {
       title: 'Proyectos',
       url: '/dashboard/projects',
-      icon: FolderKanban,
+      icon: LayoutDashboard,
     },
   ];
 
   const navProjects = dynamicProjects.map((project) => ({
     title: project.name,
     url: `/dashboard/projects/${project.id}`,
-    icon: LayoutDashboard,
+    icon: FolderKanban,
     items: project.notebooks?.map((notebook) => ({
       title: notebook.name,
       url: `/dashboard/projects/${project.id}/notebooks/${notebook.id}`,
@@ -91,9 +90,9 @@ export function AppSidebar() {
       <SidebarContent className="flex flex-col gap-0 overflow-hidden">
         <NavMain items={navGeneral} label="General" />
 
-        <ScrollArea className="flex-1 px-1 max-h-[calc(50vh)] p-0">
-          <NavMain items={navProjects} label="Proyectos" />
-        </ScrollArea>
+        {/* <ScrollArea className="flex-1 px-1 max-h-[calc(50vh)] p-0"> */}
+        <NavMain items={navProjects} label="Proyectos" scrollable />
+        {/* </ScrollArea> */}
       </SidebarContent>
 
       <SidebarFooter>

@@ -6,9 +6,8 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function formatCode(code: string): string {
-  const upperCaseCode = code.toUpperCase();
-  const firstPart = upperCaseCode.slice(0, 4);
-  const secondPart = upperCaseCode.slice(4);
+  const firstPart = code.slice(0, 4);
+  const secondPart = code.slice(4);
 
   return `${firstPart}-${secondPart}`;
 }

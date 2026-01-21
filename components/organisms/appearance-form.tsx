@@ -106,9 +106,9 @@ export function AppearanceForm() {
               <RadioGroup
                 onValueChange={field.onChange}
                 defaultValue={field.value}
-                className="grid max-w-md grid-cols-2 gap-8 pt-2"
+                className="grid max-w-md lg:grid-cols-2 gap-8 pt-2"
               >
-                <FormItem>
+                <FormItem className="">
                   <FormLabel className="[&:has([data-state=checked])>div]:border-primary">
                     <FormControl>
                       <RadioGroupItem value="light" className="sr-only" />
@@ -129,7 +129,7 @@ export function AppearanceForm() {
                         </div>
                       </div>
                     </div>
-                    <span className="block w-full p-2 text-center font-normal">
+                    <span className="block w-full p-2 font-normal">
                       {/* Light */}
                       Claro
                     </span>
@@ -156,7 +156,7 @@ export function AppearanceForm() {
                         </div>
                       </div>
                     </div>
-                    <span className="block w-full p-2 text-center font-normal">
+                    <span className="block w-full p-2 font-normal">
                       {/* Dark */}
                       Oscuro
                     </span>

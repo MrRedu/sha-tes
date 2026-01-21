@@ -1,3 +1,5 @@
+import { cn } from '@/lib/utils';
+
 interface TimelineItem {
   id: string | number;
   date?: string;
@@ -47,52 +49,68 @@ export function Timeline({
 }: TimelineProps) {
   return (
     <div className="w-full">
-      {/* Timeline Container */}
-      <div className="relative">
-        {/* Line connecting all items */}
-        <div className="absolute top-2 left-0 right-0 h-0.5 bg-gray-300" />
+      <div className="flex flex-col md:flex-row md:justify-between">
+        {items.map((item, index) => {
+          const isLast = index === items.length - 1;
+          const isActive = index <= activeStep;
 
-        {/* Timeline Items */}
-        <div className="flex justify-between items-start relative z-10">
-          {items.map((item, index) => {
-            const isActive = index === activeStep;
+          return (
+            <div
+              key={item.id}
+              className={`relative flex flex-row md:flex-col ${
+                !isLast ? 'flex-1' : 'flex-none md:flex-1'
+              }`}
+            >
+              {/* Connector Line */}
+              {/* Vertical Line (Mobile) */}
+              <div
+                className={cn(
+                  'absolute left-[7px] top-[16px] bottom-0 w-[2px] bg-slate-200 md:hidden',
+                  isActive && 'bg-primary',
+                )}
+              />
+              {/* Horizontal Line (Desktop) */}
+              <div
+                className={cn(
+                  'hidden md:block absolute left-[16px] right-0 top-[7px] h-[2px] bg-slate-200',
+                  isActive && 'bg-primary',
+                )}
+              />
 
-            return (
-              <div key={item.id} className="flex flex-col flex-1">
+              {/* Dot & Content Wrapper */}
+              <div className="flex flex-row md:flex-col items-start w-full">
                 {/* Circle Marker */}
-                <div
-                  className={`w-4 h-4 rounded-full border-4 transition-all duration-300 ${
-                    isActive
-                      ? 'bg-white border-black scale-125'
-                      : 'bg-white border-gray-400 hover:border-gray-600'
-                  }`}
-                />
+                <div className="relative flex-shrink-0">
+                  <div
+                    className={`w-4 h-4 rounded-full border-2 transition-all duration-300 bg-white relative z-10 ${
+                      isActive ? 'border-black' : 'border-slate-300'
+                    }`}
+                  />
+                </div>
 
                 {/* Content */}
-                <div className="mt-8 pr-6">
+                <div className="ml-6 md:ml-0 md:mt-8 pb-10 md:pb-0 md:pr-10">
                   {/* Date */}
                   {item.date && (
-                    <p className="text-sm text-gray-500 mb-1">{item.date}</p>
+                    <p className="text-sm font-medium text-slate-400 mb-1">
+                      {item.date}
+                    </p>
                   )}
 
                   {/* Title */}
-                  <h3
-                    className={`text-lg font-bold  transition-colors ${
-                      isActive ? 'text-black' : 'text-gray-700'
-                    }`}
-                  >
+                  <h3 className="text-lg font-bold mb-2 transition-colors text-black">
                     {item.title}
                   </h3>
 
                   {/* Description */}
-                  <p className="text-sm text-gray-600 leading-relaxed max-w-xs text-balance">
+                  <p className="text-sm text-slate-600 leading-relaxed text-balance max-w-xs transition-colors">
                     {item.description}
                   </p>
                 </div>
               </div>
-            );
-          })}
-        </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

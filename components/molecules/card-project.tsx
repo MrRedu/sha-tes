@@ -24,13 +24,16 @@ export const CardProject = ({
   members,
 }: CardProjectProps) => {
   return (
-    <Link href={`/dashboard/projects/${id}`}>
-      <Card className="h-full">
+    <Link
+      href={`/dashboard/projects/${id}`}
+      className="block h-full transition-transform hover:scale-105"
+    >
+      <Card className="h-full gap-0 cursor-pointer hover:shadow-lg transition-shadow">
         <CardHeader>
           <Typography variant="large">{name}</Typography>
         </CardHeader>
         {description && (
-          <CardContent>
+          <CardContent className="mb-2">
             <CardDescription className="line-clamp-2">
               {description}
             </CardDescription>

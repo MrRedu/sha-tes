@@ -9,12 +9,7 @@ export const HeaderActions = () => {
   return (
     <>
       {user ? (
-        <Button
-          variant="outline"
-          size="sm"
-          className="hidden sm:inline-flex bg-transparent"
-          asChild
-        >
+        <Button variant="outline" size="sm" asChild>
           <Link href="/dashboard">Dashboard</Link>
         </Button>
       ) : (

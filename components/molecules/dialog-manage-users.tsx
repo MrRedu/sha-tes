@@ -75,7 +75,6 @@ const CurrentMembersList = ({
               <Button
                 variant="secondary"
                 size="icon"
-                className="hover:bg-red-400/50"
                 aria-label="Remove user"
                 onClick={() => onRemoveMember(member.id)}
               >

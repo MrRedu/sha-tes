@@ -7,7 +7,8 @@ import { EmptyProjects } from './empty-projects';
 import { HeaderProjects } from './header-projects';
 
 import type { ProjectWithMembers, RpcPendingProject } from '@/types/types';
-import { CardPendingProject } from '../molecules/card-pending-project';
+import { CardPendingProject } from '@/components/molecules/card-pending-project';
+import { Typography } from '@/components/ui/typography';
 
 interface ProjectsParams {
   _projects?: ProjectWithMembers[];
@@ -37,12 +38,20 @@ export const Projects = ({
         ))
       : null;
 
-  if (projects?.length === 0 && _pendingProjectsRequests?.length === 0)
-    return <EmptyProjects form={form} onSubmit={onSubmit} />;
-
+  if (projects?.length === 0 && _pendingProjectsRequests?.length === 0) {
+    return (
+      <section className="w-full min-h-[calc(100svh-6rem)]">
+        <EmptyProjects form={form} onSubmit={onSubmit} />
+      </section>
+    );
+  }
   return (
-    <div>
-      <h1 className="text-2xl font-semibold mb-4">Proyectos</h1>
+    <section className="space-y-4">
+      <div className="w-full flex items-center gap-4">
+        <Typography variant="h1" className="text-2xl!">
+          Proyectos
+        </Typography>
+      </div>
       {/* Header */}
       <HeaderProjects
         layout={layout}
@@ -53,19 +62,16 @@ export const Projects = ({
       {/* Cards */}
       <div
         className={cn(
-          `w-full gap-4 `,
+          `w-full gap-4`,
           layout === 'grid'
-            ? 'grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
-            : 'flex flex-col'
+            ? 'grid md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5'
+            : 'flex flex-col',
         )}
       >
-        {/*
-           1. PROYECTOS ACTIVOS (Siempre al principio) 
-        */}
         {projects?.map((project) => {
           // Filtrar miembros aceptados (Lógica de filtrado mantenida)
           const projectMembers = project?.members?.filter(
-            (member) => member.status === 'member'
+            (member) => member.status === 'member',
           );
 
           return (
@@ -79,11 +85,8 @@ export const Projects = ({
           );
         })}
 
-        {/* 
-          2. PROYECTOS PENDIENTES (Siempre al final) 
-        */}
         {pendingCards}
       </div>
-    </div>
+    </section>
   );
 };
