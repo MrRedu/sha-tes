@@ -22,7 +22,7 @@ export default async function ProjectsPage() {
           email
         )
       )
-    `
+    `,
     )
     .order('updated_at', { ascending: false });
 
@@ -38,7 +38,7 @@ export default async function ProjectsPage() {
 
     // 2. Buscamos si el usuario es un miembro ACTIVO dentro del array anidado.
     const membership = project.members?.find(
-      (member) => member.profile?.id === userId
+      (member) => member.profile?.id === userId,
     );
 
     // Lo incluimos solo si el estado es 'member'
@@ -52,7 +52,7 @@ export default async function ProjectsPage() {
   if (pendingProjectsError) {
     console.error(
       'Error cargando proyectos pendientes:',
-      pendingProjectsError.message
+      pendingProjectsError.message,
     );
   }
 
