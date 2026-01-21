@@ -3,13 +3,17 @@ import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 
 interface AvatarGroupProps {
   members: Members;
+  maxMembers?: number;
 }
 
-export const AvatarGroup = ({ members }: AvatarGroupProps) => {
+export const AvatarGroup = ({ members, maxMembers = 3 }: AvatarGroupProps) => {
   if (members?.length > 1) {
+    const displayedMembers = members.slice(0, maxMembers);
+    const remainingCount = members.length - maxMembers;
+
     return (
       <div className="*:data-[slot=avatar]:ring-background flex -space-x-2 *:data-[slot=avatar]:ring-2">
-        {members.map(({ profile }) => (
+        {displayedMembers.map(({ profile }) => (
           <Avatar key={profile.full_name}>
             <AvatarImage
               src={profile.avatar_url || ''}
@@ -21,6 +25,11 @@ export const AvatarGroup = ({ members }: AvatarGroupProps) => {
             </AvatarFallback>
           </Avatar>
         ))}
+        {remainingCount > 0 && (
+          <Avatar>
+            <AvatarFallback>+{remainingCount}</AvatarFallback>
+          </Avatar>
+        )}
       </div>
     );
   }

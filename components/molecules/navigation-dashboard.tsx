@@ -14,7 +14,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useBreadcrumb } from '@/context/breadcrumb-context';
 
-export const HeaderDashboard = () => {
+export const NavigationDashboard = () => {
   const pathname = usePathname();
   const { labels } = useBreadcrumb();
 
