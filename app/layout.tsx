@@ -23,7 +23,10 @@ const architectsDaughter = Architects_Daughter({
 // });
 
 export const metadata: Metadata = {
-  title: 'ShaTes - Comparte tus notas con un código',
+  title: {
+    template: '%s | ShaTes',
+    default: 'ShaTes - Comparte tus notas con un código',
+  },
   description:
     'La forma más rápida y segura de compartir tus notas y colaborar en tiempo real con tu equipo utilizando códigos únicos.',
   keywords: [
@@ -36,7 +39,10 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: 'ShaTes Team' }],
   openGraph: {
-    title: 'ShaTes - Comparte tus notas con un código',
+    title: {
+      template: '%s | ShaTes',
+      default: 'ShaTes - Comparte tus notas con un código',
+    },
     description:
       'La forma más rápida y segura de compartir tus notas y colaborar en tiempo real.',
     type: 'website',
