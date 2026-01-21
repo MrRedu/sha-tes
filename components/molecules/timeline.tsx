@@ -98,12 +98,12 @@ export function Timeline({
                   )}
 
                   {/* Title */}
-                  <h3 className="text-lg font-bold mb-2 transition-colors text-black">
+                  <h3 className="text-lg font-bold mb-2 transition-colors">
                     {item.title}
                   </h3>
 
                   {/* Description */}
-                  <p className="text-sm text-slate-600 leading-relaxed text-balance max-w-xs transition-colors">
+                  <p className="text-sm text-muted-foreground leading-relaxed text-balance max-w-xs transition-colors">
                     {item.description}
                   </p>
                 </div>

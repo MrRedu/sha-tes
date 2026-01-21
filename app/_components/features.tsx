@@ -1,6 +1,6 @@
 import { GitPullRequest, Lock, Users, Zap } from 'lucide-react';
-import { Button } from '../../components/ui/button';
-import { Badge } from '../../components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 
 interface Feature {
   heading: string;
@@ -24,25 +24,27 @@ export function Features({
       heading: 'Comparte',
       description:
         'Genera códigos únicos de acceso para compartir tus notas. Sin necesidad de invitaciones complicadas.',
-      icon: <GitPullRequest className="size-4 md:size-6" />,
+      icon: (
+        <GitPullRequest className="size-4 md:size-6 text-secondary-foreground" />
+      ),
     },
     {
       heading: 'Seguridad',
       description:
         'Encriptación end-to-end. Tus notas están protegidas en todo momento. Control total del acceso.',
-      icon: <Lock className="size-4 md:size-6" />,
+      icon: <Lock className="size-4 md:size-6 text-secondary-foreground" />,
     },
     {
       heading: 'Sincronización',
       description:
         'Los cambios se actualizan instantáneamente en todos los dispositivos conectados.',
-      icon: <Zap className="size-4 md:size-6" />,
+      icon: <Zap className="size-4 md:size-6 text-secondary-foreground" />,
     },
     {
       heading: 'Colabora',
       description:
         'Trabaja con tu equipo en las notas, comentarios y actualizaciones en vivo.',
-      icon: <Users className="size-4 md:size-6" />,
+      icon: <Users className="size-4 md:size-6 text-secondary-foreground" />,
     },
   ],
   buttonText = undefined,
@@ -62,7 +64,7 @@ export function Features({
         <div className="grid gap-12 md:grid-cols-2">
           {features.map((feature, idx) => (
             <div className="flex gap-6 space-y-4 rounded-lg md:block" key={idx}>
-              <span className="bg-accent flex size-10 shrink-0 items-center justify-center rounded-full md:size-12">
+              <span className="bg-secondary flex size-10 shrink-0 items-center justify-center rounded-full md:size-12">
                 {feature.icon}
               </span>
               <div>
