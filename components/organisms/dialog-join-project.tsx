@@ -66,6 +66,7 @@ export const DialogJoinProject = () => {
                         {...field}
                         maxLength={8}
                         pattern={REGEXP_ONLY_DIGITS_AND_CHARS}
+                        type="text"
                       >
                         <InputOTPGroup className="[">
                           <InputOTPSlot index={0} />

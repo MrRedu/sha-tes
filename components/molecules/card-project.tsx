@@ -25,12 +25,12 @@ export const CardProject = ({
 }: CardProjectProps) => {
   return (
     <Link href={`/dashboard/projects/${id}`}>
-      <Card className="h-full">
+      <Card className="gap-0 h-full">
         <CardHeader>
           <Typography variant="large">{name}</Typography>
         </CardHeader>
         {description && (
-          <CardContent>
+          <CardContent className="mb-2">
             <CardDescription className="line-clamp-2">
               {description}
             </CardDescription>

@@ -9,6 +9,9 @@ import type { ProjectWithMembersAndNotebooks, User } from '@/types/types';
 import { DialogCreateNotebook } from '../molecules/dialog-create-notebook';
 import { DialogManageProject } from '../molecules/dialog-manage-project';
 import { CardNotebook } from '../molecules/card-notebook';
+import { EmptyNotebooks } from './empty-notebooks';
+import Link from 'next/link';
+import { ArrowLeft } from 'lucide-react';
 
 export interface ProjectProps {
   userId: User['id'];
@@ -46,8 +49,10 @@ export const Project = ({ userId, _project }: ProjectProps) => {
   return (
     <>
       <div className="w-full flex items-center justify-between mb-4 flex-col md:flex-row gap-4">
-        <div className="flex gap-2">
-          <Typography variant="h3">{projectName}</Typography>
+        <div className="flex gap-2 items-center">
+          <Typography variant="h1" className="text-2xl!">
+            {projectName}
+          </Typography>
           <AvatarGroup members={currentMembers} />
         </div>
         <div className="flex gap-2">
@@ -71,22 +76,32 @@ export const Project = ({ userId, _project }: ProjectProps) => {
           />
         </div>
       </div>
-      <div className="w-full grid sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
-        {notebooks.map((notebook) => (
-          <CardNotebook
-            key={notebook.id}
-            projectId={project.id}
-            notebookId={notebook.id}
-            name={notebook.name}
-            description={notebook.description}
+      {notebooks?.length === 0 && (
+        <section className="w-full flex items-center justify-center min-h-[calc(100vh-200px)]">
+          <EmptyNotebooks
+            form={formCreateNotebook}
+            onSubmit={onSubmitCreateNotebook}
           />
-        ))}
-        <DialogCreateNotebook
-          form={formCreateNotebook}
-          onSubmit={onSubmitCreateNotebook}
-        />
-      </div>
-      <pre>{JSON.stringify(_project, null, 2)}</pre>
+        </section>
+      )}
+      {notebooks?.length > 0 && (
+        <div className="w-full grid sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
+          {notebooks.map((notebook) => (
+            <CardNotebook
+              key={notebook.id}
+              projectId={project.id}
+              notebookId={notebook.id}
+              name={notebook.name}
+              description={notebook.description}
+            />
+          ))}
+          <DialogCreateNotebook
+            form={formCreateNotebook}
+            onSubmit={onSubmitCreateNotebook}
+          />
+        </div>
+      )}
+      {/* <pre>{JSON.stringify(_project, null, 2)}</pre> */}
     </>
   );
 };

@@ -23,7 +23,7 @@ interface EmptyProjectsProps {
 }
 export function EmptyProjects({ form, onSubmit }: EmptyProjectsProps) {
   return (
-    <Empty className="w-full  min-h-[calc(100svh-6rem)]">
+    <Empty>
       <EmptyHeader>
         <EmptyMedia variant="icon">
           <FolderInput />
