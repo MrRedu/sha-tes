@@ -14,20 +14,18 @@ interface ProvidersProps {
 
 export const Providers = ({ children, sidebarIsOpen }: ProvidersProps) => {
   return (
-    <>
-      <AuthProvider>
-        <NextThemesProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <SidebarProvider defaultOpen={sidebarIsOpen}>
-            <>{children}</>
-          </SidebarProvider>
-        </NextThemesProvider>
-      </AuthProvider>
+    <AuthProvider>
+      <NextThemesProvider
+        attribute="class"
+        defaultTheme="system"
+        enableSystem
+        disableTransitionOnChange
+      >
+        <SidebarProvider defaultOpen={sidebarIsOpen}>
+          <>{children}</>
+        </SidebarProvider>
+      </NextThemesProvider>
       <Toaster />
-    </>
+    </AuthProvider>
   );
 };
