@@ -62,9 +62,9 @@ export const Projects = ({
       {/* Cards */}
       <div
         className={cn(
-          `w-full gap-4 `,
+          `w-full gap-4`,
           layout === 'grid'
-            ? 'grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
+            ? 'grid md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5'
             : 'flex flex-col',
         )}
       >
