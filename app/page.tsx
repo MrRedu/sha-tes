@@ -3,7 +3,6 @@ import {
   Hero,
   Features,
   HowItWorks,
-  // CTA,
   Footer,
   Pricing,
 } from '@/app/_components';
@@ -17,7 +16,6 @@ export default function Home() {
         <Features />
         <HowItWorks />
         <Pricing />
-        {/* <CTA /> */}
       </main>
       <Footer />
     </div>
