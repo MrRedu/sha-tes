@@ -11,6 +11,7 @@ import {
 
 import { NavUser } from './nav-user';
 import { NavMain } from './nav-main';
+import { NavHeader } from './nav-header';
 import { useAuth } from '../auth/AuthProvider';
 import { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
@@ -78,21 +79,12 @@ export function AppSidebar() {
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader>
-        {/* <ProjectSwitcher
-          projects={
-            projectSwitcherData.length > 0
-              ? projectSwitcherData
-              : [{ name: 'Cargando...', logo: LayoutDashboard, plan: '' }]
-          }
-        /> */}
+        <NavHeader />
       </SidebarHeader>
 
       <SidebarContent className="flex flex-col gap-0 overflow-hidden">
         <NavMain items={navGeneral} label="General" />
-
-        {/* <ScrollArea className="flex-1 px-1 max-h-[calc(50vh)] p-0"> */}
         <NavMain items={navProjects} label="Proyectos" scrollable />
-        {/* </ScrollArea> */}
       </SidebarContent>
 
       <SidebarFooter>
