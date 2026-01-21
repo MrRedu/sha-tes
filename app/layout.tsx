@@ -23,8 +23,25 @@ const architectsDaughter = Architects_Daughter({
 // });
 
 export const metadata: Metadata = {
-  title: 'ShaTes',
-  description: 'A simple project management tool.',
+  title: 'ShaTes - Comparte tus notas con un código',
+  description:
+    'La forma más rápida y segura de compartir tus notas y colaborar en tiempo real con tu equipo utilizando códigos únicos.',
+  keywords: [
+    'compartir notas',
+    'colaboración en tiempo real',
+    'notas seguras',
+    'sha-tes',
+    'notebooks',
+    'gestión de proyectos',
+  ],
+  authors: [{ name: 'ShaTes Team' }],
+  openGraph: {
+    title: 'ShaTes - Comparte tus notas con un código',
+    description:
+      'La forma más rápida y segura de compartir tus notas y colaborar en tiempo real.',
+    type: 'website',
+    url: 'https://sha-tes.vercel.app/',
+  },
 };
 
 export default async function RootLayout({
