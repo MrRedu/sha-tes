@@ -1,11 +1,13 @@
 import z from 'zod';
 
 export const formCreateProject = z.object({
-  name: z
+  title: z
     .string()
     .min(3, { message: 'Debe tener al menos 3 caracteres.' })
     .max(64, { message: 'Debe tener como máximo 64 caracteres.' }),
 });
+
+export type FormCreateProjectType = z.infer<typeof formCreateProject>;
 
 export const formJoinProject = z.object({
   joinCode: z.string().length(8, {
@@ -14,7 +16,7 @@ export const formJoinProject = z.object({
 });
 
 export const formEditProjectSchema = z.object({
-  name: z
+  title: z
     .string()
     .min(3, { message: 'Debe tener al menos 3 caracteres.' })
     .max(64, { message: 'Debe tener como máximo 64 caracteres.' }),

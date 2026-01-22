@@ -30,36 +30,36 @@ import { useEffect, useState } from 'react';
 
 interface DialogDeleteProjectProps {
   deleteProject: () => void;
-  projectName: string;
+  projectTitle: string;
 }
 
 const formSchema = z.object({
-  projectName: z.string(),
+  projectTitle: z.string(),
   toConfirm: z.string(),
 });
 
 export function DialogDeleteProject({
   deleteProject,
-  projectName,
+  projectTitle,
 }: DialogDeleteProjectProps) {
   const [canDelete, setCanDelete] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      projectName: '',
+      projectTitle: '',
       toConfirm: '',
     },
   });
 
-  const watchedProjectName = form.watch('projectName');
+  const watchedProjectTitle = form.watch('projectTitle');
   const watchedToConfirm = form.watch('toConfirm');
 
   useEffect(() => {
     const isMatch =
-      watchedProjectName === projectName &&
+      watchedProjectTitle === projectTitle &&
       watchedToConfirm === 'eliminar mi proyecto';
     setCanDelete(isMatch);
-  }, [watchedProjectName, watchedToConfirm, projectName]);
+  }, [watchedProjectTitle, watchedToConfirm, projectTitle]);
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log('Deleted!', values);
@@ -85,10 +85,10 @@ export function DialogDeleteProject({
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 ">
               <FormField
                 control={form.control}
-                name="projectName"
+                name="projectTitle"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{`Para confirmar, escribe "${projectName}"`}</FormLabel>
+                    <FormLabel>{`Para confirmar, escribe "${projectTitle}"`}</FormLabel>
                     <FormControl>
                       <Input placeholder="" {...field} />
                     </FormControl>

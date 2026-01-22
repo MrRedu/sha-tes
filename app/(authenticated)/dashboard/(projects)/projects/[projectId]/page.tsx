@@ -20,7 +20,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
     *,
     members:tbl_project_members (
       status,
-      profile:tbl_users ( id, full_name, email, avatar_url )
+      ...tbl_users ( id, full_name, email, avatar_url )
     ),
     notebooks:tbl_notebooks (
       id,
@@ -50,7 +50,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
   return (
     <>
-      <BreadcrumbRegistry id={project.id} label={project.name} />
+      <BreadcrumbRegistry id={project.id} label={project.title} />
       <Project _project={project} userId={userId} />
     </>
   );

@@ -22,32 +22,39 @@ import {
 import { Input } from '@/components/ui/input';
 import { PlusIcon } from 'lucide-react';
 import { useDisclosure } from '@/hooks/use-disclosure';
+import { type UseFormReturn } from 'react-hook-form';
+import { FormCreateProjectType } from '@/hooks/validations/use-projects.schema';
 
 interface ProjectsParams {
-  // TODO: fix types
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  form: any;
-  onSubmit: () => void;
+  formProjects: UseFormReturn<FormCreateProjectType>;
+  onSubmitProjects: () => void;
+  triggerComponent?: React.ReactNode;
 }
 
-export function DialogCreateProject({ form, onSubmit }: ProjectsParams) {
+const DEFAULT_TRIGGER_COMPONENT = (
+  <Button size="lg">
+    <PlusIcon className="mr-2 " />
+    Crear proyecto
+  </Button>
+);
+
+export function DialogCreateProject({
+  formProjects,
+  onSubmitProjects,
+  triggerComponent = DEFAULT_TRIGGER_COMPONENT,
+}: ProjectsParams) {
   const [isOpen, { open, close, toggle }] = useDisclosure();
 
   const handleCreate = () => {
     close();
-    onSubmit();
+    onSubmitProjects();
   };
 
   return (
     <Dialog open={isOpen} onOpenChange={toggle}>
-      <Form {...form}>
-        <form onSubmit={onSubmit}>
-          <DialogTrigger asChild>
-            <Button size="sm">
-              <PlusIcon className="mr-2 " />
-              Crear proyecto
-            </Button>
-          </DialogTrigger>
+      <Form {...formProjects}>
+        <form onSubmit={onSubmitProjects}>
+          <DialogTrigger asChild>{triggerComponent}</DialogTrigger>
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
               <DialogTitle>Crear proyecto</DialogTitle>
@@ -57,11 +64,11 @@ export function DialogCreateProject({ form, onSubmit }: ProjectsParams) {
             </DialogHeader>
             <div className="grid gap-4">
               <FormField
-                control={form.control}
-                name="name"
+                control={formProjects.control}
+                name="title"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Nombre</FormLabel>
+                    <FormLabel>Título</FormLabel>
                     <FormControl>
                       <Input placeholder="ShaTes" {...field} />
                     </FormControl>

@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { CardCurrentProject } from './card-current-project';
-import type { Members } from '@/types/types';
+import type { Member } from '@/types/types';
 
 const CURRENT_PROJECTS: {
   id: string;
@@ -8,8 +8,8 @@ const CURRENT_PROJECTS: {
   description: string;
   status: 'active' | 'revision' | 'completed';
   icon: string;
-  members: Members;
-  lastUpdate: string;
+  members: Member[];
+  updated_at: string;
 }[] = [
   {
     id: '1',
@@ -19,87 +19,73 @@ const CURRENT_PROJECTS: {
     icon: 'folder',
     members: [
       {
-        profile: {
-          id: '1',
-          full_name: 'Juan',
-          avatar_url: 'https://github.com/mrredu.png',
-          email: 'x',
-          created_at: '2026-01-21T17:03:03-04:00',
-        },
+        id: '1',
+        full_name: 'Juan',
+        avatar_url: 'https://github.com/mrredu.png',
+        email: 'x',
+        created_at: '2026-01-21T17:03:03-04:00',
+
         status: 'string',
       },
       {
-        profile: {
-          id: '2',
-          full_name: 'Juan',
-          avatar_url: 'https://github.com/mrredu.png',
-          email: 'x',
-          created_at: '2026-01-21T17:03:03-04:00',
-        },
+        id: '2',
+        full_name: 'Juan',
+        avatar_url: 'https://github.com/mrredu.png',
+        email: 'x',
+        created_at: '2026-01-21T17:03:03-04:00',
         status: 'string',
       },
       {
-        profile: {
-          id: '2',
-          full_name: 'Juan',
-          avatar_url: 'https://github.com/mrredu.png',
-          email: 'x',
-          created_at: '2026-01-21T17:03:03-04:00',
-        },
+        id: '2',
+        full_name: 'Juan',
+        avatar_url: 'https://github.com/mrredu.png',
+        email: 'x',
+        created_at: '2026-01-21T17:03:03-04:00',
         status: 'string',
       },
       {
-        profile: {
-          id: '2',
-          full_name: 'Juan',
-          avatar_url: 'https://github.com/mrredu.png',
-          email: 'x',
-          created_at: '2026-01-21T17:03:03-04:00',
-        },
+        id: '2',
+        full_name: 'Juan',
+        avatar_url: 'https://github.com/mrredu.png',
+        email: 'x',
+        created_at: '2026-01-21T17:03:03-04:00',
         status: 'string',
       },
       {
-        profile: {
-          id: '2',
-          full_name: 'Juan',
-          avatar_url: 'https://github.com/mrredu.png',
-          email: 'x',
-          created_at: '2026-01-21T17:03:03-04:00',
-        },
+        id: '2',
+        full_name: 'Juan',
+        avatar_url: 'https://github.com/mrredu.png',
+        email: 'x',
+        created_at: '2026-01-21T17:03:03-04:00',
         status: 'string',
       },
       {
-        profile: {
-          id: '2',
-          full_name: 'Juan',
-          avatar_url: 'https://github.com/mrredu.png',
-          email: 'x',
-          created_at: '2026-01-21T17:03:03-04:00',
-        },
+        id: '2',
+        full_name: 'Juan',
+        avatar_url: 'https://github.com/mrredu.png',
+        email: 'x',
+        created_at: '2026-01-21T17:03:03-04:00',
         status: 'string',
       },
       {
-        profile: {
-          id: '2',
-          full_name: 'Juan',
-          avatar_url: 'https://github.com/mrredu.png',
-          email: 'x',
-          created_at: '2026-01-21T17:03:03-04:00',
-        },
+        id: '2',
+        full_name: 'Juan',
+        avatar_url: 'https://github.com/mrredu.png',
+        email: 'x',
+        created_at: '2026-01-21T17:03:03-04:00',
         status: 'string',
       },
       {
-        profile: {
-          id: '2',
-          full_name: 'Juan',
-          avatar_url: 'https://github.com/mrredu.png',
-          email: 'x',
-          created_at: '2026-01-21T17:03:03-04:00',
-        },
+        id: '2',
+        full_name: 'Juan',
+        avatar_url: 'https://github.com/mrredu.png',
+        email: 'x',
+        created_at: '2026-01-21T17:03:03-04:00',
+
         status: 'string',
       },
     ],
-    lastUpdate: '2026-01-21T17:03:03-04:00',
+    updated_at: '2026-01-21T17:03:03-04:00',
   },
   {
     id: '2',
@@ -110,17 +96,15 @@ const CURRENT_PROJECTS: {
     icon: 'folder',
     members: [
       {
-        profile: {
-          id: '1',
-          full_name: 'Juan',
-          avatar_url: 'https://github.com/mrredu.png',
-          email: 'x',
-          created_at: '2026-01-21T17:03:03-04:00',
-        },
+        id: '1',
+        full_name: 'Juan',
+        avatar_url: 'https://github.com/mrredu.png',
+        email: 'x',
+        created_at: '2026-01-21T17:03:03-04:00',
         status: 'string',
       },
     ],
-    lastUpdate: '2026-01-21T17:03:03-04:00',
+    updated_at: '2026-01-21T17:03:03-04:00',
   },
   {
     id: '3',
@@ -130,27 +114,23 @@ const CURRENT_PROJECTS: {
     status: 'completed',
     members: [
       {
-        profile: {
-          id: '1',
-          full_name: 'Juan',
-          avatar_url: 'https://github.com/mrredu.png',
-          email: 'x',
-          created_at: '2026-01-21T17:03:03-04:00',
-        },
+        id: '1',
+        full_name: 'Juan',
+        avatar_url: 'https://github.com/mrredu.png',
+        email: 'x',
+        created_at: '2026-01-21T17:03:03-04:00',
         status: 'string',
       },
       {
-        profile: {
-          id: '1',
-          full_name: 'Juan',
-          avatar_url: 'https://github.com/mrredu.png',
-          email: 'x',
-          created_at: '2026-01-21T17:03:03-04:00',
-        },
+        id: '1',
+        full_name: 'Juan',
+        avatar_url: 'https://github.com/mrredu.png',
+        email: 'x',
+        created_at: '2026-01-21T17:03:03-04:00',
         status: 'string',
       },
     ],
-    lastUpdate: '2026-01-21T17:03:03-04:00',
+    updated_at: '2026-01-21T17:03:03-04:00',
   },
 ];
 
@@ -171,7 +151,7 @@ export const CurrentProjects = () => {
             title={project.name}
             members={project.members}
             description={project.description}
-            lastUpdate={project.lastUpdate}
+            updatedAt={project.updated_at}
           />
         ))}
       </div>

@@ -7,12 +7,12 @@ import z from 'zod';
 import {
   formCreateNotebookSchema,
   formCreateProject,
+  type FormCreateProjectType,
   formEditProjectSchema,
   formJoinProject,
 } from './validations/use-projects.schema';
 import type {
   ProjectWithMembers,
-  MemberStatus,
   ProjectWithMembersAndNotebooks,
   Member,
   Notebook,
@@ -33,19 +33,19 @@ export function useProjects({ _projects = [] }: useProjectsParams = {}) {
 
   const [projects, setProjects] = useState<ProjectWithMembers[]>(_projects);
 
-  const form = useForm<z.infer<typeof formCreateProject>>({
+  const form = useForm<FormCreateProjectType>({
     resolver: zodResolver(formCreateProject),
     defaultValues: {
-      name: '',
+      title: '',
     },
   });
 
-  async function onSubmit(values: z.infer<typeof formCreateProject>) {
+  async function onSubmit(values: FormCreateProjectType) {
     try {
       if (!user?.id) throw new Error('Usuario no autenticado');
 
       const payload = {
-        name: values.name.trim(),
+        title: values.title.trim(),
       };
 
       const { data, error } = await supabase
@@ -59,9 +59,8 @@ export function useProjects({ _projects = [] }: useProjectsParams = {}) {
         throw error;
       }
 
-      // console.log('Project created successfully:', data);
-      setProjects([...projects, data[0]]);
-      toast.success(`Proyecto "${data[0].name}" creado correctamente`);
+      setProjects([...projects, data[0] as ProjectWithMembers]);
+      toast.success(`Proyecto "${data[0].title}" creado correctamente`);
       // TODO: Redirigir con Next.js redirect() maybe
       window.location.href = `${window.location.origin}/dashboard/projects/${data[0].id}`;
     } catch (err) {
@@ -69,7 +68,7 @@ export function useProjects({ _projects = [] }: useProjectsParams = {}) {
       toast.error(
         `Error creando proyecto: ${
           err instanceof Error ? err.message : String(err)
-        }`
+        }`,
       );
     }
   }
@@ -91,15 +90,15 @@ export function useProject({ _project }: useProjectParams) {
   const [project, setProject] = useState(_project);
   const [members, setMembers] = useState<Member[]>(_project.members);
   const [notebooks, setNotebooks] = useState<Notebook[]>(_project.notebooks);
-  const [projectName, setProjectName] = useState(_project?.name || '');
+  const [projectName, setProjectName] = useState(_project?.title || '');
   const [projectDescription, setProjectDescription] = useState(
-    _project?.description || ''
+    _project?.description || '',
   );
 
   const formEditProject = useForm<z.infer<typeof formEditProjectSchema>>({
     resolver: zodResolver(formEditProjectSchema),
     defaultValues: {
-      name: _project?.name || '',
+      title: _project?.title || '',
       description: _project?.description || '',
     },
   });
@@ -117,7 +116,7 @@ export function useProject({ _project }: useProjectParams) {
       if (!projectId) return;
 
       const payload = {
-        name: values.name.trim(),
+        title: values.title.trim(),
         description: values.description.trim(),
       };
 
@@ -128,7 +127,7 @@ export function useProject({ _project }: useProjectParams) {
 
       if (error) throw error;
 
-      setProjectName(payload.name);
+      setProjectName(payload.title);
       setProjectDescription(payload.description);
       toast.success('Proyecto actualizado correctamente');
     } catch (error) {
@@ -147,7 +146,7 @@ export function useProject({ _project }: useProjectParams) {
           name: values.name.trim(),
           description: values.description.trim(),
           project_id: projectId,
-          creator_id: user?.id,
+          creator_id: user?.id as string,
         };
 
         const { data, error } = await supabase
@@ -166,14 +165,14 @@ export function useProject({ _project }: useProjectParams) {
         console.error('Error creating notebook:', error);
         toast.error('Error al crear el notebook.');
       }
-    }
+    },
   );
 
   // --- Funciones de Utilidad ---
   const updateMemberStatus = async (
     userId: string,
-    newStatus: MemberStatus,
-    successMessage: string
+    newStatus: Member['status'],
+    successMessage: string,
   ) => {
     if (!projectId) return false;
 
@@ -190,10 +189,8 @@ export function useProject({ _project }: useProjectParams) {
       setMembers(
         (prevMembers) =>
           prevMembers?.map((member) =>
-            member.profile?.id === userId
-              ? { ...member, status: newStatus }
-              : member
-          ) || null
+            member?.id === userId ? { ...member, status: newStatus } : member,
+          ) || null,
       );
 
       toast.success(successMessage);
@@ -221,7 +218,7 @@ export function useProject({ _project }: useProjectParams) {
       // 1. Actualizar el estado local (eliminamos el miembro del array)
       setMembers(
         (prevMembers) =>
-          prevMembers?.filter((member) => member.profile?.id !== userId) || null
+          prevMembers?.filter((member) => member?.id !== userId) || null,
       );
 
       toast.success(successMessage);

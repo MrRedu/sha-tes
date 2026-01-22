@@ -14,7 +14,7 @@ import { UserMinus, UserPlus, Users, UserX } from 'lucide-react';
 import { formatCode } from '@/lib/utils';
 import { Typography } from '../ui/typography';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
-import type { Members } from '@/types/types';
+import type { Member } from '@/types/types';
 import { WithBadge } from '../atoms/with-badge';
 import { useDisclosure } from '@/hooks/use-disclosure';
 
@@ -22,21 +22,21 @@ interface DialogManageUsersProps {
   isProjectOwner: boolean;
   projectOwnerId: string;
   joinCode: string;
-  currentMembers: Members;
-  pendingMembers: Members;
+  currentMembers: Member[];
+  pendingMembers: Member[];
   onRemoveMember: (userId: string) => void;
   onAccept: (userId: string) => void;
   onReject: (userId: string) => void;
 }
 
 type PendingMembersListProps = {
-  members: Members;
+  members: Member[];
   onAccept: (userId: string) => void;
   onReject: (userId: string) => void;
 };
 
 type CurrentMembersListProps = {
-  members: Members;
+  members: Member[];
   isProjectOwner: boolean;
   projectOwnerId: string;
   onRemoveMember: (userId: string) => void;
@@ -50,33 +50,30 @@ const CurrentMembersList = ({
 }: CurrentMembersListProps) => {
   return (
     <ul className="space-y-2">
-      {members.map(({ profile: member }, index) => (
+      {members.map(({ avatar_url, full_name, id, email }, index) => (
         <li key={index} className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Avatar>
-              <AvatarImage
-                src={member.avatar_url || ''}
-                alt={member.full_name}
-              />
-              <AvatarFallback>{member.full_name.charAt(0)}</AvatarFallback>
+              <AvatarImage src={avatar_url || ''} alt={full_name} />
+              <AvatarFallback>{full_name.charAt(0)}</AvatarFallback>
             </Avatar>
             <div className="flex flex-col">
               <div className="flex items-center gap-1">
-                <Typography variant="small">{member.full_name}</Typography>
-                {member.id === projectOwnerId && (
+                <Typography variant="small">{full_name}</Typography>
+                {id === projectOwnerId && (
                   <Typography variant="xsmall">(Propietario)</Typography>
                 )}
               </div>
-              <Typography variant="muted">{member.email}</Typography>
+              <Typography variant="muted">{email}</Typography>
             </div>
           </div>
-          {isProjectOwner && member.id !== projectOwnerId && (
+          {isProjectOwner && id !== projectOwnerId && (
             <div className="space-x-1">
               <Button
                 variant="secondary"
                 size="icon"
                 aria-label="Remove user"
-                onClick={() => onRemoveMember(member.id)}
+                onClick={() => onRemoveMember(id)}
               >
                 <UserX />
               </Button>
@@ -95,19 +92,16 @@ const PendingMembersList = ({
 }: PendingMembersListProps) => {
   return (
     <ul className="space-y-2">
-      {members.map(({ profile: member }, index) => (
+      {members.map(({ avatar_url, full_name, id, email }, index) => (
         <li key={index} className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Avatar>
-              <AvatarImage
-                src={member.avatar_url || ''}
-                alt={member.full_name}
-              />
-              <AvatarFallback>{member.full_name.charAt(0)}</AvatarFallback>
+              <AvatarImage src={avatar_url || ''} alt={full_name} />
+              <AvatarFallback>{full_name.charAt(0)}</AvatarFallback>
             </Avatar>
             <div className="flex flex-col">
-              <Typography variant="small">{member.full_name}</Typography>
-              <Typography variant="muted">{member.email}</Typography>
+              <Typography variant="small">{full_name}</Typography>
+              <Typography variant="muted">{email}</Typography>
             </div>
           </div>
           <div className="space-x-1">
@@ -116,7 +110,7 @@ const PendingMembersList = ({
               size="icon"
               className="hover:bg-red-400/50"
               aria-label="Reject request"
-              onClick={() => onReject(member.id)}
+              onClick={() => onReject(id)}
             >
               <UserMinus />
             </Button>
@@ -125,7 +119,7 @@ const PendingMembersList = ({
               size="icon"
               className="bg-green-100 hover:bg-green-400/50"
               aria-label="Accept request"
-              onClick={() => onAccept(member.id)}
+              onClick={() => onAccept(id)}
             >
               <UserPlus />
             </Button>

@@ -90,7 +90,7 @@ export const Project = ({ userId, _project }: ProjectProps) => {
             onReject={handleRejectPendingMember}
           />
           <DialogDeleteProject
-            projectName={project.name}
+            projectTitle={project.title}
             deleteProject={deleteProject}
           />
         </div>

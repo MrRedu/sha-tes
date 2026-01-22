@@ -2,12 +2,12 @@ import { ClockIcon } from 'lucide-react';
 import { Badge } from '../ui/badge';
 import { Card, CardFooter, CardHeader } from '../ui/card';
 import { Typography } from '../ui/typography';
-import type { RpcPendingProject } from '@/types/types';
+import type { RpcPendingProjects } from '@/types/types';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 
 interface CardPendingProjectProps {
-  name: RpcPendingProject['project_name'];
-  ownerName: RpcPendingProject['owner_full_name'];
+  name: RpcPendingProjects[number]['project_name'];
+  ownerName: RpcPendingProjects[number]['owner_full_name'];
 }
 
 export const CardPendingProject = ({

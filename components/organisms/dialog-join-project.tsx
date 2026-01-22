@@ -41,7 +41,7 @@ export const DialogJoinProject = () => {
       <Form {...form}>
         <form onSubmit={onSubmit}>
           <DialogTrigger asChild>
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="lg">
               Unirse a un proyecto
             </Button>
           </DialogTrigger>

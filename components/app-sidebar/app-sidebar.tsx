@@ -17,7 +17,7 @@ import { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { Project, Notebook } from '@/types/types';
 
-type SidebarProject = Pick<Project, 'id' | 'name'> & {
+type SidebarProject = Pick<Project, 'id' | 'title'> & {
   notebooks: Pick<Notebook, 'id' | 'name'>[];
 };
 
@@ -36,7 +36,7 @@ export function AppSidebar() {
         .select(
           `
           id, 
-          name,
+          title,
           notebooks:tbl_notebooks (id, name)
         `,
         )
@@ -67,7 +67,7 @@ export function AppSidebar() {
   ];
 
   const navProjects = dynamicProjects.map((project) => ({
-    title: project.name,
+    title: project.title,
     url: `/dashboard/projects/${project.id}`,
     icon: FolderKanban,
     items: project.notebooks?.map((notebook) => ({

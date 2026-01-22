@@ -1,6 +1,5 @@
 import { createClient } from '@/lib/supabase/server';
 import { Notebook } from '@/components/organisms/notebook';
-import { NotebookWithNotes } from '@/types/types';
 import { BreadcrumbRegistry } from '@/context/breadcrumb-context';
 
 interface NotebookPageProps {
@@ -22,7 +21,7 @@ export default async function NotebookPage({ params }: NotebookPageProps) {
       *,
       creator:creator_id ( id, full_name, avatar_url ),
       notes:tbl_notes ( * ),
-      project:tbl_projects ( id, name )
+      project:tbl_projects ( id, title )
     `,
     )
     .eq('id', notebookId)
@@ -42,19 +41,16 @@ export default async function NotebookPage({ params }: NotebookPageProps) {
     );
   }
 
-  const sortedNotebook = notebook as NotebookWithNotes;
-
   return (
     <>
       {/* Registramos ambos para asegurar que el Header tenga toda la info */}
-      <BreadcrumbRegistry id={projectId} label={notebook.project?.name || ''} />
+      <BreadcrumbRegistry
+        id={projectId}
+        label={notebook.project?.title || ''}
+      />
       <BreadcrumbRegistry id={notebook.id} label={notebook.name} />
 
-      <Notebook
-        _notebook={sortedNotebook}
-        userId={userId}
-        projectId={projectId}
-      />
+      <Notebook _notebook={notebook} userId={userId} projectId={projectId} />
     </>
   );
 }

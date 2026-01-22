@@ -1,12 +1,33 @@
 import { createClient } from '@/lib/supabase/server';
 
-import { Projects } from '@/components/organisms/projects';
-import type { ProjectWithMembers } from '@/types/types';
 import { type Metadata } from 'next';
+import { ProjectsClient } from './_components/projects-client';
 
 export const metadata: Metadata = {
   title: 'Proyectos',
 };
+
+const PROJECTS_QUERY = `
+  id,
+  title,
+  description,
+  owner_id,
+  join_code,
+  updated_at,
+  created_at,
+  status, 
+  priority,
+  members:tbl_project_members (
+    status,
+    ...tbl_users (
+      id,
+      full_name,
+      avatar_url,
+      email,
+      created_at
+    )
+  )
+`;
 
 export default async function ProjectsPage() {
   const supabase = await createClient();
@@ -15,36 +36,20 @@ export default async function ProjectsPage() {
 
   const { data: projects, error: projectsError } = await supabase
     .from('tbl_projects')
-    .select(
-      `
-      *,
-      members:tbl_project_members (
-        status,
-        profile:tbl_users (
-          id,
-          full_name,
-          avatar_url,
-          email
-        )
-      )
-    `,
-    )
+    .select(PROJECTS_QUERY)
     .order('updated_at', { ascending: false });
 
   const { data: pendingProjectsRequests, error: pendingProjectsError } =
     await supabase.rpc('get_pending_projects');
 
-  const safeProjects: ProjectWithMembers[] = projects || [];
-  const activeProjects = safeProjects.filter((project) => {
+  const activeProjects = projects?.filter((project) => {
     // 1. Si el usuario es el dueño, SIEMPRE lo incluimos.
     if (project.owner_id === userId) {
       return true;
     }
 
     // 2. Buscamos si el usuario es un miembro ACTIVO dentro del array anidado.
-    const membership = project.members?.find(
-      (member) => member.profile?.id === userId,
-    );
+    const membership = project.members?.find((member) => member.id === userId);
 
     // Lo incluimos solo si el estado es 'member'
     return membership?.status === 'member';
@@ -62,8 +67,8 @@ export default async function ProjectsPage() {
   }
 
   return (
-    <Projects
-      _projects={activeProjects}
+    <ProjectsClient
+      _projects={activeProjects || []}
       _pendingProjectsRequests={pendingProjectsRequests || []}
     />
   );

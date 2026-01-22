@@ -1,29 +1,22 @@
 import type { Database } from './database';
 
+// User from tbl_users
 export type User = Database['public']['Tables']['tbl_users']['Row'];
 
-export type Member = {
-  status: string;
-  profile: User;
+// Member from tbl_project_members
+// User + status
+export type Member = User & {
+  status: Database['public']['Tables']['tbl_project_members']['Row']['status'];
 };
-export type Members = {
-  status: string;
-  profile: User;
-}[];
 
-export type ProjectMember =
-  Database['public']['Tables']['tbl_project_members']['Row'];
-
-export type ProjectWithMembers = Project & { members: Members };
-
-export type MemberStatus = 'pending' | 'member' | 'rejected';
+export type ProjectWithMembers = Project & { members: Member[] };
 
 export type OwnerProfile = {
   full_name: string;
 };
 export type PendingProject = {
   id: string;
-  name: string;
+  title: string;
   description: string | null;
   owner_id: string;
   owner_profile: OwnerProfile | null;
@@ -33,13 +26,8 @@ export type PendingProjectEntry = {
   project: PendingProject | null;
 };
 
-export type RpcPendingProject = {
-  project_id: string;
-  project_name: string;
-  project_description: string | null;
-  owner_id: string;
-  owner_full_name: string;
-};
+export type RpcPendingProjects =
+  Database['public']['Functions']['get_pending_projects']['Returns'];
 
 export type Notebook = Database['public']['Tables']['tbl_notebooks']['Row'];
 

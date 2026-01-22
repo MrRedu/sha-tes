@@ -8,22 +8,22 @@ import {
 } from '@/components/ui/card';
 import { FolderIcon } from 'lucide-react';
 import { es } from 'date-fns/locale';
-import type { Members } from '@/types/types';
+import type { Member } from '@/types/types';
 import { AvatarGroup } from '@/components/molecules/avatar-group';
 
 interface CardCurrentProjectProps {
   status: 'active' | 'revision' | 'completed';
   title: string;
   description: string;
-  lastUpdate: string;
-  members: Members;
+  updatedAt: string;
+  members: Member[];
 }
 
 export const CardCurrentProject = ({
   status = 'active',
   title = 'Proyecto',
   description = 'Descripción del proyecto',
-  lastUpdate = 'Hace 2 horas',
+  updatedAt = '2026-01-21T17:03:03-04:00',
   members,
 }: CardCurrentProjectProps) => {
   return (
@@ -41,7 +41,7 @@ export const CardCurrentProject = ({
       <CardFooter className="flex items-center justify-between">
         <AvatarGroup members={members} />
         <p className="text-sm text-muted-foreground">
-          {formatDistanceToNow(new Date(lastUpdate), {
+          {formatDistanceToNow(new Date(updatedAt), {
             addSuffix: true,
             locale: es,
           })}
