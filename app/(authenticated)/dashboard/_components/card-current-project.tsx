@@ -1,11 +1,6 @@
 import { formatDistanceToNow } from 'date-fns';
 import { Badge } from '@/components/ui/badge';
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from '@/components/ui/card';
+import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { FolderIcon } from 'lucide-react';
 import { es } from 'date-fns/locale';
 import type { Member } from '@/types/types';

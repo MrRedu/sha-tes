@@ -39,12 +39,10 @@ export function AuthProvider({
     });
 
     // subscribe to changes
-    const { data: listener } = supabase.auth.onAuthStateChange(
-      (_event, newSession) => {
-        setSession(newSession ?? null);
-        setUser(newSession?.user ?? null);
-      }
-    );
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, newSession) => {
+      setSession(newSession ?? null);
+      setUser(newSession?.user ?? null);
+    });
 
     return () => {
       mounted = false;
@@ -72,9 +70,7 @@ export function AuthProvider({
   };
 
   return (
-    <AuthContext.Provider
-      value={{ user, session, loading, signOut, signInWithGoogle }}
-    >
+    <AuthContext.Provider value={{ user, session, loading, signOut, signInWithGoogle }}>
       {children}
     </AuthContext.Provider>
   );

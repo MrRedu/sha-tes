@@ -22,7 +22,7 @@ export default async function NotebookPage({ params }: NotebookPageProps) {
       creator:creator_id ( id, full_name, avatar_url ),
       notes:tbl_notes ( * ),
       project:tbl_projects ( id, title )
-    `,
+    `
     )
     .eq('id', notebookId)
     .order('position', { foreignTable: 'tbl_notes', ascending: true })
@@ -44,10 +44,7 @@ export default async function NotebookPage({ params }: NotebookPageProps) {
   return (
     <>
       {/* Registramos ambos para asegurar que el Header tenga toda la info */}
-      <BreadcrumbRegistry
-        id={projectId}
-        label={notebook.project?.title || ''}
-      />
+      <BreadcrumbRegistry id={projectId} label={notebook.project?.title || ''} />
       <BreadcrumbRegistry id={notebook.id} label={notebook.name} />
 
       <Notebook _notebook={notebook} userId={userId} projectId={projectId} />

@@ -1,9 +1,4 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-} from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader } from '@/components/ui/card';
 import { Typography } from '@/components/ui/typography';
 import { Notebook } from '@/types/types';
 import Link from 'next/link';
@@ -15,12 +10,7 @@ interface CardNotebookProps {
   description: Notebook['description'];
 }
 
-export const CardNotebook = ({
-  projectId,
-  notebookId,
-  name,
-  description,
-}: CardNotebookProps) => {
+export const CardNotebook = ({ projectId, notebookId, name, description }: CardNotebookProps) => {
   return (
     <Link
       href={`/dashboard/projects/${projectId}/notebooks/${notebookId}`}
@@ -35,9 +25,7 @@ export const CardNotebook = ({
         </CardHeader>
         {description && (
           <CardContent>
-            <CardDescription className="line-clamp-2">
-              {description}
-            </CardDescription>
+            <CardDescription className="line-clamp-2">{description}</CardDescription>
           </CardContent>
         )}
       </Card>

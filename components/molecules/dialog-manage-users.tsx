@@ -60,9 +60,7 @@ const CurrentMembersList = ({
             <div className="flex flex-col">
               <div className="flex items-center gap-1">
                 <Typography variant="small">{full_name}</Typography>
-                {id === projectOwnerId && (
-                  <Typography variant="xsmall">(Propietario)</Typography>
-                )}
+                {id === projectOwnerId && <Typography variant="xsmall">(Propietario)</Typography>}
               </div>
               <Typography variant="muted">{email}</Typography>
             </div>
@@ -85,11 +83,7 @@ const CurrentMembersList = ({
   );
 };
 
-const PendingMembersList = ({
-  members,
-  onAccept,
-  onReject,
-}: PendingMembersListProps) => {
+const PendingMembersList = ({ members, onAccept, onReject }: PendingMembersListProps) => {
   return (
     <ul className="space-y-2">
       {members.map(({ avatar_url, full_name, id, email }, index) => (
@@ -148,12 +142,7 @@ export const DialogManageUsers = ({
     <Dialog open={isOpen} onOpenChange={toggle}>
       <DialogTrigger asChild>
         <WithBadge count={pendingMembers.length}>
-          <Button
-            variant="outline"
-            size="icon"
-            aria-label="Manage users"
-            onClick={open}
-          >
+          <Button variant="outline" size="icon" aria-label="Manage users" onClick={open}>
             <Users />
           </Button>
         </WithBadge>

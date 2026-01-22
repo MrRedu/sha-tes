@@ -13,14 +13,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import { AlertCircle, Trash2Icon } from 'lucide-react';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '../ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -38,10 +31,7 @@ const formSchema = z.object({
   toConfirm: z.string(),
 });
 
-export function DialogDeleteProject({
-  deleteProject,
-  projectTitle,
-}: DialogDeleteProjectProps) {
+export function DialogDeleteProject({ deleteProject, projectTitle }: DialogDeleteProjectProps) {
   const [canDelete, setCanDelete] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -56,8 +46,7 @@ export function DialogDeleteProject({
 
   useEffect(() => {
     const isMatch =
-      watchedProjectTitle === projectTitle &&
-      watchedToConfirm === 'eliminar mi proyecto';
+      watchedProjectTitle === projectTitle && watchedToConfirm === 'eliminar mi proyecto';
     setCanDelete(isMatch);
   }, [watchedProjectTitle, watchedToConfirm, projectTitle]);
 
@@ -76,8 +65,8 @@ export function DialogDeleteProject({
         <AlertDialogHeader>
           <AlertDialogTitle>Eliminar proyecto</AlertDialogTitle>
           <AlertDialogDescription>
-            Esta acción no puede deshacerse. Esto eliminará permanentemente tu
-            proyecto y removerá tus datos de nuestros servidores.
+            Esta acción no puede deshacerse. Esto eliminará permanentemente tu proyecto y removerá
+            tus datos de nuestros servidores.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <div className="space-y-6">

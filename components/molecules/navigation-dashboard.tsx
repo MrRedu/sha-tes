@@ -23,10 +23,7 @@ export const NavigationDashboard = () => {
   return (
     <header className="sticky top-0 z-50 flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 border-b px-4 bg-background">
       <SidebarTrigger className="-ml-1" />
-      <Separator
-        orientation="vertical"
-        className="mr-2 data-[orientation=vertical]:h-4"
-      />
+      <Separator orientation="vertical" className="mr-2 data-[orientation=vertical]:h-4" />
       <Breadcrumb>
         <BreadcrumbList>
           {/* Dashboard Home */}
@@ -59,9 +56,7 @@ export const NavigationDashboard = () => {
                 <BreadcrumbSeparator className="hidden md:block [&>svg]:size-4" />
                 <BreadcrumbItem>
                   {isLast ? (
-                    <BreadcrumbPage className="font-bold">
-                      {label}
-                    </BreadcrumbPage>
+                    <BreadcrumbPage className="font-bold">{label}</BreadcrumbPage>
                   ) : (
                     <BreadcrumbLink asChild>
                       <Link href={path}>{label}</Link>

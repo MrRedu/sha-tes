@@ -10,10 +10,7 @@ interface CardPendingProjectProps {
   ownerName: RpcPendingProjects[number]['owner_full_name'];
 }
 
-export const CardPendingProject = ({
-  name,
-  ownerName,
-}: CardPendingProjectProps) => {
+export const CardPendingProject = ({ name, ownerName }: CardPendingProjectProps) => {
   return (
     <Card className="opacity-50">
       <CardHeader className="flex items-center justify-between">
@@ -26,9 +23,7 @@ export const CardPendingProject = ({
       <CardFooter className="mt-auto">
         <Avatar>
           <AvatarImage src={undefined} alt={undefined} />
-          <AvatarFallback>
-            {ownerName?.slice(0, 2).toUpperCase() || ''}
-          </AvatarFallback>
+          <AvatarFallback>{ownerName?.slice(0, 2).toUpperCase() || ''}</AvatarFallback>
         </Avatar>
       </CardFooter>
     </Card>

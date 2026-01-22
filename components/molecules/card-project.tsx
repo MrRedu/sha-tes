@@ -1,11 +1,5 @@
 import Link from 'next/link';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-} from '../ui/card';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader } from '../ui/card';
 import { AvatarGroup } from './avatar-group';
 import type { Members, Project } from '@/types/types';
 import { Typography } from '../ui/typography';
@@ -17,12 +11,7 @@ interface CardProjectProps {
   members: Members;
 }
 
-export const CardProject = ({
-  id,
-  name,
-  description,
-  members,
-}: CardProjectProps) => {
+export const CardProject = ({ id, name, description, members }: CardProjectProps) => {
   return (
     <Link
       href={`/dashboard/projects/${id}`}
@@ -34,9 +23,7 @@ export const CardProject = ({
         </CardHeader>
         {description && (
           <CardContent className="mb-2">
-            <CardDescription className="line-clamp-2">
-              {description}
-            </CardDescription>
+            <CardDescription className="line-clamp-2">{description}</CardDescription>
           </CardContent>
         )}
         <CardFooter className="mt-auto">

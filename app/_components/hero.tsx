@@ -54,12 +54,8 @@ export function Hero({
                 <ArrowUpRight className="ml-2 size-4" />
               </Badge>
             )}
-            <h1 className="my-6 text-balance text-4xl font-bold lg:text-6xl">
-              {heading}
-            </h1>
-            <p className="text-muted-foreground mb-8 max-w-xl lg:text-xl">
-              {description}
-            </p>
+            <h1 className="my-6 text-balance text-4xl font-bold lg:text-6xl">{heading}</h1>
+            <p className="text-muted-foreground mb-8 max-w-xl lg:text-xl">{description}</p>
             <div className="flex w-full flex-col justify-center gap-2 sm:flex-row lg:justify-start">
               {buttons.primary && (
                 <Button asChild className="w-full sm:w-auto">

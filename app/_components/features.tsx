@@ -24,9 +24,7 @@ export function Features({
       heading: 'Comparte',
       description:
         'Genera códigos únicos de acceso para compartir tus notas. Sin necesidad de invitaciones complicadas.',
-      icon: (
-        <GitPullRequest className="size-4 md:size-6 text-secondary-foreground" />
-      ),
+      icon: <GitPullRequest className="size-4 md:size-6 text-secondary-foreground" />,
     },
     {
       heading: 'Seguridad',
@@ -42,8 +40,7 @@ export function Features({
     },
     {
       heading: 'Colabora',
-      description:
-        'Trabaja con tu equipo en las notas, comentarios y actualizaciones en vivo.',
+      description: 'Trabaja con tu equipo en las notas, comentarios y actualizaciones en vivo.',
       icon: <Users className="size-4 md:size-6 text-secondary-foreground" />,
     },
   ],
@@ -56,9 +53,7 @@ export function Features({
         {(label || title) && (
           <div className="mb-12 flex max-w-3xl flex-col gap-4">
             <Badge variant="secondary">{label}</Badge>
-            <h2 className="text-3xl font-medium md:text-4xl lg:text-5xl">
-              {title}
-            </h2>
+            <h2 className="text-3xl font-medium md:text-4xl lg:text-5xl">{title}</h2>
           </div>
         )}
         <div className="grid gap-12 md:grid-cols-2">
@@ -68,12 +63,8 @@ export function Features({
                 {feature.icon}
               </span>
               <div>
-                <h3 className="font-medium md:mb-2 md:text-xl">
-                  {feature.heading}
-                </h3>
-                <p className="text-muted-foreground text-sm md:text-base">
-                  {feature.description}
-                </p>
+                <h3 className="font-medium md:mb-2 md:text-xl">{feature.heading}</h3>
+                <p className="text-muted-foreground text-sm md:text-base">{feature.description}</p>
               </div>
             </div>
           ))}

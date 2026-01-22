@@ -8,11 +8,7 @@ interface AvatarGroupProps {
   className?: string;
 }
 
-export const AvatarGroup = ({
-  members,
-  maxMembers = 3,
-  className,
-}: AvatarGroupProps) => {
+export const AvatarGroup = ({ members, maxMembers = 3, className }: AvatarGroupProps) => {
   if (members?.length > 1) {
     const displayedMembers = members.slice(0, maxMembers);
     const remainingCount = members.length - maxMembers;
@@ -21,16 +17,12 @@ export const AvatarGroup = ({
       <div
         className={cn(
           '*:data-[slot=avatar]:ring-background flex -space-x-2 *:data-[slot=avatar]:ring-2',
-          className,
+          className
         )}
       >
         {displayedMembers.map(({ avatar_url, full_name }) => (
           <Avatar key={full_name}>
-            <AvatarImage
-              src={avatar_url || ''}
-              alt={full_name}
-              title={full_name}
-            />
+            <AvatarImage src={avatar_url || ''} alt={full_name} title={full_name} />
             <AvatarFallback title={full_name}>
               {full_name.slice(0, 2).toUpperCase() || 'N'}
             </AvatarFallback>
@@ -49,13 +41,8 @@ export const AvatarGroup = ({
 
   return (
     <Avatar>
-      <AvatarImage
-        src={UNIQUE_MEMBER?.avatar_url || ''}
-        alt={UNIQUE_MEMBER?.full_name}
-      />
-      <AvatarFallback>
-        {UNIQUE_MEMBER?.full_name?.slice(0, 2).toUpperCase() || ''}
-      </AvatarFallback>
+      <AvatarImage src={UNIQUE_MEMBER?.avatar_url || ''} alt={UNIQUE_MEMBER?.full_name} />
+      <AvatarFallback>{UNIQUE_MEMBER?.full_name?.slice(0, 2).toUpperCase() || ''}</AvatarFallback>
     </Avatar>
   );
 };

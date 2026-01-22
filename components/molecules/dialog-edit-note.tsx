@@ -48,20 +48,13 @@ const NOTE_COLORS = [
   { value: '#fecaca', label: 'Rojo', class: 'bg-red-100' },
 ];
 
-export const DialogEditNote = ({
-  open,
-  onOpenChange,
-  form,
-  onSubmit,
-}: DialogEditNoteProps) => {
+export const DialogEditNote = ({ open, onOpenChange, form, onSubmit }: DialogEditNoteProps) => {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Editar nota</DialogTitle>
-          <DialogDescription>
-            Modifica los detalles de tu nota.
-          </DialogDescription>
+          <DialogDescription>Modifica los detalles de tu nota.</DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -152,11 +145,7 @@ export const DialogEditNote = ({
             />
 
             <DialogFooter>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => onOpenChange(false)}
-              >
+              <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
                 Cancelar
               </Button>
               <Button type="submit">Guardar cambios</Button>

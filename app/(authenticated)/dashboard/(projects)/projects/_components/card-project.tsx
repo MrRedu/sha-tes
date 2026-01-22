@@ -1,11 +1,6 @@
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from '@/components/ui/card';
+import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { es } from 'date-fns/locale';
 import { formatDistanceToNow } from 'date-fns';
 import { cn } from '@/lib/utils';
@@ -47,10 +42,7 @@ export const CardProject = ({
   } as const;
 
   return (
-    <Link
-      href={`/dashboard/projects/${id}`}
-      className={cn('w-full gap-0 @container', className)}
-    >
+    <Link href={`/dashboard/projects/${id}`} className={cn('w-full gap-0 @container', className)}>
       <Card className="h-full">
         <CardHeader className="items-center hidden @md:flex">
           <Badge variant={COLOR_BADGE[priority]} className="uppercase">
@@ -66,19 +58,13 @@ export const CardProject = ({
         </CardHeader>
         <CardContent className="mb-4">
           <h3 className="font-semibold">{title}</h3>
-          <p className="text-sm text-muted-foreground line-clamp-2">
-            {description}
-          </p>
+          <p className="text-sm text-muted-foreground line-clamp-2">{description}</p>
         </CardContent>
         <CardFooter className="mt-auto flex items-start flex-col gap-2">
           <div className="flex items-center justify-between gap-2 w-full">
             <div className="flex items-center gap-2">
               18 blocs de notas
-              <AvatarGroup
-                members={members}
-                maxMembers={2}
-                className="@md:flex hidden"
-              />
+              <AvatarGroup members={members} maxMembers={2} className="@md:flex hidden" />
             </div>
             <span>{PROGRESS_VALUE}% completado</span>
           </div>

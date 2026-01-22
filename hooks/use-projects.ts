@@ -48,10 +48,7 @@ export function useProjects({ _projects = [] }: useProjectsParams = {}) {
         title: values.title.trim(),
       };
 
-      const { data, error } = await supabase
-        .from('tbl_projects')
-        .insert(payload)
-        .select();
+      const { data, error } = await supabase.from('tbl_projects').insert(payload).select();
 
       if (error) {
         toast.error(`Error creando proyecto: ${error.message}`);
@@ -65,11 +62,7 @@ export function useProjects({ _projects = [] }: useProjectsParams = {}) {
       window.location.href = `${window.location.origin}/dashboard/projects/${data[0].id}`;
     } catch (err) {
       console.error('Failed to create project:', err);
-      toast.error(
-        `Error creando proyecto: ${
-          err instanceof Error ? err.message : String(err)
-        }`,
-      );
+      toast.error(`Error creando proyecto: ${err instanceof Error ? err.message : String(err)}`);
     }
   }
 
@@ -91,9 +84,7 @@ export function useProject({ _project }: useProjectParams) {
   const [members, setMembers] = useState<Member[]>(_project.members);
   const [notebooks, setNotebooks] = useState<Notebook[]>(_project.notebooks);
   const [projectName, setProjectName] = useState(_project?.title || '');
-  const [projectDescription, setProjectDescription] = useState(
-    _project?.description || '',
-  );
+  const [projectDescription, setProjectDescription] = useState(_project?.description || '');
 
   const formEditProject = useForm<z.infer<typeof formEditProjectSchema>>({
     resolver: zodResolver(formEditProjectSchema),
@@ -120,10 +111,7 @@ export function useProject({ _project }: useProjectParams) {
         description: values.description.trim(),
       };
 
-      const { error } = await supabase
-        .from('tbl_projects')
-        .update(payload)
-        .eq('id', projectId);
+      const { error } = await supabase.from('tbl_projects').update(payload).eq('id', projectId);
 
       if (error) throw error;
 
@@ -136,43 +124,41 @@ export function useProject({ _project }: useProjectParams) {
     }
   });
 
-  const onSubmitCreateNotebook = formCreateNotebook.handleSubmit(
-    async (values) => {
-      // return alert(JSON.stringify(values, null, 2));
-      try {
-        if (!projectId) return;
+  const onSubmitCreateNotebook = formCreateNotebook.handleSubmit(async (values) => {
+    // return alert(JSON.stringify(values, null, 2));
+    try {
+      if (!projectId) return;
 
-        const payload = {
-          name: values.name.trim(),
-          description: values.description.trim(),
-          project_id: projectId,
-          creator_id: user?.id as string,
-        };
+      const payload = {
+        name: values.name.trim(),
+        description: values.description.trim(),
+        project_id: projectId,
+        creator_id: user?.id as string,
+      };
 
-        const { data, error } = await supabase
-          .from('tbl_notebooks')
-          .insert(payload)
-          .select()
-          .single();
+      const { data, error } = await supabase
+        .from('tbl_notebooks')
+        .insert(payload)
+        .select()
+        .single();
 
-        if (error) throw error;
+      if (error) throw error;
 
-        setNotebooks([...notebooks, data]);
-        formCreateNotebook.reset();
+      setNotebooks([...notebooks, data]);
+      formCreateNotebook.reset();
 
-        toast.success('Notebook creado correctamente');
-      } catch (error) {
-        console.error('Error creating notebook:', error);
-        toast.error('Error al crear el notebook.');
-      }
-    },
-  );
+      toast.success('Notebook creado correctamente');
+    } catch (error) {
+      console.error('Error creating notebook:', error);
+      toast.error('Error al crear el notebook.');
+    }
+  });
 
   // --- Funciones de Utilidad ---
   const updateMemberStatus = async (
     userId: string,
     newStatus: Member['status'],
-    successMessage: string,
+    successMessage: string
   ) => {
     if (!projectId) return false;
 
@@ -189,8 +175,8 @@ export function useProject({ _project }: useProjectParams) {
       setMembers(
         (prevMembers) =>
           prevMembers?.map((member) =>
-            member?.id === userId ? { ...member, status: newStatus } : member,
-          ) || null,
+            member?.id === userId ? { ...member, status: newStatus } : member
+          ) || null
       );
 
       toast.success(successMessage);
@@ -216,10 +202,7 @@ export function useProject({ _project }: useProjectParams) {
       if (error) throw error;
 
       // 1. Actualizar el estado local (eliminamos el miembro del array)
-      setMembers(
-        (prevMembers) =>
-          prevMembers?.filter((member) => member?.id !== userId) || null,
-      );
+      setMembers((prevMembers) => prevMembers?.filter((member) => member?.id !== userId) || null);
 
       toast.success(successMessage);
       return true;
@@ -262,10 +245,8 @@ export function useProject({ _project }: useProjectParams) {
     }
   };
 
-  const currentMembers =
-    members.filter((member) => member.status === 'member') || [];
-  const pendingMembers =
-    members.filter((member) => member.status === 'pending') || [];
+  const currentMembers = members.filter((member) => member.status === 'member') || [];
+  const pendingMembers = members.filter((member) => member.status === 'pending') || [];
 
   return {
     project,

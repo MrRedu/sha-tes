@@ -21,16 +21,9 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardFooter, CardHeader } from '../ui/card';
 import { FilePlusCorner } from 'lucide-react';
 import { Typography } from '../ui/typography';
-import {
-  useDisclosure,
-  type UseDisclosureHandlers,
-} from '@/hooks/use-disclosure';
+import { useDisclosure, type UseDisclosureHandlers } from '@/hooks/use-disclosure';
 
-const TriggerUI = ({
-  handleOpen,
-}: {
-  handleOpen: UseDisclosureHandlers['open'];
-}) => {
+const TriggerUI = ({ handleOpen }: { handleOpen: UseDisclosureHandlers['open'] }) => {
   return (
     <Card
       className="cursor-pointer opacity-50 border-dashed border-2 hover:opacity-100 transition-opacity duration-300 ease-in-out gap-0 h-full"
@@ -57,10 +50,7 @@ interface DialogCreateNotebookProps {
   onSubmit: () => void;
 }
 
-export const DialogCreateNotebook = ({
-  form,
-  onSubmit,
-}: DialogCreateNotebookProps) => {
+export const DialogCreateNotebook = ({ form, onSubmit }: DialogCreateNotebookProps) => {
   const [isOpen, { open, close, toggle }] = useDisclosure();
 
   const handleCreate = () => {
@@ -78,9 +68,7 @@ export const DialogCreateNotebook = ({
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
               <DialogTitle>Crear bloc de notas</DialogTitle>
-              <DialogDescription>
-                {`¡Crea tu bloc de notas; rápido y sencillo!`}
-              </DialogDescription>
+              <DialogDescription>{`¡Crea tu bloc de notas; rápido y sencillo!`}</DialogDescription>
             </DialogHeader>
             <div className="grid gap-4">
               <FormField
@@ -103,10 +91,7 @@ export const DialogCreateNotebook = ({
                   <FormItem>
                     <FormLabel>Descripción</FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder="Lista de compras para el hogar"
-                        {...field}
-                      />
+                      <Input placeholder="Lista de compras para el hogar" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

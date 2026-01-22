@@ -43,8 +43,7 @@ export const metadata: Metadata = {
       template: '%s | ShaTes',
       default: 'ShaTes - Comparte tus notas con un código',
     },
-    description:
-      'La forma más rápida y segura de compartir tus notas y colaborar en tiempo real.',
+    description: 'La forma más rápida y segura de compartir tus notas y colaborar en tiempo real.',
     type: 'website',
     url: 'https://sha-tes.vercel.app/',
   },

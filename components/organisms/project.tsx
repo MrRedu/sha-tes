@@ -11,11 +11,7 @@ import { DialogManageProject } from '../molecules/dialog-manage-project';
 import { CardNotebook } from '../molecules/card-notebook';
 import { EmptyState } from './empty-state';
 import { FilePlusCorner } from 'lucide-react';
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from '../ui/hover-card';
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '../ui/hover-card';
 
 export interface ProjectProps {
   userId: User['id'];
@@ -75,10 +71,7 @@ export const Project = ({ userId, _project }: ProjectProps) => {
         </div>
 
         <div className="flex gap-2 w-full justify-end">
-          <DialogManageProject
-            form={formEditProject}
-            onSubmit={onSubmitEditProject}
-          />
+          <DialogManageProject form={formEditProject} onSubmit={onSubmitEditProject} />
           <DialogManageUsers
             joinCode={project.join_code}
             isProjectOwner={project.owner_id === userId}
@@ -89,10 +82,7 @@ export const Project = ({ userId, _project }: ProjectProps) => {
             onAccept={handleAcceptPendingMember}
             onReject={handleRejectPendingMember}
           />
-          <DialogDeleteProject
-            projectTitle={project.title}
-            deleteProject={deleteProject}
-          />
+          <DialogDeleteProject projectTitle={project.title} deleteProject={deleteProject} />
         </div>
       </div>
       {notebooks?.length === 0 && (
@@ -102,10 +92,7 @@ export const Project = ({ userId, _project }: ProjectProps) => {
             title="Sin notebooks aún"
             description="No has creado ningún notebook dentro de tu proyecto. Comienza creando tu primer notebook."
             action={
-              <DialogCreateNotebook
-                form={formCreateNotebook}
-                onSubmit={onSubmitCreateNotebook}
-              />
+              <DialogCreateNotebook form={formCreateNotebook} onSubmit={onSubmitCreateNotebook} />
             }
           />
         </section>
@@ -121,10 +108,7 @@ export const Project = ({ userId, _project }: ProjectProps) => {
               description={notebook.description}
             />
           ))}
-          <DialogCreateNotebook
-            form={formCreateNotebook}
-            onSubmit={onSubmitCreateNotebook}
-          />
+          <DialogCreateNotebook form={formCreateNotebook} onSubmit={onSubmitCreateNotebook} />
         </div>
       )}
       {/* <pre>{JSON.stringify(_project, null, 2)}</pre> */}

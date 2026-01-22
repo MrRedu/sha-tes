@@ -10,14 +10,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '../ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form';
 import { Button } from '../ui/button';
 import { FilePenLine } from 'lucide-react';
 import { Input } from '../ui/input';
@@ -31,10 +24,7 @@ interface DialogManageProjectProps {
   onSubmit: any;
 }
 
-export const DialogManageProject = ({
-  form,
-  onSubmit,
-}: DialogManageProjectProps) => {
+export const DialogManageProject = ({ form, onSubmit }: DialogManageProjectProps) => {
   return (
     <Dialog>
       <DialogTrigger asChild>

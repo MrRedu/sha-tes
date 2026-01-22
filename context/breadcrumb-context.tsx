@@ -7,15 +7,9 @@ interface BreadcrumbContextType {
   setLabel: (id: string, label: string) => void;
 }
 
-const BreadcrumbContext = createContext<BreadcrumbContextType | undefined>(
-  undefined,
-);
+const BreadcrumbContext = createContext<BreadcrumbContextType | undefined>(undefined);
 
-export function BreadcrumbProvider({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export function BreadcrumbProvider({ children }: { children: React.ReactNode }) {
   const [labels, setLabels] = useState<Record<string, string>>({});
 
   const setLabel = useCallback((id: string, label: string) => {
@@ -27,18 +21,14 @@ export function BreadcrumbProvider({
   }, []);
 
   return (
-    <BreadcrumbContext.Provider value={{ labels, setLabel }}>
-      {children}
-    </BreadcrumbContext.Provider>
+    <BreadcrumbContext.Provider value={{ labels, setLabel }}>{children}</BreadcrumbContext.Provider>
   );
 }
 
 export function useBreadcrumb() {
   const context = useContext(BreadcrumbContext);
   if (!context) {
-    throw new Error(
-      'useBreadcrumb debe usarse dentro de un BreadcrumbProvider',
-    );
+    throw new Error('useBreadcrumb debe usarse dentro de un BreadcrumbProvider');
   }
   return context;
 }
@@ -46,13 +36,7 @@ export function useBreadcrumb() {
 /**
  * Componente puente para que Server Components puedan "registrar" nombres
  */
-export function BreadcrumbRegistry({
-  id,
-  label,
-}: {
-  id: string;
-  label: string;
-}) {
+export function BreadcrumbRegistry({ id, label }: { id: string; label: string }) {
   const { setLabel } = useBreadcrumb();
 
   React.useEffect(() => {

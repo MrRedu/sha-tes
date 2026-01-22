@@ -10,7 +10,7 @@ import { CardNote } from '../molecules/card-note';
 import { DialogCreateNote } from '../molecules/dialog-create-note';
 import { DialogEditNote } from '../molecules/dialog-edit-note';
 import { Button } from '../ui/button';
-import {  ChevronLeft, GripVertical } from 'lucide-react';
+import { ChevronLeft, GripVertical } from 'lucide-react';
 import Link from 'next/link';
 import {
   AlertDialog,
@@ -22,19 +22,10 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import {
-  DragDropContext,
-  Droppable,
-  Draggable,
-  DropResult,
-} from '@hello-pangea/dnd';
+import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd';
 import { createClient } from '@/lib/supabase/client';
 import { toast } from 'sonner';
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from '../ui/hover-card';
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '../ui/hover-card';
 
 export interface NotebookProps {
   userId: User['id'];
@@ -120,10 +111,7 @@ export const Notebook = ({ userId, projectId, _notebook }: NotebookProps) => {
     <section className="space-y-4">
       <div className="w-full flex items-center justify-between flex-col md:flex-row gap-4">
         <div className="flex items-center gap-4">
-          <Link
-            href={`/dashboard/projects/${projectId}`}
-            title="Back to project"
-          >
+          <Link href={`/dashboard/projects/${projectId}`} title="Back to project">
             <Button variant="ghost" size="icon">
               <ChevronLeft />
             </Button>
@@ -162,10 +150,7 @@ export const Notebook = ({ userId, projectId, _notebook }: NotebookProps) => {
               ref={provided.innerRef}
               className="w-full grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
             >
-              <DialogCreateNote
-                form={formCreateNote}
-                onSubmit={onSubmitCreateNote}
-              />
+              <DialogCreateNote form={formCreateNote} onSubmit={onSubmitCreateNote} />
 
               {notes.map((note: Note, index) => (
                 <Draggable key={note.id} draggableId={note.id} index={index}>
@@ -199,9 +184,7 @@ export const Notebook = ({ userId, projectId, _notebook }: NotebookProps) => {
 
       {notes.length === 0 && (
         <div className="text-center py-12">
-          <Typography variant="muted">
-            No hay notas en este notebook. ¡Crea la primera!
-          </Typography>
+          <Typography variant="muted">No hay notas en este notebook. ¡Crea la primera!</Typography>
         </div>
       )}
 
@@ -222,15 +205,12 @@ export const Notebook = ({ userId, projectId, _notebook }: NotebookProps) => {
           <AlertDialogHeader>
             <AlertDialogTitle>¿Estás seguro?</AlertDialogTitle>
             <AlertDialogDescription>
-              Esta acción no se puede deshacer. La nota será eliminada
-              permanentemente.
+              Esta acción no se puede deshacer. La nota será eliminada permanentemente.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancelar</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDeleteNote}>
-              Eliminar
-            </AlertDialogAction>
+            <AlertDialogAction onClick={handleDeleteNote}>Eliminar</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

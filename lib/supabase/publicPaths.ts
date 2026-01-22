@@ -3,7 +3,5 @@
 export const PUBLIC_PATHS = ['/', '/login', '/auth'];
 
 export function isPublicPath(pathname: string) {
-  return PUBLIC_PATHS.some(
-    (p) => pathname === p || pathname.startsWith(p + '/')
-  );
+  return PUBLIC_PATHS.some((p) => pathname === p || pathname.startsWith(p + '/'));
 }

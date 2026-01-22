@@ -25,10 +25,7 @@ interface ProjectsParams {
   _pendingProjectsRequests: RpcPendingProjects;
 }
 
-export const ProjectsClient = ({
-  _projects,
-  _pendingProjectsRequests,
-}: ProjectsParams) => {
+export const ProjectsClient = ({ _projects, _pendingProjectsRequests }: ProjectsParams) => {
   const {
     projects,
     form: formProjects,
@@ -66,12 +63,7 @@ export const ProjectsClient = ({
             </div>
           }
           footer={
-            <Button
-              variant="link"
-              asChild
-              className="text-muted-foreground"
-              size="sm"
-            >
+            <Button variant="link" asChild className="text-muted-foreground" size="sm">
               <Link href="#">
                 Learn More <ArrowUpRightIcon />
               </Link>
@@ -85,10 +77,7 @@ export const ProjectsClient = ({
   return (
     <section className="space-y-4 p-4 md:p-6">
       {/* Header */}
-      <HeaderProjects
-        formProjects={formProjects}
-        onSubmitProjects={onSubmitProjects}
-      />
+      <HeaderProjects formProjects={formProjects} onSubmitProjects={onSubmitProjects} />
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {projects?.map((project, index) => {
           return (
@@ -99,10 +88,7 @@ export const ProjectsClient = ({
               updated_at={project.updated_at}
               title={project.title}
               description={project.description}
-              className={cn(
-                'w-full',
-                index === 0 ? 'col-span-1 md:col-span-2' : 'col-span-1',
-              )}
+              className={cn('w-full', index === 0 ? 'col-span-1 md:col-span-2' : 'col-span-1')}
               members={project.members}
             />
           );
@@ -123,11 +109,7 @@ export const ProjectsClient = ({
         />
       </div>
       {/* Cards */}
-      <div
-        className={cn(
-          `w-full gap-4 grid md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5`,
-        )}
-      >
+      <div className={cn(`w-full gap-4 grid md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5`)}>
         {pendingCards}
       </div>
     </section>

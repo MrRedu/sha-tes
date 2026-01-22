@@ -38,7 +38,7 @@ export function AppSidebar() {
           id, 
           title,
           notebooks:tbl_notebooks (id, name)
-        `,
+        `
         )
         .order('created_at', { ascending: false });
 
@@ -90,10 +90,7 @@ export function AppSidebar() {
       <SidebarFooter>
         <NavUser
           user={{
-            name:
-              user?.user_metadata?.name ||
-              user?.email?.split('@')[0] ||
-              'Usuario',
+            name: user?.user_metadata?.name || user?.email?.split('@')[0] || 'Usuario',
             email: user?.email || '',
             avatar: user?.user_metadata?.avatar_url || '',
             avatarFallback: (user?.user_metadata?.name || user?.email || 'U')

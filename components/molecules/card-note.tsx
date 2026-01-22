@@ -1,11 +1,6 @@
 'use client';
 
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from '@/components/ui/card';
+import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Typography } from '@/components/ui/typography';
 import { Button } from '@/components/ui/button';
 import { Note } from '@/types/types';
@@ -25,15 +20,9 @@ const PRIORITY_BADGES = {
   urgent: { label: '🔴 Urgente', class: 'bg-red-100 text-red-800' },
 };
 
-export const CardNote = ({
-  note,
-  onToggleComplete,
-  onEdit,
-  onDelete,
-}: CardNoteProps) => {
+export const CardNote = ({ note, onToggleComplete, onEdit, onDelete }: CardNoteProps) => {
   const priorityBadge =
-    PRIORITY_BADGES[note.priority as keyof typeof PRIORITY_BADGES] ||
-    PRIORITY_BADGES.normal;
+    PRIORITY_BADGES[note.priority as keyof typeof PRIORITY_BADGES] || PRIORITY_BADGES.normal;
 
   return (
     <Card
@@ -75,12 +64,7 @@ export const CardNote = ({
         </Typography>
       </CardContent>
       <CardFooter className="flex justify-end gap-2 pt-2">
-        <Button
-          variant="ghost"
-          size="icon"
-          className="h-8 w-8"
-          onClick={() => onEdit(note)}
-        >
+        <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => onEdit(note)}>
           <Pencil className="h-4 w-4" />
         </Button>
         <Button

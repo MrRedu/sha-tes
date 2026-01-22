@@ -44,9 +44,7 @@ export default async function ProjectsPage() {
 
   const activeProjects = projects?.filter((project) => {
     // 1. Si el usuario es el dueño, SIEMPRE lo incluimos.
-    if (project.owner_id === userId) {
-      return true;
-    }
+    if (project.owner_id === userId) return true;
 
     // 2. Buscamos si el usuario es un miembro ACTIVO dentro del array anidado.
     const membership = project.members?.find((member) => member.id === userId);
@@ -60,10 +58,7 @@ export default async function ProjectsPage() {
   }
 
   if (pendingProjectsError) {
-    console.error(
-      'Error cargando proyectos pendientes:',
-      pendingProjectsError.message,
-    );
+    console.error('Error cargando proyectos pendientes:', pendingProjectsError.message);
   }
 
   return (

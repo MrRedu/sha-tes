@@ -22,10 +22,7 @@ export const HeaderActions = () => {
           >
             <Link href="/login">Iniciar Sesión</Link>
           </Button>
-          <Button
-            size="sm"
-            className="bg-primary hover:bg-primary/90 text-primary-foreground"
-          >
+          <Button size="sm" className="bg-primary hover:bg-primary/90 text-primary-foreground">
             <Link href="/login">Comenzar</Link>
           </Button>
         </>

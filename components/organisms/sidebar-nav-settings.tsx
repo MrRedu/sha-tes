@@ -21,11 +21,7 @@ type SidebarNavProps = React.HTMLAttributes<HTMLElement> & {
   }[];
 };
 
-export function SidebarNavSettings({
-  className,
-  items,
-  ...props
-}: SidebarNavProps) {
+export function SidebarNavSettings({ className, items, ...props }: SidebarNavProps) {
   const pathname = usePathname();
   const router = useRouter();
   const [val, setVal] = useState(pathname ?? '/dashboard/settings');
@@ -61,10 +57,7 @@ export function SidebarNavSettings({
         className="bg-background hidden w-full min-w-40 px-1 py-2 md:block whitespace-nowrap"
       >
         <nav
-          className={cn(
-            'flex space-x-2 py-1 lg:flex-col lg:space-y-1 lg:space-x-0',
-            className
-          )}
+          className={cn('flex space-x-2 py-1 lg:flex-col lg:space-y-1 lg:space-x-0', className)}
           {...props}
         >
           {items.map((item) => (

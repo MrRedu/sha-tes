@@ -26,8 +26,7 @@ export type PendingProjectEntry = {
   project: PendingProject | null;
 };
 
-export type RpcPendingProjects =
-  Database['public']['Functions']['get_pending_projects']['Returns'];
+export type RpcPendingProjects = Database['public']['Functions']['get_pending_projects']['Returns'];
 
 export type Notebook = Database['public']['Tables']['tbl_notebooks']['Row'];
 

@@ -58,9 +58,7 @@ export function DialogCreateProject({
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
               <DialogTitle>Crear proyecto</DialogTitle>
-              <DialogDescription>
-                {`¡Crea tu proyecto; rápido y sencillo!`}
-              </DialogDescription>
+              <DialogDescription>{`¡Crea tu proyecto; rápido y sencillo!`}</DialogDescription>
             </DialogHeader>
             <div className="grid gap-4">
               <FormField
@@ -73,8 +71,7 @@ export function DialogCreateProject({
                       <Input placeholder="ShaTes" {...field} />
                     </FormControl>
                     <FormDescription>
-                      Este será visible para ti y para los colaboradores que
-                      invites.
+                      Este será visible para ti y para los colaboradores que invites.
                     </FormDescription>
                     <FormMessage />
                   </FormItem>

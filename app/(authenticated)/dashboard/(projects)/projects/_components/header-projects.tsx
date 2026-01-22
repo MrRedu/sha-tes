@@ -36,10 +36,7 @@ const FILTER_LABELS = [
   },
 ];
 
-export const HeaderProjects = ({
-  formProjects,
-  onSubmitProjects,
-}: HeaderProjectsProps) => {
+export const HeaderProjects = ({ formProjects, onSubmitProjects }: HeaderProjectsProps) => {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
@@ -50,10 +47,7 @@ export const HeaderProjects = ({
         </div>
         <div className="flex gap-2">
           <DialogJoinProject />
-          <DialogCreateProject
-            formProjects={formProjects}
-            onSubmitProjects={onSubmitProjects}
-          />
+          <DialogCreateProject formProjects={formProjects} onSubmitProjects={onSubmitProjects} />
         </div>
       </div>
       <div className="relative w-full">

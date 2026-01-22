@@ -1,11 +1,4 @@
-import {
-  Header,
-  Hero,
-  Features,
-  HowItWorks,
-  Footer,
-  Pricing,
-} from '@/app/_components';
+import { Header, Hero, Features, HowItWorks, Footer, Pricing } from '@/app/_components';
 
 export default function Home() {
   return (

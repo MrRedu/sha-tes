@@ -16,13 +16,7 @@ interface EmptyStateProps {
   footer?: React.ReactNode;
 }
 
-export const EmptyState = ({
-  icon: Icon,
-  title,
-  description,
-  action,
-  footer,
-}: EmptyStateProps) => {
+export const EmptyState = ({ icon: Icon, title, description, action, footer }: EmptyStateProps) => {
   return (
     <Empty>
       <EmptyHeader>

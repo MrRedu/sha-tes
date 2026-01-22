@@ -17,36 +17,29 @@ const timelineData = [
     id: 1,
     date: 'January 15, 2024',
     title: 'Phase I',
-    description:
-      'Initial data collection and model architecture design for the AI system.',
+    description: 'Initial data collection and model architecture design for the AI system.',
   },
   {
     id: 2,
     date: 'March 30, 2024',
     title: 'Phase II',
-    description:
-      'Model training and validation with core dataset implementation.',
+    description: 'Model training and validation with core dataset implementation.',
   },
   {
     id: 3,
     date: 'June 15, 2024',
     title: 'Phase III',
-    description:
-      'Integration of advanced features and performance optimization.',
+    description: 'Integration of advanced features and performance optimization.',
   },
   {
     id: 4,
     date: 'September 1, 2024',
     title: 'Phase IV',
-    description:
-      'Final testing, deployment, and continuous improvement system launch.',
+    description: 'Final testing, deployment, and continuous improvement system launch.',
   },
 ];
 
-export function Timeline({
-  items = timelineData,
-  activeStep = 1,
-}: TimelineProps) {
+export function Timeline({ items = timelineData, activeStep = 1 }: TimelineProps) {
   return (
     <div className="w-full">
       <div className="flex flex-col md:flex-row md:justify-between">
@@ -66,14 +59,14 @@ export function Timeline({
               <div
                 className={cn(
                   'absolute left-[7px] top-[16px] bottom-0 w-[2px] bg-slate-200 md:hidden',
-                  isActive && 'bg-primary',
+                  isActive && 'bg-primary'
                 )}
               />
               {/* Horizontal Line (Desktop) */}
               <div
                 className={cn(
                   'hidden md:block absolute left-[16px] right-0 top-[7px] h-[2px] bg-slate-200',
-                  isActive && 'bg-primary',
+                  isActive && 'bg-primary'
                 )}
               />
 
@@ -92,15 +85,11 @@ export function Timeline({
                 <div className="ml-6 md:ml-0 md:mt-8 pb-10 md:pb-0 md:pr-10">
                   {/* Date */}
                   {item.date && (
-                    <p className="text-sm font-medium text-slate-400 mb-1">
-                      {item.date}
-                    </p>
+                    <p className="text-sm font-medium text-slate-400 mb-1">{item.date}</p>
                   )}
 
                   {/* Title */}
-                  <h3 className="text-lg font-bold mb-2 transition-colors">
-                    {item.title}
-                  </h3>
+                  <h3 className="text-lg font-bold mb-2 transition-colors">{item.title}</h3>
 
                   {/* Description */}
                   <p className="text-sm text-muted-foreground leading-relaxed text-balance max-w-xs transition-colors">

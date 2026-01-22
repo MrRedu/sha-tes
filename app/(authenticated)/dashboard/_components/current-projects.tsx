@@ -90,8 +90,7 @@ const CURRENT_PROJECTS: {
   {
     id: '2',
     name: 'Integración API REST',
-    description:
-      'Conexión del feed de actividad con los webhooks del sistema central.',
+    description: 'Conexión del feed de actividad con los webhooks del sistema central.',
     status: 'revision',
     icon: 'folder',
     members: [
