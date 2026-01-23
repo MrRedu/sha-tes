@@ -43,8 +43,8 @@ export const CardProject = ({
 
   return (
     <Link href={`/dashboard/projects/${id}`} className={cn('w-full gap-0 @container', className)}>
-      <Card className="h-full">
-        <CardHeader className="items-center hidden @md:flex">
+      <Card className="h-full min-h-[250px]">
+        <CardHeader className="items-center flex">
           <Badge variant={COLOR_BADGE[priority]} className="uppercase">
             Prioridad {PRIORITY_TEXT[priority]}
           </Badge>
@@ -58,7 +58,7 @@ export const CardProject = ({
         </CardHeader>
         <CardContent className="mb-4">
           <h3 className="font-semibold">{title}</h3>
-          <p className="text-sm text-muted-foreground line-clamp-2">{description}</p>
+          <p className="text-sm text-muted-foreground line-clamp-2 break-words">{description}</p>
         </CardContent>
         <CardFooter className="mt-auto flex items-start flex-col gap-2">
           <div className="flex items-center justify-between gap-2 w-full">

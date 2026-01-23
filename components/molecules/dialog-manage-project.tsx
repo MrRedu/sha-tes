@@ -45,10 +45,10 @@ export const DialogManageProject = ({ form, onSubmit }: DialogManageProjectProps
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 ">
               <FormField
                 control={form.control}
-                name="name"
+                name="title"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{`Nombre del proyecto`}</FormLabel>
+                    <FormLabel>{`Título del proyecto`}</FormLabel>
                     <FormControl>
                       <Input placeholder="ShaTes" {...field} />
                     </FormControl>
