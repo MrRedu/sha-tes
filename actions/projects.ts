@@ -1,11 +1,12 @@
 'use server';
 
 import { createClient } from '@/lib/supabase/server';
-import { PROJECT_DETAILS_QUERY, PROJECTS_QUERY } from '@/lib/constants';
+import { PROJECT_WITH_NOTEBOOKS_QUERY, PROJECTS_QUERY } from '@/lib/constants';
+import { ProjectWithMembersAndNotebooks } from '@/types/types';
 
 export async function fetchProjectsAction(
-  from: number, 
-  to: number, 
+  from: number,
+  to: number,
   options?: { search?: string; status?: string }
 ) {
   const supabase = await createClient();
@@ -47,8 +48,7 @@ export async function fetchPendingProjectsAction() {
 
   if (!userId) return { pendingProjects: [], error: 'Not authenticated' };
 
-  const { data: pendingProjects, error } =
-    await supabase.rpc('get_pending_projects');
+  const { data: pendingProjects, error } = await supabase.rpc('get_pending_projects');
 
   if (error) {
     console.error('Error fetching pending projects:', error);
@@ -67,7 +67,7 @@ export async function fetchProjectByIdAction(projectId: string) {
 
   const { data: project, error } = await supabase
     .from('tbl_projects')
-    .select(PROJECT_DETAILS_QUERY)
+    .select(PROJECT_WITH_NOTEBOOKS_QUERY)
     .eq('id', projectId)
     .single();
 
@@ -76,5 +76,14 @@ export async function fetchProjectByIdAction(projectId: string) {
     return { project: null, error: error.message };
   }
 
-  return { project: project as any, error: null };
+  // Transform nested count from Supabase [{ count: X }] to a simple number
+  const projectTransformed = {
+    ...project,
+    notebooks: project.notebooks.map((notebook: any) => ({
+      ...notebook,
+      count_notes: notebook.count_notes?.[0]?.count || 0,
+    })),
+  };
+
+  return { project: projectTransformed as ProjectWithMembersAndNotebooks, error: null };
 }

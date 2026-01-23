@@ -28,7 +28,9 @@ export type PendingProjectEntry = {
 
 export type RpcPendingProjects = Database['public']['Functions']['get_pending_projects']['Returns'];
 
-export type Notebook = Database['public']['Tables']['tbl_notebooks']['Row'];
+export type Notebook = Database['public']['Tables']['tbl_notebooks']['Row'] & {
+  count_notes: number;
+};
 
 // Note
 export type Note = Database['public']['Tables']['tbl_notes']['Row'];

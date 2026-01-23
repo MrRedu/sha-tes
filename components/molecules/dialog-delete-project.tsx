@@ -21,8 +21,10 @@ import { Input } from '../ui/input';
 import { Alert, AlertTitle } from '../ui/alert';
 import { useEffect, useState } from 'react';
 
+import { useProjectMutations } from '@/hooks/use-projects';
+
 interface DialogDeleteProjectProps {
-  deleteProject: () => void;
+  projectId: string;
   projectTitle: string;
 }
 
@@ -31,7 +33,8 @@ const formSchema = z.object({
   toConfirm: z.string(),
 });
 
-export function DialogDeleteProject({ deleteProject, projectTitle }: DialogDeleteProjectProps) {
+export function DialogDeleteProject({ projectId, projectTitle }: DialogDeleteProjectProps) {
+  const { deleteProject } = useProjectMutations(projectId);
   const [canDelete, setCanDelete] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -109,7 +112,7 @@ export function DialogDeleteProject({ deleteProject, projectTitle }: DialogDelet
           <AlertDialogCancel>Cancelar</AlertDialogCancel>
           <AlertDialogAction
             className="bg-destructive text-white hover:bg-destructive/90"
-            onClick={deleteProject}
+            onClick={() => deleteProject()}
             disabled={!canDelete}
           >
             Eliminar

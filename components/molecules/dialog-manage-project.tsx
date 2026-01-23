@@ -10,17 +10,13 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form';
-import { Button } from '../ui/button';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Button } from '@/components/ui/button';
 import { FilePenLine } from 'lucide-react';
-import { Input } from '../ui/input';
-import { Textarea } from '../ui/textarea';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 
 import { useProjectStore } from '@/hooks/use-project-store';
-
-import { UseFormReturn } from 'react-hook-form';
-import z from 'zod';
-import { formEditProjectSchema } from '@/hooks/validations/use-projects.schema';
 
 import {
   Select,
@@ -28,39 +24,20 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '../ui/select';
-import { Constants } from '@/types/database';
+} from '@/components/ui/select';
 
-const STATUS_LABELS: Record<string, string> = {
-  active: 'Activo',
-  inactive: 'Inactivo',
-  archived: 'Archivado',
-  featured: 'Destacado',
-};
 
-const PRIORITY_LABELS: Record<string, string> = {
-  low: 'Baja',
-  medium: 'Media',
-  high: 'Alta',
-};
-
-const STATUS_OPTIONS = Constants.public.Enums.project_status.map((status) => ({
-  value: status,
-  label: STATUS_LABELS[status] || status.charAt(0).toUpperCase() + status.slice(1),
-}));
-
-const PRIORITY_OPTIONS = Constants.public.Enums.project_priority.map((priority) => ({
-  value: priority,
-  label: PRIORITY_LABELS[priority] || priority.charAt(0).toUpperCase() + priority.slice(1),
-}));
+import { useProjectMutations, useProjectDetails } from '@/hooks/use-projects';
+import { PRIORITY_OPTIONS, STATUS_OPTIONS } from '@/lib/constants';
 
 interface DialogManageProjectProps {
-  form: UseFormReturn<z.infer<typeof formEditProjectSchema>, any, any>;
-  onSubmit: (e?: React.BaseSyntheticEvent) => Promise<void>;
+  projectId: string;
 }
 
-export const DialogManageProject = ({ form, onSubmit }: DialogManageProjectProps) => {
+export const DialogManageProject = ({ projectId }: DialogManageProjectProps) => {
   const { isManageDialogOpen, setManageDialogOpen } = useProjectStore();
+  const { data: project } = useProjectDetails(projectId);
+  const { form, onSubmit } = useProjectMutations(projectId, project);
 
   return (
     <Dialog open={isManageDialogOpen} onOpenChange={setManageDialogOpen}>

@@ -33,7 +33,7 @@ export const CardCurrentProject = ({
         <h3 className="font-semibold text-lg">{title}</h3>
         <p>{description}</p>
       </CardContent>
-      <CardFooter className="flex items-center justify-between">
+      <CardFooter className="flex items-center justify-between mt-auto">
         <AvatarGroup members={members} />
         <p className="text-sm text-muted-foreground">
           {formatDistanceToNow(new Date(updatedAt), {

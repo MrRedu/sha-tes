@@ -1,29 +1,16 @@
-import { type FormCreateProjectType } from '@/hooks/validations/use-projects.schema';
-import { type UseFormReturn } from 'react-hook-form';
 import { DialogCreateProject } from '@/components/organisms/dialog-create-project';
 import { DialogJoinProject } from '@/components/organisms/dialog-join-project';
 import { Typography } from '@/components/ui/typography';
 import { Input } from '@/components/ui/input';
-import { PlusIcon, SearchIcon } from 'lucide-react';
+import { SearchIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useProjectStore } from '@/hooks/use-project-store';
 
-import { Constants } from '@/types/database';
-
-const STATUS_LABELS: Record<string, string> = {
-  all: 'Todos',
-  active: 'Activos',
-  inactive: 'Inactivos',
-  archived: 'Archivados',
-  featured: 'Destacados',
-};
+import { STATUS_OPTIONS } from '@/lib/constants';
 
 const FILTER_LABELS = [
-  { value: 'all', label: STATUS_LABELS.all },
-  ...Constants.public.Enums.project_status.map((status) => ({
-    value: status,
-    label: STATUS_LABELS[status] || status.charAt(0).toUpperCase() + status.slice(1),
-  })),
+  { value: 'all', label: 'Todos' },
+  ...STATUS_OPTIONS
 ];
 
 export const HeaderProjects = () => {

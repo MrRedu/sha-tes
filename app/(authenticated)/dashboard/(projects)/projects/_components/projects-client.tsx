@@ -26,16 +26,10 @@ import { actions } from '@/actions';
 import { Spinner } from '@/components/ui/spinner';
 
 export const ProjectsClient = () => {
-  const {
-    projects,
-    isLoading,
-    isSearching,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-  } = useProjects({
-    itemsPerPage: 7,
-  });
+  const { projects, isLoading, isSearching, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useProjects({
+      itemsPerPage: 7,
+    });
 
   const { data: pendingProjects } = useQuery({
     queryKey: ['pending-projects'],
@@ -89,10 +83,12 @@ export const ProjectsClient = () => {
       <HeaderProjects />
 
       {/* Grid wrapper */}
-      <div className={cn(
-        "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 transition-all duration-300",
-        isSearching ? "opacity-50 grayscale-50 pointer-events-none" : "opacity-100"
-      )}>
+      <div
+        className={cn(
+          'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 transition-all duration-300',
+          isSearching ? 'opacity-50 grayscale-50 pointer-events-none' : 'opacity-100'
+        )}
+      >
         {/* Skeletons while hydrating/loading to avoid layout shift */}
         {isLoading && projects.length === 0 && (
           <>
@@ -132,21 +128,25 @@ export const ProjectsClient = () => {
             </p>
           </div>
         )}
-        
+
         {/* Always visible at the end, but disabled during initial load to prevent jump */}
         <DialogCreateProject
           triggerComponent={
-            <Card className={cn(
-              "h-full min-h-[250px] cursor-pointer border-dashed border-spacing-8 border-2 transition-all duration-300 text-center justify-center flex-col-reverse bg-transparent capitalize!",
-              isLoading && projects.length === 0 ? "opacity-0 invisible" : "opacity-50 hover:opacity-100",
-              projects.length === 0 && !isLoading && "col-span-1"
-            )}>
+            <Card
+              className={cn(
+                'h-full min-h-[250px] cursor-pointer border-dashed border-spacing-8 border-2 transition-all duration-300 text-center justify-center flex-col-reverse bg-transparent capitalize!',
+                isLoading && projects.length === 0
+                  ? 'opacity-0 invisible'
+                  : 'opacity-50 hover:opacity-100',
+                projects.length === 0 && !isLoading && 'col-span-1'
+              )}
+            >
               <CardHeader>
                 <h3>Crear nuevo proyecto</h3>
               </CardHeader>
               <CardContent>
-                <Button className='rounded-full' variant='secondary' size='icon-lg'>
-                <PlusIcon className='size-6' />
+                <Button className="rounded-full" variant="secondary" size="icon-lg">
+                  <PlusIcon className="size-6" />
                 </Button>
               </CardContent>
             </Card>
@@ -164,9 +164,7 @@ export const ProjectsClient = () => {
       )}
 
       {/* Pending Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {pendingCards}
-      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">{pendingCards}</div>
     </section>
   );
 };

@@ -1,3 +1,28 @@
+import { Constants } from '@/types/database';
+
+export const STATUS_LABELS: Record<string, string> = {
+  active: 'Activo',
+  inactive: 'Inactivo',
+  archived: 'Archivado',
+  featured: 'Destacado',
+};
+
+export const PRIORITY_LABELS: Record<string, string> = {
+  low: 'Baja',
+  medium: 'Media',
+  high: 'Alta',
+};
+
+export const STATUS_OPTIONS = Constants.public.Enums.project_status.map((status) => ({
+  value: status,
+  label: STATUS_LABELS[status] || status.charAt(0).toUpperCase() + status.slice(1),
+}));
+
+export const PRIORITY_OPTIONS = Constants.public.Enums.project_priority.map((priority) => ({
+  value: priority,
+  label: PRIORITY_LABELS[priority] || priority.charAt(0).toUpperCase() + priority.slice(1),
+}));
+
 export const PROJECTS_ITEMS_PER_PAGE = 7;
 
 export const PROJECTS_QUERY = `
@@ -22,7 +47,7 @@ export const PROJECTS_QUERY = `
   )
 `;
 
-export const PROJECT_DETAILS_QUERY = `
+export const PROJECT_WITH_NOTEBOOKS_QUERY = `
   id,
   title,
   description,
@@ -47,6 +72,8 @@ export const PROJECT_DETAILS_QUERY = `
     name,
     description,
     created_at,
-    creator:creator_id ( id, full_name, avatar_url )
+    updated_at,
+    creator:creator_id ( id, full_name, avatar_url ),
+    count_notes:tbl_notes ( count )
   )
 `;

@@ -69,20 +69,18 @@ export function useProjects({ itemsPerPage = PROJECTS_ITEMS_PER_PAGE }: useProje
   };
 }
 
-export type ProjectWithNotebooks = ProjectWithMembersAndNotebooks;
-
 export function useProjectDetails(projectId: string) {
   return useQuery({
     queryKey: ['project', projectId],
     queryFn: async () => {
       const { project, error } = await actions.projects.fetchProjectById(projectId);
       if (error) throw new Error(error);
-      return project as ProjectWithNotebooks;
+      return project as ProjectWithMembersAndNotebooks;
     },
   });
 }
 
-export function useProjectMutations(projectId: string, project?: ProjectWithNotebooks) {
+export function useProjectMutations(projectId: string, project?: ProjectWithMembersAndNotebooks) {
   const supabase = createClient();
   const queryClient = useQueryClient();
   const setManageDialogOpen = useProjectStore((state) => state.setManageDialogOpen);

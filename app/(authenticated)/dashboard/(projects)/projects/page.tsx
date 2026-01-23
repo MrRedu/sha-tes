@@ -15,7 +15,10 @@ export default async function ProjectsPage() {
   await queryClient.prefetchInfiniteQuery({
     queryKey: ['projects', { limit: PROJECTS_ITEMS_PER_PAGE }],
     queryFn: async () => {
-      const { projects, error } = await actions.projects.fetchProjects(0, PROJECTS_ITEMS_PER_PAGE - 1);
+      const { projects, error } = await actions.projects.fetchProjects(
+        0,
+        PROJECTS_ITEMS_PER_PAGE - 1
+      );
       if (error) throw new Error(error);
       return projects;
     },

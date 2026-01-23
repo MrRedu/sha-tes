@@ -1,10 +1,10 @@
-import { Project } from '@/components/organisms/project';
 import { BreadcrumbRegistry } from '@/context/breadcrumb-context';
 import { getQueryClient } from '@/lib/get-query-client';
 import { actions } from '@/actions';
 import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
 import { createClient } from '@/lib/supabase/server';
 import { notFound } from 'next/navigation';
+import { ProjectClient } from './_components/project-client';
 
 interface ProjectPageProps {
   params: Promise<{ projectId: string }>;
@@ -30,14 +30,12 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
   const project = queryClient.getQueryData(['project', projectId]) as any;
 
-  if (!project) {
-    return notFound();
-  }
+  if (!project) return notFound();
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       <BreadcrumbRegistry id={project.id} label={project.title} />
-      <Project projectId={projectId} userId={userId} />
+      <ProjectClient projectId={projectId} userId={userId} />
     </HydrationBoundary>
   );
 }
