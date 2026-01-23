@@ -58,7 +58,7 @@ export const DialogCreateNote = ({ notebookId }: DialogCreateNoteProps) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button>
+        <Button size="lg">
           <Plus className="h-4 w-4 mr-2" />
           Nueva nota
         </Button>

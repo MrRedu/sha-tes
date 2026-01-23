@@ -6,9 +6,8 @@ import { useNotebookDetails, useNoteMutations } from '@/hooks/use-notebooks';
 import { CardNote } from '@/components/molecules/card-note';
 import { DialogCreateNote } from '@/components/molecules/dialog-create-note';
 import { DialogEditNote } from '@/components/molecules/dialog-edit-note';
-import { Button } from '@/components/ui/button';
-import { ChevronLeft, Loader2, Plus } from 'lucide-react';
-import Link from 'next/link';
+import {} from '@/components/ui/button';
+import { Loader2, Plus } from 'lucide-react';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -19,7 +18,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd';
+import { DragDropContext, Droppable, Draggable, type DropResult } from '@hello-pangea/dnd';
 import type { Note } from '@/types/types';
 import { notFound } from 'next/navigation';
 
@@ -67,20 +66,13 @@ export const NotebookClient = ({ projectId, notebookId }: NotebookClientProps) =
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-center gap-4">
-          <Link href={`/dashboard/projects/${projectId}`}>
-            <Button variant="outline" size="icon" className="h-9 w-9">
-              <ChevronLeft className="size-4" />
-            </Button>
-          </Link>
-          <div>
-            <div className="flex items-center gap-3">
-              <Typography variant="h1" className="text-2xl font-bold tracking-tight">
-                {notebook.name}
-              </Typography>
-              <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20 uppercase tracking-wider">
-                {notes.length} Notas
-              </span>
-            </div>
+          <div className="flex items-center gap-3">
+            <Typography variant="h1" className="text-2xl font-bold tracking-tight">
+              {notebook.name}
+            </Typography>
+            <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20 uppercase tracking-wider">
+              {notes.length} Notas
+            </span>
           </div>
         </div>
 
@@ -90,46 +82,19 @@ export const NotebookClient = ({ projectId, notebookId }: NotebookClientProps) =
       </div>
 
       {notebook.description && (
-        <Typography variant="muted" className="text-sm max-w-3xl border-l-2 pl-4 py-1 italic ml-1">
+        <Typography variant="muted" className="max-w-3xl italic line-clamp-1">
           {notebook.description}
         </Typography>
       )}
 
       {/* Notes List */}
-      <DragDropContext onDragEnd={onDragEnd}>
-        <Droppable droppableId="notes">
-          {(provided) => (
-            <div
-              {...provided.droppableProps}
-              ref={provided.innerRef}
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
-            >
-              {notes.map((note, index) => (
-                <Draggable key={note.id} draggableId={note.id} index={index}>
-                  {(provided, snapshot) => (
-                    <div
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      className={snapshot.isDragging ? 'z-50 shadow-xl' : ''}
-                    >
-                      <CardNote
-                        dragHandleProps={provided.dragHandleProps}
-                        note={note}
-                        onToggleComplete={(n) =>
-                          toggleNote({ noteId: n.id, isCompleted: !n.is_completed })
-                        }
-                        onEdit={setEditingNote}
-                        onDelete={(id) => setDeletingNoteId(id)}
-                      />
-                    </div>
-                  )}
-                </Draggable>
-              ))}
-              {provided.placeholder}
-            </div>
-          )}
-        </Droppable>
-      </DragDropContext>
+      {notes.length > 0 && (
+        <div className="grid grid-cols-1 gap-4">
+          {notes.map((note) => (
+            <CardNote key={note.id} note={note} />
+          ))}
+        </div>
+      )}
 
       {notes.length === 0 && (
         <div className="border border-dashed border-border rounded-xl p-20 flex flex-col items-center justify-center text-center space-y-4 bg-muted/20">
