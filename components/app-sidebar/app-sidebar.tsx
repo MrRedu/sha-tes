@@ -1,5 +1,5 @@
 'use client';
-import { FolderKanban, Home, LayoutDashboard } from 'lucide-react';
+import { Folder, FolderGit2, LayoutDashboard } from 'lucide-react';
 
 import {
   Sidebar,
@@ -57,19 +57,19 @@ export function AppSidebar() {
     {
       title: 'Panel principal',
       url: '/dashboard',
-      icon: Home,
+      icon: LayoutDashboard,
     },
     {
       title: 'Proyectos',
       url: '/dashboard/projects',
-      icon: LayoutDashboard,
+      icon: Folder,
     },
   ];
 
   const navProjects = dynamicProjects.map((project) => ({
     title: project.title,
     url: `/dashboard/projects/${project.id}`,
-    icon: FolderKanban,
+    icon: FolderGit2,
     items: project.notebooks?.map((notebook) => ({
       title: notebook.name,
       url: `/dashboard/projects/${project.id}/notebooks/${notebook.id}`,
