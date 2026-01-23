@@ -21,13 +21,10 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { PlusIcon } from 'lucide-react';
-import { useDisclosure } from '@/hooks/use-disclosure';
-import { type UseFormReturn } from 'react-hook-form';
-import { FormCreateProjectType } from '@/hooks/validations/use-projects.schema';
+import { useProjectStore } from '@/hooks/use-project-store';
+import { useCreateProject } from '@/hooks/use-create-project';
 
 interface ProjectsParams {
-  formProjects: UseFormReturn<FormCreateProjectType>;
-  onSubmitProjects: () => void;
   triggerComponent?: React.ReactNode;
 }
 
@@ -39,21 +36,20 @@ const DEFAULT_TRIGGER_COMPONENT = (
 );
 
 export function DialogCreateProject({
-  formProjects,
-  onSubmitProjects,
   triggerComponent = DEFAULT_TRIGGER_COMPONENT,
 }: ProjectsParams) {
-  const [isOpen, { open, close, toggle }] = useDisclosure();
+  const { isCreateDialogOpen, setCreateDialogOpen } = useProjectStore();
+  const { form, onSubmit, isLoading } = useCreateProject();
 
-  const handleCreate = () => {
-    close();
-    onSubmitProjects();
+  const handleCreate = (e: React.FormEvent) => {
+    e.preventDefault();
+    onSubmit();
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={toggle}>
-      <Form {...formProjects}>
-        <form onSubmit={onSubmitProjects}>
+    <Dialog open={isCreateDialogOpen} onOpenChange={setCreateDialogOpen}>
+      <Form {...form}>
+        <form onSubmit={handleCreate}>
           <DialogTrigger asChild>{triggerComponent}</DialogTrigger>
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
@@ -62,7 +58,7 @@ export function DialogCreateProject({
             </DialogHeader>
             <div className="grid gap-4">
               <FormField
-                control={formProjects.control}
+                control={form.control}
                 name="title"
                 render={({ field }) => (
                   <FormItem>
@@ -82,8 +78,8 @@ export function DialogCreateProject({
               <DialogClose asChild>
                 <Button variant="outline">Cancelar</Button>
               </DialogClose>
-              <Button type="submit" onClick={handleCreate}>
-                Crear proyecto
+              <Button type="submit" disabled={isLoading}>
+                {isLoading ? 'Creando...' : 'Crear proyecto'}
               </Button>
             </DialogFooter>
           </DialogContent>

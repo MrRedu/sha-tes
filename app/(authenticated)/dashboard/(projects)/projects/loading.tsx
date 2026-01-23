@@ -13,14 +13,19 @@ export default function LoadingPage() {
           <Skeleton className="h-10 w-40" />
         </div>
       </div>
-      <div className="grid md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-        <Skeleton className="h-40 w-full" />
-        <Skeleton className="h-40 w-full" />
-        <Skeleton className="h-40 w-full" />
-        <Skeleton className="h-40 w-full" />
-        <Skeleton className="h-40 w-full" />
-        <Skeleton className="h-40 w-full" />
-        <Skeleton className="h-40 w-full" />
+      <div className='flex items-center gap-2'>
+        <Skeleton className="h-10 w-40 rounded-full" />
+        <Skeleton className="h-10 w-40 rounded-full" />
+        <Skeleton className="h-10 w-40 rounded-full" />
+        <Skeleton className="h-10 w-40 rounded-full" />
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <Skeleton className="h-[250px] w-full" />
+        <Skeleton className="h-[250px] w-full" />
+        <Skeleton className="h-[250px] w-full" />
+        <Skeleton className="h-[250px] w-full" />
+        <Skeleton className="h-[250px] w-full" />
+        <Skeleton className="h-[250px] w-full" />
       </div>
     </section>
   );

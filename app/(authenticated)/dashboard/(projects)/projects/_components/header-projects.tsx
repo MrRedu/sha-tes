@@ -4,50 +4,42 @@ import { DialogCreateProject } from '@/components/organisms/dialog-create-projec
 import { DialogJoinProject } from '@/components/organisms/dialog-join-project';
 import { Typography } from '@/components/ui/typography';
 import { Input } from '@/components/ui/input';
-import { SearchIcon } from 'lucide-react';
+import { PlusIcon, SearchIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { useProjectStore } from '@/hooks/use-project-store';
 
-interface HeaderProjectsProps {
-  formProjects: UseFormReturn<FormCreateProjectType>;
-  onSubmitProjects: () => void;
-}
+import { Constants } from '@/types/database';
+
+const STATUS_LABELS: Record<string, string> = {
+  all: 'Todos',
+  active: 'Activos',
+  inactive: 'En revisión',
+  archived: 'Archivados',
+  featured: 'Destacados',
+};
 
 const FILTER_LABELS = [
-  {
-    value: 'all',
-    label: 'Todos',
-  },
-  {
-    value: 'active',
-    label: 'Activos',
-  },
-  {
-    value: 'inactive',
-    label: 'En revisión',
-  },
-  {
-    value: 'archived',
-    label: 'Archivados',
-  },
-  {
-    value: 'featured',
-    label: 'Destacados',
-  },
+  { value: 'all', label: STATUS_LABELS.all },
+  ...Constants.public.Enums.project_status.map((status) => ({
+    value: status,
+    label: STATUS_LABELS[status] || status.charAt(0).toUpperCase() + status.slice(1),
+  })),
 ];
 
-export const HeaderProjects = ({ formProjects, onSubmitProjects }: HeaderProjectsProps) => {
+export const HeaderProjects = () => {
+  const { searchQuery, setSearchQuery, statusFilter, setStatusFilter } = useProjectStore();
+
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <div>
-          <Typography variant="h1" className="text-2xl!">
+      <div className="flex items-center justify-between flex-col md:flex-row gap-4">
+        <div className='w-full'>
+          <Typography variant="h1" className="text-2xl! text-start">
             Proyectos
           </Typography>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2 w-full justify-start md:justify-end">
           <DialogJoinProject />
-          <DialogCreateProject formProjects={formProjects} onSubmitProjects={onSubmitProjects} />
+          <DialogCreateProject />
         </div>
       </div>
       <div className="relative w-full">
@@ -56,6 +48,8 @@ export const HeaderProjects = ({ formProjects, onSubmitProjects }: HeaderProject
           placeholder="Buscar por nombres, etiquetas o contenido..."
           type="search"
           className="pl-10 h-12"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
         />
       </div>
       <div className="flex items-center flex-wrap gap-2">
@@ -64,7 +58,8 @@ export const HeaderProjects = ({ formProjects, onSubmitProjects }: HeaderProject
             key={filter.value}
             className="rounded-full px-4"
             size="sm"
-            variant={filter.value === 'all' ? 'default' : 'secondary'}
+            variant={filter.value === statusFilter ? 'default' : 'secondary'}
+            onClick={() => setStatusFilter(filter.value)}
           >
             <span className="text-xs">
               {filter.value === 'featured' && <>{'⭐ '}</>}

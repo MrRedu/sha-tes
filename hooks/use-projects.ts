@@ -19,11 +19,11 @@ import type {
 } from '../types/types';
 import { toast } from 'sonner';
 import { actions } from '@/actions';
+import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { PROJECTS_ITEMS_PER_PAGE } from '@/lib/constants';
 
 type useProjectsParams = {
-  _projects?: ProjectWithMembers[];
   itemsPerPage?: number;
 };
 
@@ -31,79 +31,45 @@ type useProjectParams = {
   _project: ProjectWithMembersAndNotebooks;
 };
 
-export function useProjects({ _projects = [], itemsPerPage = PROJECTS_ITEMS_PER_PAGE }: useProjectsParams = {}) {
-  const supabase = createClient();
-  const { user } = useAuth();
+import { useProjectStore } from './use-project-store';
 
-  const [projects, setProjects] = useState<ProjectWithMembers[]>(_projects);
-  const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(_projects.length >= itemsPerPage);
-  const [isLoadingMore, setIsLoadingMore] = useState(false);
+export function useProjects({ itemsPerPage = PROJECTS_ITEMS_PER_PAGE }: useProjectsParams = {}) {
+  const searchQuery = useProjectStore((state) => state.searchQuery);
+  const statusFilter = useProjectStore((state) => state.statusFilter);
 
-  const form = useForm<FormCreateProjectType>({
-    resolver: zodResolver(formCreateProject),
-    defaultValues: {
-      title: '',
+  const {
+    data,
+    isLoading,
+    isFetching,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery({
+    queryKey: ['projects', { limit: itemsPerPage, search: searchQuery, status: statusFilter }],
+    queryFn: async ({ pageParam = 0 }) => {
+      const from = pageParam * itemsPerPage;
+      const to = from + itemsPerPage - 1;
+      const { projects, error } = await actions.projects.fetchProjects(from, to, {
+        search: searchQuery,
+        status: statusFilter,
+      });
+      if (error) throw new Error(error);
+      return projects;
     },
+    initialPageParam: 0,
+    getNextPageParam: (lastPage, allPages) => {
+      return lastPage.length < itemsPerPage ? undefined : allPages.length;
+    },
+    placeholderData: (previousData) => previousData,
   });
 
-  async function loadMoreProjects() {
-    if (isLoadingMore || !hasMore) return;
-
-    setIsLoadingMore(true);
-    const nextPage = page + 1;
-    const from = (nextPage - 1) * itemsPerPage;
-    const to = from + itemsPerPage - 1;
-
-    const { projects: newProjects, error } = await actions.projects.fetchProjects(from, to);
-
-    if (error) {
-      toast.error('Error al cargar más proyectos');
-    } else {
-      if (newProjects.length < itemsPerPage) {
-        setHasMore(false);
-      }
-      setProjects((prev) => [...prev, ...newProjects]);
-      setPage(nextPage);
-    }
-    setIsLoadingMore(false);
-  }
-
-  async function onSubmit(values: FormCreateProjectType) {
-    try {
-      if (!user?.id) throw new Error('Usuario no autenticado');
-
-      const payload = {
-        title: values.title.trim(),
-      };
-
-      const { data, error } = await supabase.from('tbl_projects').insert(payload).select();
-
-      if (error) {
-        toast.error(`Error creando proyecto: ${error.message}`);
-        console.error('Error creating project:', error);
-        throw error;
-      }
-
-      setProjects([...projects, data[0] as ProjectWithMembers]);
-      toast.success(`Proyecto "${data[0].title}" creado correctamente`);
-      // TODO: Redirigir con Next.js redirect() maybe
-      window.location.href = `${window.location.origin}/dashboard/projects/${data[0].id}`;
-    } catch (err) {
-      console.error('Failed to create project:', err);
-      toast.error(`Error creando proyecto: ${err instanceof Error ? err.message : String(err)}`);
-    }
-  }
-
-  const onSubmitWrapper = form.handleSubmit(onSubmit);
-
   return {
-    projects,
-    form,
-    onSubmit: onSubmitWrapper,
-    loadMoreProjects,
-    hasMore,
-    isLoadingMore,
+    projects: data?.pages.flat() || [],
+    isLoading,
+    isSearching: isFetching && !isFetchingNextPage && !isLoading,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
   };
 }
 
