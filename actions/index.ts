@@ -4,6 +4,7 @@ import {
   fetchPendingProjectsAction,
   fetchProjectByIdAction,
 } from './projects';
+import { fetchNotebookByIdAction } from './notebooks';
 
 export const actions = {
   // auth: {
@@ -14,5 +15,8 @@ export const actions = {
     fetchProjects: fetchProjectsAction,
     fetchPendingProjects: fetchPendingProjectsAction,
     fetchProjectById: fetchProjectByIdAction,
+  },
+  notebooks: {
+    fetchNotebookById: fetchNotebookByIdAction,
   },
 };

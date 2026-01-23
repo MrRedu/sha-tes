@@ -35,9 +35,10 @@ import { createNoteSchema } from '@/hooks/validations/note';
 import { Card, CardHeader } from '../ui/card';
 import { Typography } from '../ui/typography';
 
+import { useNoteMutations } from '@/hooks/use-notebooks';
+
 interface DialogCreateNoteProps {
-  form: UseFormReturn<z.infer<typeof createNoteSchema>>;
-  onSubmit: (values: z.infer<typeof createNoteSchema>) => void;
+  notebookId: string;
 }
 
 const NOTE_COLORS = [
@@ -51,18 +52,16 @@ const NOTE_COLORS = [
   { value: '#fecaca', label: 'Rojo', class: 'bg-red-100' },
 ];
 
-export const DialogCreateNote = ({ form, onSubmit }: DialogCreateNoteProps) => {
+export const DialogCreateNote = ({ notebookId }: DialogCreateNoteProps) => {
+  const { formCreateNote: form, onSubmitCreateNote: onSubmit } = useNoteMutations(notebookId);
+
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Card className="h-full cursor-pointer hover:shadow-lg transition-shadow border-dashed border-2 flex items-center justify-center min-h-[200px]">
-          <CardHeader className="flex flex-col items-center justify-center">
-            <Plus className="h-8 w-8 text-muted-foreground mb-2" />
-            <Typography variant="large" className="text-muted-foreground">
-              Nueva nota
-            </Typography>
-          </CardHeader>
-        </Card>
+        <Button>
+          <Plus className="h-4 w-4 mr-2" />
+          Nueva nota
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
@@ -72,7 +71,7 @@ export const DialogCreateNote = ({ form, onSubmit }: DialogCreateNoteProps) => {
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={onSubmit} className="space-y-4">
             {/* Title */}
             <FormField
               control={form.control}

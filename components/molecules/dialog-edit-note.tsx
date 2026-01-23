@@ -26,15 +26,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { UseFormReturn } from 'react-hook-form';
-import { z } from 'zod';
+import { useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { updateNoteSchema } from '@/hooks/validations/note';
+import { useNoteMutations } from '@/hooks/use-notebooks';
+import type { Note } from '@/types/types';
 
 interface DialogEditNoteProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  form: UseFormReturn<z.infer<typeof updateNoteSchema>>;
-  onSubmit: (values: z.infer<typeof updateNoteSchema>) => void;
+  note: Note;
+  notebookId: string;
 }
 
 const NOTE_COLORS = [
@@ -48,7 +51,39 @@ const NOTE_COLORS = [
   { value: '#fecaca', label: 'Rojo', class: 'bg-red-100' },
 ];
 
-export const DialogEditNote = ({ open, onOpenChange, form, onSubmit }: DialogEditNoteProps) => {
+import { z } from 'zod';
+
+export const DialogEditNote = ({ open, onOpenChange, note, notebookId }: DialogEditNoteProps) => {
+  const { updateNote } = useNoteMutations(notebookId);
+
+  const form = useForm<z.infer<typeof updateNoteSchema>>({
+    resolver: zodResolver(updateNoteSchema),
+    defaultValues: {
+      title: note.title || '',
+      content: note.content,
+      color: note.color || '#ffffff',
+      priority: (note.priority as any) || 'normal',
+      is_completed: note.is_completed || false,
+    },
+  });
+
+  useEffect(() => {
+    if (note) {
+      form.reset({
+        title: note.title || '',
+        content: note.content,
+        color: note.color || '#ffffff',
+        priority: (note.priority as any) || 'normal',
+        is_completed: note.is_completed || false,
+      });
+    }
+  }, [note, form]);
+
+  const onSubmit = (values: z.infer<typeof updateNoteSchema>) => {
+    updateNote({ noteId: note.id, values });
+    onOpenChange(false);
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">

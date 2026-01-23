@@ -37,9 +37,14 @@ export type Note = Database['public']['Tables']['tbl_notes']['Row'];
 export type NotebookWithNotes = Notebook & {
   notes: Note[];
   creator: {
-    id: string;
-    full_name: string;
-    avatar_url: string;
+    id: Member['id'];
+    full_name: Member['full_name'];
+    avatar_url: Member['avatar_url'];
+  };
+  count_notes?: number;
+  project?: {
+    id: Project['id'];
+    title: Project['title'];
   };
 };
 
