@@ -1,3 +1,4 @@
+import { DialogCreateProject } from '@/components/organisms/dialog-create-project';
 import { Button } from '@/components/ui/button';
 import { FolderPlus, PlusIcon } from 'lucide-react';
 
@@ -15,10 +16,12 @@ export const HeaderDashboard = () => {
           <PlusIcon />
           Nueva nota
         </Button>
-        <Button size="lg" className="">
+        <DialogCreateProject triggerComponent={
+              <Button size="lg" className="">
           <FolderPlus />
           Nuevo proyecto
         </Button>
+          }  />
       </div>
     </div>
   );

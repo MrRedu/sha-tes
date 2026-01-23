@@ -41,22 +41,17 @@ export function DialogCreateProject({
   const { isCreateDialogOpen, setCreateDialogOpen } = useProjectStore();
   const { form, onSubmit, isLoading } = useCreateProject();
 
-  const handleCreate = (e: React.FormEvent) => {
-    e.preventDefault();
-    onSubmit();
-  };
-
   return (
     <Dialog open={isCreateDialogOpen} onOpenChange={setCreateDialogOpen}>
-      <Form {...form}>
-        <form onSubmit={handleCreate}>
-          <DialogTrigger asChild>{triggerComponent}</DialogTrigger>
-          <DialogContent className="sm:max-w-[425px]">
+      <DialogTrigger asChild>{triggerComponent}</DialogTrigger>
+      <DialogContent className="sm:max-w-[425px]">
+        <Form {...form}>
+          <form onSubmit={onSubmit}>
             <DialogHeader>
               <DialogTitle>Crear proyecto</DialogTitle>
               <DialogDescription>{`¡Crea tu proyecto; rápido y sencillo!`}</DialogDescription>
             </DialogHeader>
-            <div className="grid gap-4">
+            <div className="grid gap-4 py-4">
               <FormField
                 control={form.control}
                 name="title"
@@ -76,15 +71,15 @@ export function DialogCreateProject({
             </div>
             <DialogFooter>
               <DialogClose asChild>
-                <Button variant="outline">Cancelar</Button>
+                <Button variant="outline" type="button">Cancelar</Button>
               </DialogClose>
               <Button type="submit" disabled={isLoading}>
                 {isLoading ? 'Creando...' : 'Crear proyecto'}
               </Button>
             </DialogFooter>
-          </DialogContent>
-        </form>
-      </Form>
+          </form>
+        </Form>
+      </DialogContent>
     </Dialog>
   );
 }
