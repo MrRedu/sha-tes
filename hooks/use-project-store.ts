@@ -12,18 +12,19 @@ interface ProjectState {
   // Create Project Dialog
   isCreateDialogOpen: boolean;
   setCreateDialogOpen: (isOpen: boolean) => void;
-  
-  // Create Project Form (optional, but requested for global onSubmit)
-  // Note: Managing the full form instance in Zustand can be tricky with RHF,
-  // but we can store the "trigger" for submission or the state.
-  // For now, let's just keep the visibility and filters here.
+
+  // Manage Project Dialog
+  isManageDialogOpen: boolean;
+  setManageDialogOpen: (isOpen: boolean) => void;
 }
 
 export const useProjectStore = create<ProjectState>((set) => ({
   searchQuery: '',
   statusFilter: 'all',
   isCreateDialogOpen: false,
+  isManageDialogOpen: false,
   setSearchQuery: (query) => set({ searchQuery: query }),
   setStatusFilter: (status) => set({ statusFilter: status }),
   setCreateDialogOpen: (isOpen) => set({ isCreateDialogOpen: isOpen }),
+  setManageDialogOpen: (isOpen) => set({ isManageDialogOpen: isOpen }),
 }));

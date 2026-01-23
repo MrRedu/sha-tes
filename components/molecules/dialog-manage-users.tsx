@@ -10,18 +10,17 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Button } from '../ui/button';
-import { UserMinus, UserPlus, Users, UserX } from 'lucide-react';
-import { formatCode } from '@/lib/utils';
+import { Copy, UserMinus, UserPlus, Users, UserX } from 'lucide-react';
 import { Typography } from '../ui/typography';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
-import type { Member } from '@/types/types';
+import type { Member, Project } from '@/types/types';
 import { WithBadge } from '../atoms/with-badge';
 import { useDisclosure } from '@/hooks/use-disclosure';
 
 interface DialogManageUsersProps {
   isProjectOwner: boolean;
-  projectOwnerId: string;
-  joinCode: string;
+  projectOwnerId: string | null;
+  joinCode: Project['join_code'];
   currentMembers: Member[];
   pendingMembers: Member[];
   onRemoveMember: (userId: string) => void;
@@ -158,7 +157,12 @@ export const DialogManageUsers = ({
           <Typography variant="lead" className="mb-2">
             Código de invitación
           </Typography>
-          <Typography variant="code">{formatCode(joinCode)}</Typography>
+          <div className="flex items-center gap-2">
+            <Typography variant="code">{joinCode}</Typography>
+            <Button variant="ghost" size="icon" aria-label="Copy code">
+              <Copy />
+            </Button>
+          </div>
           <Typography variant="lead" className="mt-4 mb-2">
             {isProjectOwner ? 'Miembros actuales' : 'Miembros'}
           </Typography>
@@ -166,7 +170,7 @@ export const DialogManageUsers = ({
             <CurrentMembersList
               members={currentMembers}
               isProjectOwner={isProjectOwner}
-              projectOwnerId={projectOwnerId}
+              projectOwnerId={projectOwnerId as string}
               onRemoveMember={onRemoveMember}
             />
           ) : (

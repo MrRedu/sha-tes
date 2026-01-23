@@ -1,7 +1,7 @@
 'use server';
 
 import { createClient } from '@/lib/supabase/server';
-import { PROJECTS_QUERY } from '@/lib/constants';
+import { PROJECT_DETAILS_QUERY, PROJECTS_QUERY } from '@/lib/constants';
 
 export async function fetchProjectsAction(
   from: number, 
@@ -41,19 +41,40 @@ export async function fetchProjectsAction(
 }
 
 export async function fetchPendingProjectsAction() {
-    const supabase = await createClient();
-    const { data: userData } = await supabase.auth.getUser();
-    const userId = userData?.user?.id;
+  const supabase = await createClient();
+  const { data: userData } = await supabase.auth.getUser();
+  const userId = userData?.user?.id;
 
-    if (!userId) return { pendingProjects: [], error: 'Not authenticated' };
+  if (!userId) return { pendingProjects: [], error: 'Not authenticated' };
 
-    const { data: pendingProjects, error } =
-      await supabase.rpc('get_pending_projects');
+  const { data: pendingProjects, error } =
+    await supabase.rpc('get_pending_projects');
 
-    if (error) {
-      console.error('Error fetching pending projects:', error);
-      return { pendingProjects: [], error: error.message };
-    }
+  if (error) {
+    console.error('Error fetching pending projects:', error);
+    return { pendingProjects: [], error: error.message };
+  }
 
-    return { pendingProjects: pendingProjects || [], error: null };
-  } 
+  return { pendingProjects: pendingProjects || [], error: null };
+}
+
+export async function fetchProjectByIdAction(projectId: string) {
+  const supabase = await createClient();
+  const { data: userData } = await supabase.auth.getUser();
+  const userId = userData?.user?.id;
+
+  if (!userId) return { project: null, error: 'Not authenticated' };
+
+  const { data: project, error } = await supabase
+    .from('tbl_projects')
+    .select(PROJECT_DETAILS_QUERY)
+    .eq('id', projectId)
+    .single();
+
+  if (error) {
+    console.error('Error fetching project:', error);
+    return { project: null, error: error.message };
+  }
+
+  return { project: project as any, error: null };
+}

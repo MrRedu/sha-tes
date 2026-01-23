@@ -19,16 +19,12 @@ import type {
 } from '../types/types';
 import { toast } from 'sonner';
 import { actions } from '@/actions';
-import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useInfiniteQuery, useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
 
 import { PROJECTS_ITEMS_PER_PAGE } from '@/lib/constants';
 
 type useProjectsParams = {
   itemsPerPage?: number;
-};
-
-type useProjectParams = {
-  _project: ProjectWithMembersAndNotebooks;
 };
 
 import { useProjectStore } from './use-project-store';
@@ -73,26 +69,138 @@ export function useProjects({ itemsPerPage = PROJECTS_ITEMS_PER_PAGE }: useProje
   };
 }
 
-export function useProject({ _project }: useProjectParams) {
-  const { user } = useAuth();
+export type ProjectWithNotebooks = ProjectWithMembersAndNotebooks;
+
+export function useProjectDetails(projectId: string) {
+  return useQuery({
+    queryKey: ['project', projectId],
+    queryFn: async () => {
+      const { project, error } = await actions.projects.fetchProjectById(projectId);
+      if (error) throw new Error(error);
+      return project as ProjectWithNotebooks;
+    },
+  });
+}
+
+export function useProjectMutations(projectId: string, project?: ProjectWithNotebooks) {
   const supabase = createClient();
-  const projectId = _project?.id;
+  const queryClient = useQueryClient();
+  const setManageDialogOpen = useProjectStore((state) => state.setManageDialogOpen);
 
-  const [project, setProject] = useState(_project);
-  const [members, setMembers] = useState<Member[]>(_project.members);
-  const [notebooks, setNotebooks] = useState<Notebook[]>(_project.notebooks);
-  const [projectName, setProjectName] = useState(_project?.title || '');
-  const [projectDescription, setProjectDescription] = useState(_project?.description || '');
-
-  const formEditProject = useForm<z.infer<typeof formEditProjectSchema>>({
+  const form = useForm<z.infer<typeof formEditProjectSchema>>({
     resolver: zodResolver(formEditProjectSchema),
-    defaultValues: {
-      title: _project?.title || '',
-      description: _project?.description || '',
+    values: {
+      title: project?.title || '',
+      description: project?.description || '',
+      status: project?.status || 'active',
+      priority: project?.priority || 'medium',
     },
   });
 
-  const formCreateNotebook = useForm<z.infer<typeof formCreateNotebookSchema>>({
+  const updateMutation = useMutation({
+    mutationFn: async (values: z.infer<typeof formEditProjectSchema>) => {
+      const payload = {
+        title: values.title.trim(),
+        description: values.description.trim(),
+        status: values.status,
+        priority: values.priority,
+      };
+      const { error } = await supabase.from('tbl_projects').update(payload).eq('id', projectId);
+      if (error) throw error;
+      return payload;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['project', projectId] });
+      queryClient.invalidateQueries({ queryKey: ['projects'] });
+      toast.success('Proyecto actualizado correctamente');
+      setManageDialogOpen(false);
+    },
+    onError: (err) => {
+      console.error('Error updating project:', err);
+      toast.error('Error al actualizar el proyecto.');
+    }
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: async () => {
+      const { error } = await supabase.from('tbl_projects').delete().eq('id', projectId);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['projects'] });
+      toast.success('Proyecto eliminado correctamente');
+      window.location.href = `${window.location.origin}/dashboard/projects`;
+    },
+    onError: (err) => {
+      console.error('Error deleting project:', err);
+      toast.error('Error al eliminar el proyecto.');
+    }
+  });
+
+  return {
+    form,
+    onSubmit: form.handleSubmit((values) => updateMutation.mutate(values)),
+    updateProject: updateMutation.mutate,
+    isUpdating: updateMutation.isPending,
+    deleteProject: deleteMutation.mutate,
+    isDeleting: deleteMutation.isPending,
+  };
+}
+
+export function useMemberMutations(projectId: string) {
+  const supabase = createClient();
+  const queryClient = useQueryClient();
+
+  const updateStatusMutation = useMutation({
+    mutationFn: async ({ userId, status }: { userId: string; status: Member['status'] }) => {
+      const { error } = await supabase
+        .from('tbl_project_members')
+        .update({ status })
+        .eq('project_id', projectId)
+        .eq('user_id', userId);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['project', projectId] });
+      toast.success('Estado del miembro actualizado');
+    },
+    onError: (err) => {
+      console.error('Error updating member status:', err);
+      toast.error('Error al actualizar el estado del miembro.');
+    }
+  });
+
+  const removeMemberMutation = useMutation({
+    mutationFn: async (userId: string) => {
+      const { error } = await supabase
+        .from('tbl_project_members')
+        .delete()
+        .eq('project_id', projectId)
+        .eq('user_id', userId);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['project', projectId] });
+      toast.success('Miembro eliminado');
+    },
+    onError: (err) => {
+      console.error('Error removing member:', err);
+      toast.error('Error al eliminar el miembro.');
+    }
+  });
+
+  return {
+    updateMemberStatus: updateStatusMutation.mutate,
+    removeMember: removeMemberMutation.mutate,
+  };
+}
+
+export function useNotebookMutations(projectId: string) {
+  const supabase = createClient();
+  const { user } = useAuth();
+  const queryClient = useQueryClient();
+
+  const form = useForm<z.infer<typeof formCreateNotebookSchema>>({
     resolver: zodResolver(formCreateNotebookSchema),
     defaultValues: {
       name: '',
@@ -100,172 +208,38 @@ export function useProject({ _project }: useProjectParams) {
     },
   });
 
-  const onSubmitEditProject = formEditProject.handleSubmit(async (values) => {
-    try {
-      if (!projectId) return;
-
-      const payload = {
-        title: values.title.trim(),
-        description: values.description.trim(),
-      };
-
-      const { error } = await supabase.from('tbl_projects').update(payload).eq('id', projectId);
-
-      if (error) throw error;
-
-      setProjectName(payload.title);
-      setProjectDescription(payload.description);
-      toast.success('Proyecto actualizado correctamente');
-    } catch (error) {
-      console.error('Error updating project:', error);
-      toast.error('Error al actualizar el proyecto.');
-    }
-  });
-
-  const onSubmitCreateNotebook = formCreateNotebook.handleSubmit(async (values) => {
-    // return alert(JSON.stringify(values, null, 2));
-    try {
-      if (!projectId) return;
-
+  const createMutation = useMutation({
+    mutationFn: async (values: z.infer<typeof formCreateNotebookSchema>) => {
       const payload = {
         name: values.name.trim(),
         description: values.description.trim(),
         project_id: projectId,
         creator_id: user?.id as string,
       };
-
       const { data, error } = await supabase
         .from('tbl_notebooks')
         .insert(payload)
         .select()
         .single();
-
       if (error) throw error;
-
-      setNotebooks([...notebooks, data]);
-      formCreateNotebook.reset();
-
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['project', projectId] });
       toast.success('Notebook creado correctamente');
-    } catch (error) {
-      console.error('Error creating notebook:', error);
+      form.reset();
+    },
+    onError: (err) => {
+      console.error('Error creating notebook:', err);
       toast.error('Error al crear el notebook.');
     }
   });
 
-  // --- Funciones de Utilidad ---
-  const updateMemberStatus = async (
-    userId: string,
-    newStatus: Member['status'],
-    successMessage: string
-  ) => {
-    if (!projectId) return false;
-
-    try {
-      const { error } = await supabase
-        .from('tbl_project_members')
-        .update({ status: newStatus })
-        .eq('project_id', projectId)
-        .eq('user_id', userId);
-
-      if (error) throw error;
-
-      // 1. Actualizar el estado local (optimización de UI)
-      setMembers(
-        (prevMembers) =>
-          prevMembers?.map((member) =>
-            member?.id === userId ? { ...member, status: newStatus } : member
-          ) || null
-      );
-
-      toast.success(successMessage);
-      return true;
-    } catch (error) {
-      console.error('Error updating member status:', error);
-      toast.error('Error al actualizar el estado del miembro.');
-      return false;
-    }
-  };
-
-  const removeMemberEntry = async (userId: string, successMessage: string) => {
-    if (!projectId) return false;
-
-    try {
-      // Borramos la fila de la tabla pivote
-      const { error } = await supabase
-        .from('tbl_project_members')
-        .delete()
-        .eq('project_id', projectId)
-        .eq('user_id', userId);
-
-      if (error) throw error;
-
-      // 1. Actualizar el estado local (eliminamos el miembro del array)
-      setMembers((prevMembers) => prevMembers?.filter((member) => member?.id !== userId) || null);
-
-      toast.success(successMessage);
-      return true;
-    } catch (error) {
-      console.error('Error removing member:', error);
-      toast.error('Error al eliminar el miembro.');
-      return false;
-    }
-  };
-
-  // --- Funciones Exportadas ---
-
-  const handleAcceptPendingMember = (userId: string) => {
-    return updateMemberStatus(userId, 'member', 'Miembro aceptado. ');
-  };
-
-  const handleRejectPendingMember = (userId: string) => {
-    // Opción 1: Cambiar a 'rejected'
-    // return updateMemberStatus(userId, 'rejected', 'Solicitud rechazada.');
-
-    // Opción 2: Eliminar completamente la fila de la solicitud pendiente (si no necesitas el historial)
-    return removeMemberEntry(userId, 'Solicitud rechazada y eliminada.');
-  };
-
-  const handleRemoveMember = (userId: string) => {
-    return removeMemberEntry(userId, 'Miembro eliminado del proyecto.');
-  };
-
-  const deleteProject = async () => {
-    if (!projectId) return;
-
-    try {
-      await supabase.from('tbl_projects').delete().eq('id', projectId);
-      toast.success('Proyecto eliminado correctamente');
-
-      // TODO: Redirigir con Next.js redirect()
-      window.location.href = `${window.location.origin}/dashboard/projects`;
-    } catch (error) {
-      console.error('Error deleting tasks:', error);
-    }
-  };
-
-  const currentMembers = members.filter((member) => member.status === 'member') || [];
-  const pendingMembers = members.filter((member) => member.status === 'pending') || [];
-
   return {
-    project,
-    notebooks,
-
-    members,
-    currentMembers,
-    pendingMembers,
-
-    projectName,
-    projectDescription,
-    formEditProject,
-    onSubmitEditProject,
-
-    deleteProject,
-    handleRemoveMember,
-    handleAcceptPendingMember,
-    handleRejectPendingMember,
-
-    formCreateNotebook,
-    onSubmitCreateNotebook,
+    form,
+    onSubmit: form.handleSubmit((values) => createMutation.mutate(values)),
+    createNotebook: createMutation.mutate,
+    isCreating: createMutation.isPending,
   };
 }
 
@@ -291,15 +265,15 @@ export function useJoinProject({ close }: { close: () => void }) {
       });
 
       if (error) throw error;
-
       // La función devuelve un objeto JSON custom
-      if (data && data.success) {
-        toast.success(`¡Éxito! ${data.message}`);
+      const result = data as any;
+      if (result && result.success) {
+        toast.success(`¡Éxito! ${result.message}`);
         close();
         form.reset();
       } else {
-        toast.error(`¡Error! ${data?.message || 'No se pudo unir'}`);
-        setError(data?.message || 'Error desconocido');
+        toast.error(`¡Error! ${result?.message || 'No se pudo unir'}`);
+        setError(result?.message || 'Error desconocido');
       }
     } catch (error) {
       console.error(error);

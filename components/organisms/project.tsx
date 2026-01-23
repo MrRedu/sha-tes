@@ -1,50 +1,56 @@
 'use client';
-
 import { AvatarGroup } from '@/components/molecules/avatar-group';
 import { DialogManageUsers } from '@/components/molecules/dialog-manage-users';
 import { Typography } from '@/components/ui/typography';
-import { useProject } from '@/hooks/use-projects';
+import { 
+  useProjectDetails, 
+  useProjectMutations, 
+  useMemberMutations, 
+  useNotebookMutations 
+} from '@/hooks/use-projects';
 import { DialogDeleteProject } from '../molecules/dialog-delete-project';
-import type { ProjectWithMembersAndNotebooks, User } from '@/types/types';
+import type { User, Notebook, Member } from '@/types/types';
 import { DialogCreateNotebook } from '../molecules/dialog-create-notebook';
 import { DialogManageProject } from '../molecules/dialog-manage-project';
 import { CardNotebook } from '../molecules/card-notebook';
 import { EmptyState } from './empty-state';
-import { FilePlusCorner } from 'lucide-react';
+import { FilePlusCorner, Loader2 } from 'lucide-react';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '../ui/hover-card';
 
 export interface ProjectProps {
   userId: User['id'];
-  _project: ProjectWithMembersAndNotebooks;
+  projectId: string;
 }
 
-export const Project = ({ userId, _project }: ProjectProps) => {
-  const {
-    project,
-    notebooks,
+export const Project = ({ userId, projectId }: ProjectProps) => {
+  const { data: project, isLoading, error } = useProjectDetails(projectId);
+  const { 
+    form: formEditProject, 
+    onSubmit: onSubmitEditProject, 
+    deleteProject 
+  } = useProjectMutations(projectId, project);
+  
+  const { updateMemberStatus, removeMember } = useMemberMutations(projectId);
+  
+  const { 
+    form: formCreateNotebook, 
+    onSubmit: onSubmitCreateNotebook 
+  } = useNotebookMutations(projectId);
 
-    // Project properties
-    projectName,
-    projectDescription,
-    // Actions project properties
-    formEditProject,
-    onSubmitEditProject,
+  if (isLoading) {
+    return (
+      <div className="w-full min-h-[400px] flex items-center justify-center">
+        <Loader2 className="size-8 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
 
-    // Members
-    currentMembers,
-    pendingMembers,
-    // Actions members
-    handleRemoveMember,
-    handleAcceptPendingMember,
-    handleRejectPendingMember,
+  if (error || !project) {
+    return <div>Error al cargar el proyecto</div>;
+  }
 
-    deleteProject,
-
-    formCreateNotebook,
-    onSubmitCreateNotebook,
-  } = useProject({
-    _project,
-  });
+  const currentMembers = project.members.filter((m: Member) => m.status === 'member');
+  const pendingMembers = project.members.filter((m: Member) => m.status === 'pending');
 
   return (
     <section className="space-y-4 p-4 md:p-6">
@@ -53,16 +59,16 @@ export const Project = ({ userId, _project }: ProjectProps) => {
           <HoverCard openDelay={10} closeDelay={100}>
             <HoverCardTrigger>
               <Typography variant="h1" className="text-2xl!">
-                {projectName}
+                {project.title}
               </Typography>
             </HoverCardTrigger>
-            {projectDescription && (
+            {project.description && (
               <HoverCardContent side="bottom" align="start">
                 <Typography
                   variant="p"
                   className="text-sm leading-relaxed text-muted-foreground mt-0! text-pretty"
                 >
-                  {projectDescription}
+                  {project.description}
                 </Typography>
               </HoverCardContent>
             )}
@@ -78,14 +84,15 @@ export const Project = ({ userId, _project }: ProjectProps) => {
             projectOwnerId={project.owner_id}
             currentMembers={currentMembers}
             pendingMembers={pendingMembers}
-            onRemoveMember={handleRemoveMember}
-            onAccept={handleAcceptPendingMember}
-            onReject={handleRejectPendingMember}
+            onRemoveMember={(id: string) => removeMember(id)}
+            onAccept={(id: string) => updateMemberStatus({ userId: id, status: 'member' })}
+            onReject={(id: string) => removeMember(id)}
           />
-          <DialogDeleteProject projectTitle={project.title} deleteProject={deleteProject} />
+          <DialogDeleteProject projectTitle={project.title} deleteProject={() => deleteProject()} />
         </div>
       </div>
-      {notebooks?.length === 0 && (
+      
+      {project.notebooks?.length === 0 && (
         <section className="w-full flex items-center justify-center min-h-[calc(100vh-200px)]">
           <EmptyState
             icon={FilePlusCorner}
@@ -97,9 +104,10 @@ export const Project = ({ userId, _project }: ProjectProps) => {
           />
         </section>
       )}
-      {notebooks?.length > 0 && (
+
+      {project.notebooks?.length > 0 && (
         <div className="w-full grid sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
-          {notebooks.map((notebook) => (
+          {project.notebooks.map((notebook: Notebook) => (
             <CardNotebook
               key={notebook.id}
               projectId={project.id}
@@ -111,7 +119,6 @@ export const Project = ({ userId, _project }: ProjectProps) => {
           <DialogCreateNotebook form={formCreateNotebook} onSubmit={onSubmitCreateNotebook} />
         </div>
       )}
-      {/* <pre>{JSON.stringify(_project, null, 2)}</pre> */}
     </section>
   );
 };

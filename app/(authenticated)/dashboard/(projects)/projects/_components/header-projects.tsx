@@ -13,7 +13,7 @@ import { Constants } from '@/types/database';
 const STATUS_LABELS: Record<string, string> = {
   all: 'Todos',
   active: 'Activos',
-  inactive: 'En revisión',
+  inactive: 'Inactivos',
   archived: 'Archivados',
   featured: 'Destacados',
 };
