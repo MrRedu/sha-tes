@@ -10,7 +10,14 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
 import { Button } from '@/components/ui/button';
 import { FilePenLine } from 'lucide-react';
 import { Input } from '@/components/ui/input';
@@ -25,7 +32,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-
 
 import { useProjectMutations, useProjectDetails } from '@/hooks/use-projects';
 import { PRIORITY_OPTIONS, STATUS_OPTIONS } from '@/lib/constants';

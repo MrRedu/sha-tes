@@ -5,7 +5,7 @@ import { z } from 'zod';
 import { Typography } from '@/components/ui/typography';
 import { useNotebook } from '@/hooks/use-notebook';
 import { updateNoteSchema } from '@/hooks/validations/note';
-import type { NotebookWithNotes, User, Note } from '@/types/types';
+import type { NotebookWithNotes, User, Note, Project } from '@/types/types';
 import { CardNote } from '../molecules/card-note';
 import { DialogCreateNote } from '../molecules/dialog-create-note';
 import { DialogEditNote } from '../molecules/dialog-edit-note';
@@ -29,7 +29,7 @@ import { HoverCard, HoverCardContent, HoverCardTrigger } from '../ui/hover-card'
 
 export interface NotebookProps {
   userId: User['id'];
-  projectId: string;
+  projectId: Project['id'];
   _notebook: NotebookWithNotes;
 }
 

@@ -71,7 +71,9 @@ export function DialogCreateProject({
             </div>
             <DialogFooter>
               <DialogClose asChild>
-                <Button variant="outline" type="button">Cancelar</Button>
+                <Button variant="outline" type="button">
+                  Cancelar
+                </Button>
               </DialogClose>
               <Button type="submit" disabled={isLoading}>
                 {isLoading ? 'Creando...' : 'Crear proyecto'}

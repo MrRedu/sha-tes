@@ -39,7 +39,7 @@ export function useCreateProject() {
     onError: (err) => {
       console.error('Failed to create project:', err);
       toast.error(`Error creando proyecto: ${err instanceof Error ? err.message : String(err)}`);
-    }
+    },
   });
 
   const onSubmit = form.handleSubmit((values) => mutation.mutate(values));

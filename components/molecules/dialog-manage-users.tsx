@@ -24,14 +24,14 @@ interface DialogManageUsersProps {
   userId: string;
 }
 
-const MemberItem = ({ 
-  member, 
-  isOwner, 
-  canManage, 
-  onAction 
-}: { 
-  member: Member; 
-  isOwner: boolean; 
+const MemberItem = ({
+  member,
+  isOwner,
+  canManage,
+  onAction,
+}: {
+  member: Member;
+  isOwner: boolean;
   canManage: boolean;
   onAction?: (action: 'accept' | 'reject' | 'remove') => void;
 }) => (
@@ -57,7 +57,7 @@ const MemberItem = ({
         </Typography>
       </div>
     </div>
-    
+
     {canManage && !isOwner && onAction && (
       <div className="flex gap-1">
         {member.status === 'pending' ? (
@@ -168,7 +168,10 @@ export const DialogManageUsers = ({ projectId, userId }: DialogManageUsersProps)
 
           {isProjectOwner && pendingMembers.length > 0 && (
             <div>
-              <Typography variant="small" className="font-semibold px-1 mb-2 block text-yellow-600 dark:text-yellow-500">
+              <Typography
+                variant="small"
+                className="font-semibold px-1 mb-2 block text-yellow-600 dark:text-yellow-500"
+              >
                 Solicitudes pendientes ({pendingMembers.length})
               </Typography>
               <ul className="divide-y border rounded-lg px-3 bg-card border-yellow-200 dark:border-yellow-900/30">
@@ -179,7 +182,8 @@ export const DialogManageUsers = ({ projectId, userId }: DialogManageUsersProps)
                     isOwner={false}
                     canManage={true}
                     onAction={(action) => {
-                      if (action === 'accept') updateMemberStatus({ userId: member.id, status: 'member' });
+                      if (action === 'accept')
+                        updateMemberStatus({ userId: member.id, status: 'member' });
                       if (action === 'reject') removeMember(member.id);
                     }}
                   />

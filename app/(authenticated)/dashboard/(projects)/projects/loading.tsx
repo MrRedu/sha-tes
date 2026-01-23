@@ -13,7 +13,7 @@ export default function LoadingPage() {
           <Skeleton className="h-10 w-40" />
         </div>
       </div>
-      <div className='flex items-center gap-2'>
+      <div className="flex items-center gap-2">
         <Skeleton className="h-10 w-40 rounded-full" />
         <Skeleton className="h-10 w-40 rounded-full" />
         <Skeleton className="h-10 w-40 rounded-full" />

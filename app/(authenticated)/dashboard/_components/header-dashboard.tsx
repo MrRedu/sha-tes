@@ -16,12 +16,14 @@ export const HeaderDashboard = () => {
           <PlusIcon />
           Nueva nota
         </Button>
-        <DialogCreateProject triggerComponent={
-              <Button size="lg" className="">
-          <FolderPlus />
-          Nuevo proyecto
-        </Button>
-          }  />
+        <DialogCreateProject
+          triggerComponent={
+            <Button size="lg" className="">
+              <FolderPlus />
+              Nuevo proyecto
+            </Button>
+          }
+        />
       </div>
     </div>
   );

@@ -10,8 +10,7 @@ function makeQueryClient() {
         // per default, only successful queries are dehydrated,
         // this can be customized
         shouldDehydrateQuery: (query) =>
-          defaultShouldDehydrateQuery(query) ||
-          query.state.status === 'pending',
+          defaultShouldDehydrateQuery(query) || query.state.status === 'pending',
       },
     },
   });

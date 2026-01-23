@@ -1,5 +1,9 @@
 // import { registerUserAction, loginUserAction } from './auth'
-import { fetchProjectsAction, fetchPendingProjectsAction, fetchProjectByIdAction } from "./projects";
+import {
+  fetchProjectsAction,
+  fetchPendingProjectsAction,
+  fetchProjectByIdAction,
+} from './projects';
 
 export const actions = {
   // auth: {
@@ -11,4 +15,4 @@ export const actions = {
     fetchPendingProjects: fetchPendingProjectsAction,
     fetchProjectById: fetchProjectByIdAction,
   },
-}
+};

@@ -25,7 +25,7 @@ export default async function NotebookPage({ params }: NotebookPageProps) {
     `
     )
     .eq('id', notebookId)
-    .order('position', { foreignTable: 'tbl_notes', ascending: true })
+    .order('position', { ascending: true })
     .single();
 
   if (notebookError) {

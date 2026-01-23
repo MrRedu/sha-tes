@@ -3,9 +3,7 @@
 import { AvatarGroup } from '@/components/molecules/avatar-group';
 import { DialogManageUsers } from '@/components/molecules/dialog-manage-users';
 import { Typography } from '@/components/ui/typography';
-import {
-  useProjectDetails,
-} from '@/hooks/use-projects';
+import { useProjectDetails } from '@/hooks/use-projects';
 import { DialogDeleteProject } from '@/components/molecules/dialog-delete-project';
 import type { User, Member, Project } from '@/types/types';
 import { DialogManageProject } from '@/components/molecules/dialog-manage-project';
@@ -56,9 +54,7 @@ export const HeaderProject = ({ projectId, userId }: HeaderProjectProps) => {
           )}
         </HoverCard>
         <div className="flex gap-2 items-center">
-          <Badge className='px-4'>
-            {PRIORITY_LABELS[project.priority]}
-          </Badge>
+          <Badge className="px-4">{PRIORITY_LABELS[project.priority]}</Badge>
           <Typography variant="muted">
             Última actividad:{' '}
             {formatDistanceToNow(new Date(project.updated_at), {
@@ -70,18 +66,12 @@ export const HeaderProject = ({ projectId, userId }: HeaderProjectProps) => {
       </div>
 
       <div className="flex flex-row-reverse md:flex-row gap-2 w-full items-center mt-auto justify-end">
-        <AvatarGroup members={currentMembers} className='pr-8' />
-        <div className='flex gap-2'>
-        <DialogManageProject projectId={projectId} />
-        <DialogManageUsers
-          projectId={projectId}
-          userId={userId}
-          />
-        <DialogDeleteProject 
-          projectId={projectId}
-          projectTitle={project.title} 
-          />
-          </div>
+        <AvatarGroup members={currentMembers} className="pr-8" />
+        <div className="flex gap-2">
+          <DialogManageProject projectId={projectId} />
+          <DialogManageUsers projectId={projectId} userId={userId} />
+          <DialogDeleteProject projectId={projectId} projectTitle={project.title} />
+        </div>
       </div>
     </div>
   );

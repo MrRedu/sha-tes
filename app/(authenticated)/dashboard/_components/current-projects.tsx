@@ -9,7 +9,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 export const CurrentProjects = () => {
   const { data, isLoading, error } = useQuery({
     queryKey: ['projects', { limit: 2 }],
-    queryFn: () => actions.projects.fetchProjects(0, 1)
+    queryFn: () => actions.projects.fetchProjects(0, 1),
   });
 
   const projects = data?.projects || [];
@@ -45,7 +45,7 @@ export const CurrentProjects = () => {
           Ver todos
         </Link>
       </div>
-      
+
       {projects.length === 0 ? (
         <div className="p-8 border border-dashed rounded-lg text-center">
           <p className="text-muted-foreground text-sm">No hay proyectos activos todavía.</p>
@@ -55,6 +55,7 @@ export const CurrentProjects = () => {
           {projects.map((project) => (
             <CardCurrentProject
               key={project.id}
+              id={project.id}
               status={project.status as any}
               title={project.title}
               members={project.members as any}

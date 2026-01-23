@@ -33,31 +33,25 @@ export function useProjects({ itemsPerPage = PROJECTS_ITEMS_PER_PAGE }: useProje
   const searchQuery = useProjectStore((state) => state.searchQuery);
   const statusFilter = useProjectStore((state) => state.statusFilter);
 
-  const {
-    data,
-    isLoading,
-    isFetching,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-  } = useInfiniteQuery({
-    queryKey: ['projects', { limit: itemsPerPage, search: searchQuery, status: statusFilter }],
-    queryFn: async ({ pageParam = 0 }) => {
-      const from = pageParam * itemsPerPage;
-      const to = from + itemsPerPage - 1;
-      const { projects, error } = await actions.projects.fetchProjects(from, to, {
-        search: searchQuery,
-        status: statusFilter,
-      });
-      if (error) throw new Error(error);
-      return projects;
-    },
-    initialPageParam: 0,
-    getNextPageParam: (lastPage, allPages) => {
-      return lastPage.length < itemsPerPage ? undefined : allPages.length;
-    },
-    placeholderData: (previousData) => previousData,
-  });
+  const { data, isLoading, isFetching, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useInfiniteQuery({
+      queryKey: ['projects', { limit: itemsPerPage, search: searchQuery, status: statusFilter }],
+      queryFn: async ({ pageParam = 0 }) => {
+        const from = pageParam * itemsPerPage;
+        const to = from + itemsPerPage - 1;
+        const { projects, error } = await actions.projects.fetchProjects(from, to, {
+          search: searchQuery,
+          status: statusFilter,
+        });
+        if (error) throw new Error(error);
+        return projects;
+      },
+      initialPageParam: 0,
+      getNextPageParam: (lastPage, allPages) => {
+        return lastPage.length < itemsPerPage ? undefined : allPages.length;
+      },
+      placeholderData: (previousData) => previousData,
+    });
 
   return {
     projects: data?.pages.flat() || [],
@@ -116,7 +110,7 @@ export function useProjectMutations(projectId: string, project?: ProjectWithMemb
     onError: (err) => {
       console.error('Error updating project:', err);
       toast.error('Error al actualizar el proyecto.');
-    }
+    },
   });
 
   const deleteMutation = useMutation({
@@ -132,7 +126,7 @@ export function useProjectMutations(projectId: string, project?: ProjectWithMemb
     onError: (err) => {
       console.error('Error deleting project:', err);
       toast.error('Error al eliminar el proyecto.');
-    }
+    },
   });
 
   return {
@@ -165,7 +159,7 @@ export function useMemberMutations(projectId: string) {
     onError: (err) => {
       console.error('Error updating member status:', err);
       toast.error('Error al actualizar el estado del miembro.');
-    }
+    },
   });
 
   const removeMemberMutation = useMutation({
@@ -184,7 +178,7 @@ export function useMemberMutations(projectId: string) {
     onError: (err) => {
       console.error('Error removing member:', err);
       toast.error('Error al eliminar el miembro.');
-    }
+    },
   });
 
   return {
@@ -230,7 +224,7 @@ export function useNotebookMutations(projectId: string) {
     onError: (err) => {
       console.error('Error creating notebook:', err);
       toast.error('Error al crear el notebook.');
-    }
+    },
   });
 
   return {

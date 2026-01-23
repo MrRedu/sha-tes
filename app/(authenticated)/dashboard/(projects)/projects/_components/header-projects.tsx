@@ -8,10 +8,7 @@ import { useProjectStore } from '@/hooks/use-project-store';
 
 import { STATUS_OPTIONS } from '@/lib/constants';
 
-const FILTER_LABELS = [
-  { value: 'all', label: 'Todos' },
-  ...STATUS_OPTIONS
-];
+const FILTER_LABELS = [{ value: 'all', label: 'Todos' }, ...STATUS_OPTIONS];
 
 export const HeaderProjects = () => {
   const { searchQuery, setSearchQuery, statusFilter, setStatusFilter } = useProjectStore();
@@ -19,7 +16,7 @@ export const HeaderProjects = () => {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between flex-col md:flex-row gap-4">
-        <div className='w-full'>
+        <div className="w-full">
           <Typography variant="h1" className="text-2xl! text-start">
             Proyectos
           </Typography>
