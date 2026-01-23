@@ -19,6 +19,7 @@ export function useDisclosure(
 ): UseDisclosureReturnValue {
   const [opened, setOpened] = useState(initialState);
 
+  // eslint-disable-next-line react-hooks/preserve-manual-memoization
   const open = useCallback(() => {
     setOpened((isOpened) => {
       if (!isOpened) {
@@ -29,6 +30,7 @@ export function useDisclosure(
     });
   }, [options.onOpen]);
 
+  // eslint-disable-next-line react-hooks/preserve-manual-memoization
   const close = useCallback(() => {
     setOpened((isOpened) => {
       if (isOpened) {
