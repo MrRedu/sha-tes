@@ -1,5 +1,5 @@
 'use client';
-import { FolderKanban, Home, LayoutDashboard } from 'lucide-react';
+import { Folder, FolderGit2, LayoutDashboard } from 'lucide-react';
 
 import {
   Sidebar,
@@ -11,12 +11,13 @@ import {
 
 import { NavUser } from './nav-user';
 import { NavMain } from './nav-main';
+import { NavHeader } from './nav-header';
 import { useAuth } from '../auth/AuthProvider';
 import { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { Project, Notebook } from '@/types/types';
 
-type SidebarProject = Pick<Project, 'id' | 'name'> & {
+type SidebarProject = Pick<Project, 'id' | 'title'> & {
   notebooks: Pick<Notebook, 'id' | 'name'>[];
 };
 
@@ -35,9 +36,9 @@ export function AppSidebar() {
         .select(
           `
           id, 
-          name,
+          title,
           notebooks:tbl_notebooks (id, name)
-        `,
+        `
         )
         .order('created_at', { ascending: false });
 
@@ -56,19 +57,19 @@ export function AppSidebar() {
     {
       title: 'Panel principal',
       url: '/dashboard',
-      icon: Home,
+      icon: LayoutDashboard,
     },
     {
       title: 'Proyectos',
       url: '/dashboard/projects',
-      icon: LayoutDashboard,
+      icon: Folder,
     },
   ];
 
   const navProjects = dynamicProjects.map((project) => ({
-    title: project.name,
+    title: project.title,
     url: `/dashboard/projects/${project.id}`,
-    icon: FolderKanban,
+    icon: FolderGit2,
     items: project.notebooks?.map((notebook) => ({
       title: notebook.name,
       url: `/dashboard/projects/${project.id}/notebooks/${notebook.id}`,
@@ -78,30 +79,18 @@ export function AppSidebar() {
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader>
-        {/* <ProjectSwitcher
-          projects={
-            projectSwitcherData.length > 0
-              ? projectSwitcherData
-              : [{ name: 'Cargando...', logo: LayoutDashboard, plan: '' }]
-          }
-        /> */}
+        <NavHeader />
       </SidebarHeader>
 
       <SidebarContent className="flex flex-col gap-0 overflow-hidden">
         <NavMain items={navGeneral} label="General" />
-
-        {/* <ScrollArea className="flex-1 px-1 max-h-[calc(50vh)] p-0"> */}
         <NavMain items={navProjects} label="Proyectos" scrollable />
-        {/* </ScrollArea> */}
       </SidebarContent>
 
       <SidebarFooter>
         <NavUser
           user={{
-            name:
-              user?.user_metadata?.name ||
-              user?.email?.split('@')[0] ||
-              'Usuario',
+            name: user?.user_metadata?.name || user?.email?.split('@')[0] || 'Usuario',
             email: user?.email || '',
             avatar: user?.user_metadata?.avatar_url || '',
             avatarFallback: (user?.user_metadata?.name || user?.email || 'U')

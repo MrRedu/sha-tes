@@ -37,9 +37,7 @@ export const useNotebook = ({ _notebook, userId }: UseNotebookProps) => {
   });
 
   // Create note handler
-  const onSubmitCreateNote = async (
-    values: z.infer<typeof createNoteSchema>,
-  ) => {
+  const onSubmitCreateNote = async (values: z.infer<typeof createNoteSchema>) => {
     const supabase = createClient();
 
     const { data, error } = await supabase
@@ -70,10 +68,7 @@ export const useNotebook = ({ _notebook, userId }: UseNotebookProps) => {
   };
 
   // Update note handler
-  const onSubmitUpdateNote = async (
-    noteId: string,
-    values: z.infer<typeof updateNoteSchema>,
-  ) => {
+  const onSubmitUpdateNote = async (noteId: string, values: z.infer<typeof updateNoteSchema>) => {
     const supabase = createClient();
 
     const { data, error } = await supabase
@@ -126,10 +121,7 @@ export const useNotebook = ({ _notebook, userId }: UseNotebookProps) => {
   const deleteNote = async (noteId: string) => {
     const supabase = createClient();
 
-    const { error } = await supabase
-      .from('tbl_notes')
-      .delete()
-      .eq('id', noteId);
+    const { error } = await supabase.from('tbl_notes').delete().eq('id', noteId);
 
     if (error) {
       console.error('Error deleting note:', error);

@@ -7,11 +7,7 @@ interface WithBadgeProps {
   variant?: VariantProps<typeof badgeVariants>['variant'];
 }
 
-export const WithBadge = ({
-  children,
-  count,
-  variant = 'default',
-}: WithBadgeProps) => {
+export const WithBadge = ({ children, count, variant = 'default' }: WithBadgeProps) => {
   return (
     <div className="relative">
       {children}

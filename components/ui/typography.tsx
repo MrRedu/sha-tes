@@ -58,20 +58,11 @@ const tagMap: Record<POSSIBLE_VARIANTS, keyof JSX.IntrinsicElements> = {
   muted: 'p',
 };
 
-export const Typography = ({
-  variant = 'p',
-  className,
-  children,
-  ...props
-}: TypographyProps) => {
+export const Typography = ({ variant = 'p', className, children, ...props }: TypographyProps) => {
   const Tag = tagMap[variant] || 'p';
 
   return (
-    <Tag
-      data-slot="typography"
-      className={typographyVariants({ variant, className })}
-      {...props}
-    >
+    <Tag data-slot="typography" className={typographyVariants({ variant, className })} {...props}>
       {children}
     </Tag>
   );

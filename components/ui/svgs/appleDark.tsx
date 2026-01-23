@@ -1,4 +1,4 @@
-import type { SVGProps } from "react";
+import type { SVGProps } from 'react';
 
 const AppleDark = (props: SVGProps<SVGSVGElement>) => (
   <svg {...props} xmlSpace="preserve" viewBox="0 0 814 1000">

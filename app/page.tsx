@@ -1,12 +1,4 @@
-import {
-  Header,
-  Hero,
-  Features,
-  HowItWorks,
-  // CTA,
-  Footer,
-  Pricing,
-} from '@/app/_components';
+import { Header, Hero, Features, HowItWorks, Footer, Pricing } from '@/app/_components';
 
 export default function Home() {
   return (
@@ -17,7 +9,6 @@ export default function Home() {
         <Features />
         <HowItWorks />
         <Pricing />
-        {/* <CTA /> */}
       </main>
       <Footer />
     </div>

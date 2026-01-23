@@ -1,5 +1,5 @@
 import { AppSidebar } from '@/components/app-sidebar/app-sidebar';
-import { HeaderDashboard } from '@/components/molecules/header-dashboard';
+import { NavigationDashboard } from '@/components/molecules/navigation-dashboard';
 import { SidebarInset } from '@/components/ui/sidebar';
 import { BreadcrumbProvider } from '@/context/breadcrumb-context';
 
@@ -12,9 +12,9 @@ export default function DashboardLayout({
     <BreadcrumbProvider>
       <AppSidebar />
       <div className="flex flex-1 flex-col h-screen overflow-y-auto bg-background">
-        <HeaderDashboard />
+        <NavigationDashboard />
         <SidebarInset>
-          <main className="p-6">{children}</main>
+          <main>{children}</main>
         </SidebarInset>
       </div>
     </BreadcrumbProvider>

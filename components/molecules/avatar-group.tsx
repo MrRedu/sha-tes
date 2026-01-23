@@ -1,25 +1,38 @@
-import type { Members } from '@/types/types';
+import type { Member } from '@/types/types';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import { cn } from '@/lib/utils';
 
 interface AvatarGroupProps {
-  members: Members;
+  members: Member[];
+  maxMembers?: number;
+  className?: string;
 }
 
-export const AvatarGroup = ({ members }: AvatarGroupProps) => {
+export const AvatarGroup = ({ members, maxMembers = 3, className }: AvatarGroupProps) => {
   if (members?.length > 1) {
+    const displayedMembers = members.slice(0, maxMembers);
+    const remainingCount = members.length - maxMembers;
+
     return (
-      <div className="*:data-[slot=avatar]:ring-background flex -space-x-2 *:data-[slot=avatar]:ring-2">
-        {members.map(({ profile }) => (
-          <Avatar key={profile.full_name}>
-            <AvatarImage
-              src={profile.avatar_url || ''}
-              alt={profile.full_name}
-            />
-            <AvatarFallback>
-              {profile.full_name.slice(0, 2).toUpperCase() || 'N'}
+      <div
+        className={cn(
+          '*:data-[slot=avatar]:ring-background flex -space-x-2 *:data-[slot=avatar]:ring-2',
+          className
+        )}
+      >
+        {displayedMembers.map(({ avatar_url, full_name }) => (
+          <Avatar key={full_name}>
+            <AvatarImage src={avatar_url || ''} alt={full_name} title={full_name} />
+            <AvatarFallback title={full_name}>
+              {full_name.slice(0, 2).toUpperCase() || 'N'}
             </AvatarFallback>
           </Avatar>
         ))}
+        {remainingCount > 0 && (
+          <Avatar>
+            <AvatarFallback>+{remainingCount}</AvatarFallback>
+          </Avatar>
+        )}
       </div>
     );
   }
@@ -28,13 +41,8 @@ export const AvatarGroup = ({ members }: AvatarGroupProps) => {
 
   return (
     <Avatar>
-      <AvatarImage
-        src={UNIQUE_MEMBER?.profile?.avatar_url || ''}
-        alt={UNIQUE_MEMBER?.profile?.full_name}
-      />
-      <AvatarFallback>
-        {UNIQUE_MEMBER?.profile?.full_name?.slice(0, 2).toUpperCase() || ''}
-      </AvatarFallback>
+      <AvatarImage src={UNIQUE_MEMBER?.avatar_url || ''} alt={UNIQUE_MEMBER?.full_name} />
+      <AvatarFallback>{UNIQUE_MEMBER?.full_name?.slice(0, 2).toUpperCase() || ''}</AvatarFallback>
     </Avatar>
   );
 };

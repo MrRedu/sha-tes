@@ -2,13 +2,7 @@
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Field,
   FieldDescription,
@@ -22,10 +16,7 @@ import Link from 'next/link';
 import { Google } from '@/components/ui/svgs/google';
 import { Apple } from '@/components/ui/svgs/apple';
 
-export function FormLogin({
-  className,
-  ...props
-}: React.ComponentProps<'div'>) {
+export function FormLogin({ className, ...props }: React.ComponentProps<'div'>) {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -49,9 +40,7 @@ export function FormLogin({
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const anyRes: any = result;
       if (anyRes.error) {
-        setErrorMessage(
-          anyRes.error?.message || 'Error desconocido al iniciar sesión',
-        );
+        setErrorMessage(anyRes.error?.message || 'Error desconocido al iniciar sesión');
         setLoading(false);
       }
     } catch (err) {
@@ -66,9 +55,7 @@ export function FormLogin({
       <Card>
         <CardHeader className="text-center">
           <CardTitle className="text-xl">¡Bienvenido!</CardTitle>
-          <CardDescription>
-            Inicia sesión con tu cuenta de Apple o Google
-          </CardDescription>
+          <CardDescription>Inicia sesión con tu cuenta de Apple o Google</CardDescription>
         </CardHeader>
         <CardContent>
           <form>
@@ -78,9 +65,7 @@ export function FormLogin({
                   <Apple />
                   Continuar con Apple
                 </Button>
-                {errorMessage ? (
-                  <p className="text-sm text-red-600">{errorMessage}</p>
-                ) : null}
+                {errorMessage ? <p className="text-sm text-red-600">{errorMessage}</p> : null}
                 <Button
                   variant="outline"
                   type="button"
@@ -96,21 +81,12 @@ export function FormLogin({
               </FieldSeparator>
               <Field>
                 <FieldLabel htmlFor="email">Correo electrónico</FieldLabel>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="m@example.com"
-                  required
-                  disabled
-                />
+                <Input id="email" type="email" placeholder="m@example.com" required disabled />
               </Field>
               <Field>
                 <div className="flex items-center">
                   <FieldLabel htmlFor="password">Contraseña</FieldLabel>
-                  <a
-                    href="#"
-                    className="ml-auto text-sm underline-offset-4 hover:underline"
-                  >
+                  <a href="#" className="ml-auto text-sm underline-offset-4 hover:underline">
                     ¿Olvidaste tu contraseña?
                   </a>
                 </div>
@@ -129,9 +105,8 @@ export function FormLogin({
         </CardContent>
       </Card>
       <FieldDescription className="px-6 text-center">
-        Al hacer clic en continuar, aceptas nuestros{' '}
-        <Link href="#">Términos de servicio</Link> y nuestra{' '}
-        <Link href="#">Política de privacidad</Link>.
+        Al hacer clic en continuar, aceptas nuestros <Link href="#">Términos de servicio</Link> y
+        nuestra <Link href="#">Política de privacidad</Link>.
       </FieldDescription>
     </div>
   );

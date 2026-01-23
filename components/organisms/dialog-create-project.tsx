@@ -21,53 +21,48 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { PlusIcon } from 'lucide-react';
-import { useDisclosure } from '@/hooks/use-disclosure';
+import { useProjectStore } from '@/hooks/use-project-store';
+import { useCreateProject } from '@/hooks/use-create-project';
 
 interface ProjectsParams {
-  // TODO: fix types
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  form: any;
-  onSubmit: () => void;
+  triggerComponent?: React.ReactNode;
 }
 
-export function DialogCreateProject({ form, onSubmit }: ProjectsParams) {
-  const [isOpen, { open, close, toggle }] = useDisclosure();
+const DEFAULT_TRIGGER_COMPONENT = (
+  <Button size="lg">
+    <PlusIcon className="mr-2 " />
+    Crear proyecto
+  </Button>
+);
 
-  const handleCreate = () => {
-    close();
-    onSubmit();
-  };
+export function DialogCreateProject({
+  triggerComponent = DEFAULT_TRIGGER_COMPONENT,
+}: ProjectsParams) {
+  const { isCreateDialogOpen, setCreateDialogOpen } = useProjectStore();
+  const { form, onSubmit, isLoading } = useCreateProject();
 
   return (
-    <Dialog open={isOpen} onOpenChange={toggle}>
-      <Form {...form}>
-        <form onSubmit={onSubmit}>
-          <DialogTrigger asChild>
-            <Button size="sm">
-              <PlusIcon className="mr-2 " />
-              Crear proyecto
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-[425px]">
+    <Dialog open={isCreateDialogOpen} onOpenChange={setCreateDialogOpen}>
+      <DialogTrigger asChild>{triggerComponent}</DialogTrigger>
+      <DialogContent className="sm:max-w-[425px]">
+        <Form {...form}>
+          <form onSubmit={onSubmit}>
             <DialogHeader>
               <DialogTitle>Crear proyecto</DialogTitle>
-              <DialogDescription>
-                {`¡Crea tu proyecto; rápido y sencillo!`}
-              </DialogDescription>
+              <DialogDescription>{`¡Crea tu proyecto; rápido y sencillo!`}</DialogDescription>
             </DialogHeader>
-            <div className="grid gap-4">
+            <div className="grid gap-4 py-4">
               <FormField
                 control={form.control}
-                name="name"
+                name="title"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Nombre</FormLabel>
+                    <FormLabel>Título</FormLabel>
                     <FormControl>
                       <Input placeholder="ShaTes" {...field} />
                     </FormControl>
                     <FormDescription>
-                      Este será visible para ti y para los colaboradores que
-                      invites.
+                      Este será visible para ti y para los colaboradores que invites.
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -76,15 +71,17 @@ export function DialogCreateProject({ form, onSubmit }: ProjectsParams) {
             </div>
             <DialogFooter>
               <DialogClose asChild>
-                <Button variant="outline">Cancelar</Button>
+                <Button variant="outline" type="button">
+                  Cancelar
+                </Button>
               </DialogClose>
-              <Button type="submit" onClick={handleCreate}>
-                Crear proyecto
+              <Button type="submit" disabled={isLoading}>
+                {isLoading ? 'Creando...' : 'Crear proyecto'}
               </Button>
             </DialogFooter>
-          </DialogContent>
-        </form>
-      </Form>
+          </form>
+        </Form>
+      </DialogContent>
     </Dialog>
   );
 }

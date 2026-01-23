@@ -1,65 +1,42 @@
-import { createClient } from '@/lib/supabase/server';
+import { type Metadata } from 'next';
+import { ProjectsClient } from './_components/projects-client';
+import { PROJECTS_ITEMS_PER_PAGE } from '@/lib/constants';
+import { actions } from '@/actions';
+import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
+import { getQueryClient } from '@/lib/get-query-client';
 
-import { Projects } from '@/components/organisms/projects';
-import type { ProjectWithMembers } from '@/types/types';
+export const metadata: Metadata = {
+  title: 'Proyectos',
+};
 
 export default async function ProjectsPage() {
-  const supabase = await createClient();
-  const { data: userData } = await supabase.auth.getUser();
-  const userId = userData?.user?.id;
+  const queryClient = getQueryClient();
 
-  const { data: projects, error: projectsError } = await supabase
-    .from('tbl_projects')
-    .select(
-      `
-      *,
-      members:tbl_project_members (
-        status,
-        profile:tbl_users (
-          id,
-          full_name,
-          avatar_url,
-          email
-        )
-      )
-    `,
-    )
-    .order('updated_at', { ascending: false });
-
-  const { data: pendingProjectsRequests, error: pendingProjectsError } =
-    await supabase.rpc('get_pending_projects');
-
-  const safeProjects: ProjectWithMembers[] = projects || [];
-  const activeProjects = safeProjects.filter((project) => {
-    // 1. Si el usuario es el dueño, SIEMPRE lo incluimos.
-    if (project.owner_id === userId) {
-      return true;
-    }
-
-    // 2. Buscamos si el usuario es un miembro ACTIVO dentro del array anidado.
-    const membership = project.members?.find(
-      (member) => member.profile?.id === userId,
-    );
-
-    // Lo incluimos solo si el estado es 'member'
-    return membership?.status === 'member';
+  await queryClient.prefetchInfiniteQuery({
+    queryKey: ['projects', { limit: PROJECTS_ITEMS_PER_PAGE }],
+    queryFn: async () => {
+      const { projects, error } = await actions.projects.fetchProjects(
+        0,
+        PROJECTS_ITEMS_PER_PAGE - 1
+      );
+      if (error) throw new Error(error);
+      return projects;
+    },
+    initialPageParam: 0,
   });
 
-  if (projectsError) {
-    console.error('Error cargando proyectos:', projectsError.message);
-  }
-
-  if (pendingProjectsError) {
-    console.error(
-      'Error cargando proyectos pendientes:',
-      pendingProjectsError.message,
-    );
-  }
+  await queryClient.prefetchQuery({
+    queryKey: ['pending-projects'],
+    queryFn: async () => {
+      const { pendingProjects, error } = await actions.projects.fetchPendingProjects();
+      if (error) throw new Error(error);
+      return pendingProjects;
+    },
+  });
 
   return (
-    <Projects
-      _projects={activeProjects}
-      _pendingProjectsRequests={pendingProjectsRequests || []}
-    />
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <ProjectsClient />
+    </HydrationBoundary>
   );
 }

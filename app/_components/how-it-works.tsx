@@ -19,8 +19,7 @@ const timelineData = [
     id: 3,
     // date: 'June 15, 2024',
     title: 'Comparte el Código',
-    description:
-      'Envía el código a través de cualquier canal. No se requiere invitación previa.',
+    description: 'Envía el código a través de cualquier canal. No se requiere invitación previa.',
   },
   {
     id: 4,
@@ -36,9 +35,7 @@ export function HowItWorks() {
     <section id="how-it-works" className="py-32 ">
       <div className="container">
         <div className="text-center space-y-6">
-          <h2 className="text-3xl font-medium md:text-4xl lg:text-5xl">
-            ¿Cómo Funciona?
-          </h2>
+          <h2 className="text-3xl font-medium md:text-4xl lg:text-5xl">¿Cómo Funciona?</h2>
           <p className="text-muted-foreground lg:text-xl">
             Cuatro simples pasos para comenzar a compartir tus notas
           </p>

@@ -1,10 +1,4 @@
-export type Json =
-  | string
-  | number
-  | boolean
-  | null
-  | { [key: string]: Json | undefined }
-  | Json[];
+export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
 
 export type Database = {
   // Allows to automatically instantiate createClient with right options
@@ -128,24 +122,24 @@ export type Database = {
       };
       tbl_project_members: {
         Row: {
-          created_at: string | null;
+          created_at: string;
           id: string;
           project_id: string;
-          status: string | null;
+          status: string;
           user_id: string;
         };
         Insert: {
-          created_at?: string | null;
+          created_at?: string;
           id?: string;
           project_id: string;
-          status?: string | null;
+          status?: string;
           user_id: string;
         };
         Update: {
-          created_at?: string | null;
+          created_at?: string;
           id?: string;
           project_id?: string;
-          status?: string | null;
+          status?: string;
           user_id?: string;
         };
         Relationships: [
@@ -170,27 +164,33 @@ export type Database = {
           created_at: string;
           description: string | null;
           id: string;
-          join_code: string;
-          name: string;
-          owner_id: string;
+          join_code: string | null;
+          owner_id: string | null;
+          priority: Database['public']['Enums']['project_priority'];
+          status: Database['public']['Enums']['project_status'];
+          title: string;
           updated_at: string;
         };
         Insert: {
           created_at?: string;
           description?: string | null;
           id?: string;
-          join_code: string;
-          name: string;
-          owner_id: string;
+          join_code?: string | null;
+          owner_id?: string | null;
+          priority?: Database['public']['Enums']['project_priority'];
+          status?: Database['public']['Enums']['project_status'];
+          title: string;
           updated_at?: string;
         };
         Update: {
           created_at?: string;
           description?: string | null;
           id?: string;
-          join_code?: string;
-          name?: string;
-          owner_id?: string;
+          join_code?: string | null;
+          owner_id?: string | null;
+          priority?: Database['public']['Enums']['project_priority'];
+          status?: Database['public']['Enums']['project_status'];
+          title?: string;
           updated_at?: string;
         };
         Relationships: [
@@ -248,9 +248,11 @@ export type Database = {
           created_at: string;
           description: string | null;
           id: string;
-          join_code: string;
-          name: string;
-          owner_id: string;
+          join_code: string | null;
+          owner_id: string | null;
+          priority: Database['public']['Enums']['project_priority'];
+          status: Database['public']['Enums']['project_status'];
+          title: string;
           updated_at: string;
         }[];
         SetofOptions: {
@@ -271,7 +273,8 @@ export type Database = {
       request_join_project: { Args: { code_input: string }; Returns: Json };
     };
     Enums: {
-      [_ in never]: never;
+      project_priority: 'low' | 'medium' | 'high';
+      project_status: 'active' | 'inactive' | 'archived' | 'featured';
     };
     CompositeTypes: {
       [_ in never]: never;
@@ -281,10 +284,7 @@ export type Database = {
 
 type DatabaseWithoutInternals = Omit<Database, '__InternalSupabase'>;
 
-type DefaultSchema = DatabaseWithoutInternals[Extract<
-  keyof Database,
-  'public'
->];
+type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, 'public'>];
 
 export type Tables<
   DefaultSchemaTableNameOrOptions extends
@@ -305,10 +305,8 @@ export type Tables<
     }
     ? R
     : never
-  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema['Tables'] &
-        DefaultSchema['Views'])
-    ? (DefaultSchema['Tables'] &
-        DefaultSchema['Views'])[DefaultSchemaTableNameOrOptions] extends {
+  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema['Tables'] & DefaultSchema['Views'])
+    ? (DefaultSchema['Tables'] & DefaultSchema['Views'])[DefaultSchemaTableNameOrOptions] extends {
         Row: infer R;
       }
       ? R
@@ -401,6 +399,9 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      project_priority: ['low', 'medium', 'high'],
+      project_status: ['active', 'inactive', 'archived', 'featured'],
+    },
   },
 } as const;

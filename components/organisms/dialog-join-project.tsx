@@ -22,12 +22,7 @@ import {
 } from '@/components/ui/dialog';
 import { useJoinProject } from '@/hooks/use-projects';
 import { REGEXP_ONLY_DIGITS_AND_CHARS } from 'input-otp';
-import {
-  InputOTP,
-  InputOTPGroup,
-  InputOTPSeparator,
-  InputOTPSlot,
-} from '../ui/input-otp';
+import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from '../ui/input-otp';
 import { useDisclosure } from '@/hooks/use-disclosure';
 
 export const DialogJoinProject = () => {
@@ -41,16 +36,14 @@ export const DialogJoinProject = () => {
       <Form {...form}>
         <form onSubmit={onSubmit}>
           <DialogTrigger asChild>
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="lg">
               Unirse a un proyecto
             </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
               <DialogTitle>Unirse a un proyecto</DialogTitle>
-              <DialogDescription>
-                {`¡Únete a un proyecto con tus colegas!`}
-              </DialogDescription>
+              <DialogDescription>{`¡Únete a un proyecto con tus colegas!`}</DialogDescription>
             </DialogHeader>
             <div className="grid gap-4">
               <FormField
@@ -58,9 +51,7 @@ export const DialogJoinProject = () => {
                 name="joinCode"
                 render={({ field }) => (
                   <FormItem className="[&>:nth-child(3)]:justify-center mt-5">
-                    <FormLabel className="text-center block">
-                      Código único del proyecto
-                    </FormLabel>
+                    <FormLabel className="text-center block">Código único del proyecto</FormLabel>
                     <FormControl>
                       <InputOTP
                         {...field}

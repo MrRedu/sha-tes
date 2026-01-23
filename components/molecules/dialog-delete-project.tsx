@@ -13,14 +13,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import { AlertCircle, Trash2Icon } from 'lucide-react';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '../ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -28,38 +21,37 @@ import { Input } from '../ui/input';
 import { Alert, AlertTitle } from '../ui/alert';
 import { useEffect, useState } from 'react';
 
+import { useProjectMutations } from '@/hooks/use-projects';
+
 interface DialogDeleteProjectProps {
-  deleteProject: () => void;
-  projectName: string;
+  projectId: string;
+  projectTitle: string;
 }
 
 const formSchema = z.object({
-  projectName: z.string(),
+  projectTitle: z.string(),
   toConfirm: z.string(),
 });
 
-export function DialogDeleteProject({
-  deleteProject,
-  projectName,
-}: DialogDeleteProjectProps) {
+export function DialogDeleteProject({ projectId, projectTitle }: DialogDeleteProjectProps) {
+  const { deleteProject } = useProjectMutations(projectId);
   const [canDelete, setCanDelete] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      projectName: '',
+      projectTitle: '',
       toConfirm: '',
     },
   });
 
-  const watchedProjectName = form.watch('projectName');
+  const watchedProjectTitle = form.watch('projectTitle');
   const watchedToConfirm = form.watch('toConfirm');
 
   useEffect(() => {
     const isMatch =
-      watchedProjectName === projectName &&
-      watchedToConfirm === 'eliminar mi proyecto';
+      watchedProjectTitle === projectTitle && watchedToConfirm === 'eliminar mi proyecto';
     setCanDelete(isMatch);
-  }, [watchedProjectName, watchedToConfirm, projectName]);
+  }, [watchedProjectTitle, watchedToConfirm, projectTitle]);
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log('Deleted!', values);
@@ -76,8 +68,8 @@ export function DialogDeleteProject({
         <AlertDialogHeader>
           <AlertDialogTitle>Eliminar proyecto</AlertDialogTitle>
           <AlertDialogDescription>
-            Esta acción no puede deshacerse. Esto eliminará permanentemente tu
-            proyecto y removerá tus datos de nuestros servidores.
+            Esta acción no puede deshacerse. Esto eliminará permanentemente tu proyecto y removerá
+            tus datos de nuestros servidores.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <div className="space-y-6">
@@ -85,10 +77,10 @@ export function DialogDeleteProject({
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 ">
               <FormField
                 control={form.control}
-                name="projectName"
+                name="projectTitle"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{`Para confirmar, escribe "${projectName}"`}</FormLabel>
+                    <FormLabel>{`Para confirmar, escribe "${projectTitle}"`}</FormLabel>
                     <FormControl>
                       <Input placeholder="" {...field} />
                     </FormControl>
@@ -120,7 +112,7 @@ export function DialogDeleteProject({
           <AlertDialogCancel>Cancelar</AlertDialogCancel>
           <AlertDialogAction
             className="bg-destructive text-white hover:bg-destructive/90"
-            onClick={deleteProject}
+            onClick={() => deleteProject()}
             disabled={!canDelete}
           >
             Eliminar

@@ -8,13 +8,7 @@ export function Header() {
       <div className="mx-auto container">
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center gap-2">
-            <Image
-              src="/sha-tes.svg"
-              alt="ShaTes"
-              width={24}
-              height={24}
-              className="h-8 w-8"
-            />
+            <Image src="/sha-tes.svg" alt="ShaTes" width={24} height={24} className="h-8 w-8" />
             <span className="text-xl font-bold text-foreground">ShaTes</span>
           </div>
 

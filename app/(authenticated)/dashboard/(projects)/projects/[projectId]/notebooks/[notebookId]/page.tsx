@@ -1,7 +1,10 @@
 import { createClient } from '@/lib/supabase/server';
-import { Notebook } from '@/components/organisms/notebook';
-import { NotebookWithNotes } from '@/types/types';
 import { BreadcrumbRegistry } from '@/context/breadcrumb-context';
+import { NotebookClient } from './_components/notebook-client';
+import { actions } from '@/actions';
+import { getQueryClient } from '@/lib/get-query-client';
+import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
+import { notFound } from 'next/navigation';
 
 interface NotebookPageProps {
   params: { projectId: string; notebookId: string };
@@ -14,47 +17,29 @@ export default async function NotebookPage({ params }: NotebookPageProps) {
   const { data: userData } = await supabase.auth.getUser();
   const userId = userData?.user?.id || '';
 
-  // Fetch notebook with notes (ordered by position) and also project for the breadcrumb
-  const { data: notebook, error: notebookError } = await supabase
-    .from('tbl_notebooks')
-    .select(
-      `
-      *,
-      creator:creator_id ( id, full_name, avatar_url ),
-      notes:tbl_notes ( * ),
-      project:tbl_projects ( id, name )
-    `,
-    )
-    .eq('id', notebookId)
-    .order('position', { foreignTable: 'tbl_notes', ascending: true })
-    .single();
+  const queryClient = getQueryClient();
 
-  if (notebookError) {
-    console.error('Error cargando el notebook:', notebookError.message);
-  }
+  // Prefetch notebook details
+  await queryClient.prefetchQuery({
+    queryKey: ['notebook', notebookId],
+    queryFn: async () => {
+      const { notebook, error } = await actions.notebooks.fetchNotebookById(notebookId);
+      if (error) throw new Error(error);
+      return notebook;
+    },
+  });
 
-  if (!notebook) {
-    return (
-      <>
-        <h2>Notebook no encontrado</h2>
-        <p>El notebook con ID {notebookId} no existe.</p>
-      </>
-    );
-  }
+  const notebook = queryClient.getQueryData(['notebook', notebookId]) as any;
 
-  const sortedNotebook = notebook as NotebookWithNotes;
+  if (!notebook) return notFound();
 
   return (
-    <>
-      {/* Registramos ambos para asegurar que el Header tenga toda la info */}
-      <BreadcrumbRegistry id={projectId} label={notebook.project?.name || ''} />
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      {/* Breadcrumbs */}
+      <BreadcrumbRegistry id={projectId} label={notebook.project?.title || ''} />
       <BreadcrumbRegistry id={notebook.id} label={notebook.name} />
 
-      <Notebook
-        _notebook={sortedNotebook}
-        userId={userId}
-        projectId={projectId}
-      />
-    </>
+      <NotebookClient projectId={projectId} notebookId={notebookId} />
+    </HydrationBoundary>
   );
 }

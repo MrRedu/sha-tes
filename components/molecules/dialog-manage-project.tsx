@@ -17,26 +17,36 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '../ui/form';
-import { Button } from '../ui/button';
+} from '@/components/ui/form';
+import { Button } from '@/components/ui/button';
 import { FilePenLine } from 'lucide-react';
-import { Input } from '../ui/input';
-import { Textarea } from '../ui/textarea';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+
+import { useProjectStore } from '@/hooks/use-project-store';
+
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+
+import { useProjectMutations, useProjectDetails } from '@/hooks/use-projects';
+import { PRIORITY_OPTIONS, STATUS_OPTIONS } from '@/lib/constants';
 
 interface DialogManageProjectProps {
-  // TODO: fix types
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  form: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  onSubmit: any;
+  projectId: string;
 }
 
-export const DialogManageProject = ({
-  form,
-  onSubmit,
-}: DialogManageProjectProps) => {
+export const DialogManageProject = ({ projectId }: DialogManageProjectProps) => {
+  const { isManageDialogOpen, setManageDialogOpen } = useProjectStore();
+  const { data: project } = useProjectDetails(projectId);
+  const { form, onSubmit } = useProjectMutations(projectId, project);
+
   return (
-    <Dialog>
+    <Dialog open={isManageDialogOpen} onOpenChange={setManageDialogOpen}>
       <DialogTrigger asChild>
         <Button variant="outline" size="icon">
           <FilePenLine />
@@ -52,13 +62,13 @@ export const DialogManageProject = ({
 
         <div className="space-y-6">
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 ">
+            <form onSubmit={onSubmit} className="space-y-4 ">
               <FormField
                 control={form.control}
-                name="name"
+                name="title"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{`Nombre del proyecto`}</FormLabel>
+                    <FormLabel>{`Título del proyecto`}</FormLabel>
                     <FormControl>
                       <Input placeholder="ShaTes" {...field} />
                     </FormControl>
@@ -66,6 +76,57 @@ export const DialogManageProject = ({
                   </FormItem>
                 )}
               />
+              <div className="grid grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="status"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Estado</FormLabel>
+                      <Select onValueChange={field.onChange} value={field.value}>
+                        <FormControl>
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Seleccionar estado" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {STATUS_OPTIONS.map((option) => (
+                            <SelectItem key={option.value} value={option.value}>
+                              {option.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="priority"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Prioridad</FormLabel>
+                      <Select onValueChange={field.onChange} value={field.value}>
+                        <FormControl>
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Seleccionar prioridad" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {PRIORITY_OPTIONS.map((option) => (
+                            <SelectItem key={option.value} value={option.value}>
+                              {option.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
               <FormField
                 control={form.control}
                 name="description"
@@ -92,7 +153,7 @@ export const DialogManageProject = ({
           <DialogClose asChild>
             <Button variant="outline">Cerrar</Button>
           </DialogClose>
-          <Button onClick={form.handleSubmit(onSubmit)}>Guardar cambios</Button>
+          <Button onClick={onSubmit}>Guardar cambios</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

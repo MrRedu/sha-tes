@@ -1,11 +1,7 @@
 'use client';
 
 import { ChevronRight, type LucideIcon } from 'lucide-react';
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from '@/components/ui/collapsible';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import {
   SidebarGroup,
   SidebarGroupLabel,
@@ -43,12 +39,12 @@ export function NavMain({
       {scrollable ? (
         <ScrollArea className="flex-1 px-1 max-h-[calc(50vh)] p-0">
           <SidebarMenu>
-            {items.map((item) => {
+            {items.map((item, index) => {
               const hasItems = item.items && item.items.length > 0;
 
               if (!hasItems) {
                 return (
-                  <SidebarMenuItem key={item.title}>
+                  <SidebarMenuItem key={`${item.title}-${index}`}>
                     <SidebarMenuButton asChild tooltip={item.title}>
                       <Link href={item.url}>
                         {item.icon && <item.icon />}
@@ -76,8 +72,8 @@ export function NavMain({
                     </CollapsibleTrigger>
                     <CollapsibleContent>
                       <SidebarMenuSub>
-                        {item.items?.map((subItem) => (
-                          <SidebarMenuSubItem key={subItem.title}>
+                        {item.items?.map((subItem, index) => (
+                          <SidebarMenuSubItem key={`${subItem.title}-${index}`}>
                             <SidebarMenuSubButton asChild>
                               <Link href={subItem.url}>
                                 <span>{subItem.title}</span>
@@ -128,8 +124,8 @@ export function NavMain({
                   </CollapsibleTrigger>
                   <CollapsibleContent>
                     <SidebarMenuSub>
-                      {item.items?.map((subItem) => (
-                        <SidebarMenuSubItem key={subItem.title}>
+                      {item.items?.map((subItem, index) => (
+                        <SidebarMenuSubItem key={`${subItem.title}-${index}`}>
                           <SidebarMenuSubButton asChild>
                             <Link href={subItem.url}>
                               <span>{subItem.title}</span>

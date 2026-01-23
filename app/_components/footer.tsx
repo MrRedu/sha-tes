@@ -91,10 +91,7 @@ export function Footer({
                 <h3 className="mb-4 font-bold">{section.title}</h3>
                 <ul className="text-muted-foreground space-y-4">
                   {section.links.map((link, linkIdx) => (
-                    <li
-                      key={linkIdx}
-                      className="hover:text-primary font-medium"
-                    >
+                    <li key={linkIdx} className="hover:text-primary font-medium">
                       <a href={link.url}>{link.text}</a>
                     </li>
                   ))}

@@ -1,4 +1,5 @@
 'use client';
+
 import {
   Dialog,
   DialogClose,
@@ -9,206 +10,192 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { Button } from '../ui/button';
-import { UserMinus, UserPlus, Users, UserX } from 'lucide-react';
-import { formatCode } from '@/lib/utils';
-import { Typography } from '../ui/typography';
-import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
-import type { Members } from '@/types/types';
-import { WithBadge } from '../atoms/with-badge';
+import { Button } from '@/components/ui/button';
+import { Copy, UserMinus, UserPlus, Users, UserX, Loader2 } from 'lucide-react';
+import { Typography } from '@/components/ui/typography';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import type { Member } from '@/types/types';
+import { WithBadge } from '@/components/atoms/with-badge';
 import { useDisclosure } from '@/hooks/use-disclosure';
+import { useMemberMutations, useProjectDetails } from '@/hooks/use-projects';
 
 interface DialogManageUsersProps {
-  isProjectOwner: boolean;
-  projectOwnerId: string;
-  joinCode: string;
-  currentMembers: Members;
-  pendingMembers: Members;
-  onRemoveMember: (userId: string) => void;
-  onAccept: (userId: string) => void;
-  onReject: (userId: string) => void;
+  projectId: string;
+  userId: string;
 }
 
-type PendingMembersListProps = {
-  members: Members;
-  onAccept: (userId: string) => void;
-  onReject: (userId: string) => void;
-};
-
-type CurrentMembersListProps = {
-  members: Members;
-  isProjectOwner: boolean;
-  projectOwnerId: string;
-  onRemoveMember: (userId: string) => void;
-};
-
-const CurrentMembersList = ({
-  members,
-  isProjectOwner,
-  projectOwnerId,
-  onRemoveMember,
-}: CurrentMembersListProps) => {
-  return (
-    <ul className="space-y-2">
-      {members.map(({ profile: member }, index) => (
-        <li key={index} className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Avatar>
-              <AvatarImage
-                src={member.avatar_url || ''}
-                alt={member.full_name}
-              />
-              <AvatarFallback>{member.full_name.charAt(0)}</AvatarFallback>
-            </Avatar>
-            <div className="flex flex-col">
-              <div className="flex items-center gap-1">
-                <Typography variant="small">{member.full_name}</Typography>
-                {member.id === projectOwnerId && (
-                  <Typography variant="xsmall">(Propietario)</Typography>
-                )}
-              </div>
-              <Typography variant="muted">{member.email}</Typography>
-            </div>
-          </div>
-          {isProjectOwner && member.id !== projectOwnerId && (
-            <div className="space-x-1">
-              <Button
-                variant="secondary"
-                size="icon"
-                aria-label="Remove user"
-                onClick={() => onRemoveMember(member.id)}
-              >
-                <UserX />
-              </Button>
-            </div>
+const MemberItem = ({
+  member,
+  isOwner,
+  canManage,
+  onAction,
+}: {
+  member: Member;
+  isOwner: boolean;
+  canManage: boolean;
+  onAction?: (action: 'accept' | 'reject' | 'remove') => void;
+}) => (
+  <li className="flex items-center justify-between py-2">
+    <div className="flex items-center gap-2">
+      <Avatar>
+        <AvatarImage src={member.avatar_url || ''} alt={member.full_name} />
+        <AvatarFallback>{member.full_name.charAt(0)}</AvatarFallback>
+      </Avatar>
+      <div className="flex flex-col text-start">
+        <div className="flex items-center gap-1">
+          <Typography variant="small" className="font-medium">
+            {member.full_name}
+          </Typography>
+          {isOwner && (
+            <span className="text-[10px] bg-primary/10 text-primary px-1.5 py-0.5 rounded-full font-semibold uppercase tracking-wider">
+              Propietario
+            </span>
           )}
-        </li>
-      ))}
-    </ul>
-  );
-};
+        </div>
+        <Typography variant="muted" className="text-xs">
+          {member.email}
+        </Typography>
+      </div>
+    </div>
 
-const PendingMembersList = ({
-  members,
-  onAccept,
-  onReject,
-}: PendingMembersListProps) => {
-  return (
-    <ul className="space-y-2">
-      {members.map(({ profile: member }, index) => (
-        <li key={index} className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Avatar>
-              <AvatarImage
-                src={member.avatar_url || ''}
-                alt={member.full_name}
-              />
-              <AvatarFallback>{member.full_name.charAt(0)}</AvatarFallback>
-            </Avatar>
-            <div className="flex flex-col">
-              <Typography variant="small">{member.full_name}</Typography>
-              <Typography variant="muted">{member.email}</Typography>
-            </div>
-          </div>
-          <div className="space-x-1">
+    {canManage && !isOwner && onAction && (
+      <div className="flex gap-1">
+        {member.status === 'pending' ? (
+          <>
             <Button
               variant="secondary"
               size="icon"
-              className="hover:bg-red-400/50"
-              aria-label="Reject request"
-              onClick={() => onReject(member.id)}
+              className="h-8 w-8 hover:bg-red-500/10 hover:text-red-500"
+              onClick={() => onAction('reject')}
             >
-              <UserMinus />
+              <UserMinus className="h-4 w-4" />
             </Button>
             <Button
               variant="secondary"
               size="icon"
-              className="bg-green-100 hover:bg-green-400/50"
-              aria-label="Accept request"
-              onClick={() => onAccept(member.id)}
+              className="h-8 w-8 hover:bg-green-500/10 hover:text-green-500"
+              onClick={() => onAction('accept')}
             >
-              <UserPlus />
+              <UserPlus className="h-4 w-4" />
             </Button>
-          </div>
-        </li>
-      ))}
-    </ul>
-  );
-};
+          </>
+        ) : (
+          <Button
+            variant="secondary"
+            size="icon"
+            className="h-8 w-8 hover:bg-red-500/10 hover:text-red-500"
+            onClick={() => onAction('remove')}
+          >
+            <UserX className="h-4 w-4" />
+          </Button>
+        )}
+      </div>
+    )}
+  </li>
+);
 
-export const DialogManageUsers = ({
-  joinCode,
-  isProjectOwner,
-  projectOwnerId,
-  // Data
-  currentMembers,
-  pendingMembers,
-  // Actions
-  onRemoveMember,
-  onAccept,
-  onReject,
-}: DialogManageUsersProps & { projectId?: string }) => {
+export const DialogManageUsers = ({ projectId, userId }: DialogManageUsersProps) => {
   const [isOpen, { open, toggle }] = useDisclosure();
+  const { data: project, isLoading } = useProjectDetails(projectId);
+  const { updateMemberStatus, removeMember } = useMemberMutations(projectId);
+
+  if (isLoading || !project) {
+    return (
+      <Button variant="outline" size="icon" disabled>
+        <Loader2 className="animate-spin h-4 w-4" />
+      </Button>
+    );
+  }
+
+  const isProjectOwner = project.owner_id === userId;
+  const currentMembers = project.members.filter((m: Member) => m.status === 'member');
+  const pendingMembers = project.members.filter((m: Member) => m.status === 'pending');
+
+  const copyToClipboard = () => {
+    if (project.join_code) {
+      navigator.clipboard.writeText(project.join_code);
+    }
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={toggle}>
       <DialogTrigger asChild>
         <WithBadge count={pendingMembers.length}>
-          <Button
-            variant="outline"
-            size="icon"
-            aria-label="Manage users"
-            onClick={open}
-          >
-            <Users />
+          <Button variant="outline" size="icon" onClick={open}>
+            <Users className="h-4 w-4" />
           </Button>
         </WithBadge>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle>Gestionar usuarios</DialogTitle>
           <DialogDescription>
-            Aquí puedes gestionar los usuarios para este proyecto.
+            Administra los miembros y las solicitudes de acceso al proyecto.
           </DialogDescription>
         </DialogHeader>
-        <div>
-          <Typography variant="lead" className="mb-2">
-            Código de invitación
-          </Typography>
-          <Typography variant="code">{formatCode(joinCode)}</Typography>
-          <Typography variant="lead" className="mt-4 mb-2">
-            {isProjectOwner ? 'Miembros actuales' : 'Miembros'}
-          </Typography>
-          {currentMembers.length > 0 ? (
-            <CurrentMembersList
-              members={currentMembers}
-              isProjectOwner={isProjectOwner}
-              projectOwnerId={projectOwnerId}
-              onRemoveMember={onRemoveMember}
-            />
-          ) : (
-            <div>No hay miembros en este proyecto.</div>
-          )}
 
-          {isProjectOwner && (
-            <>
-              <Typography variant="lead" className="mt-4 mb-2">
-                Miembros pendientes
+        <div className="space-y-6 py-4">
+          <div className="p-3 bg-muted/30 rounded-lg border">
+            <Typography className="text-muted-foreground block mb-1 font-semibold">
+              Código de invitación
+            </Typography>
+            <div className="flex items-center justify-between">
+              <Typography variant="code" className="text-lg tracking-widest bg-transparent p-0">
+                {project.join_code}
               </Typography>
-              {pendingMembers && pendingMembers.length > 0 ? (
-                <PendingMembersList
-                  members={pendingMembers}
-                  onAccept={onAccept}
-                  onReject={onReject}
+              <Button variant="ghost" size="icon" className="h-8 w-8" onClick={copyToClipboard}>
+                <Copy className="h-3.5 w-3.5" />
+              </Button>
+            </div>
+          </div>
+
+          <div>
+            <Typography variant="small" className="font-semibold px-1 mb-2 block">
+              Miembros ({currentMembers.length})
+            </Typography>
+            <ul className="divide-y border rounded-lg px-3 bg-card">
+              {currentMembers.map((member: Member) => (
+                <MemberItem
+                  key={member.id}
+                  member={member}
+                  isOwner={member.id === project.owner_id}
+                  canManage={isProjectOwner}
+                  onAction={() => removeMember(member.id)}
                 />
-              ) : (
-                <div>No hay miembros pendientes.</div>
-              )}
-            </>
+              ))}
+            </ul>
+          </div>
+
+          {isProjectOwner && pendingMembers.length > 0 && (
+            <div>
+              <Typography
+                variant="small"
+                className="font-semibold px-1 mb-2 block text-yellow-600 dark:text-yellow-500"
+              >
+                Solicitudes pendientes ({pendingMembers.length})
+              </Typography>
+              <ul className="divide-y border rounded-lg px-3 bg-card border-yellow-200 dark:border-yellow-900/30">
+                {pendingMembers.map((member: Member) => (
+                  <MemberItem
+                    key={member.id}
+                    member={member}
+                    isOwner={false}
+                    canManage={true}
+                    onAction={(action) => {
+                      if (action === 'accept')
+                        updateMemberStatus({ userId: member.id, status: 'member' });
+                      if (action === 'reject') removeMember(member.id);
+                    }}
+                  />
+                ))}
+              </ul>
+            </div>
           )}
         </div>
         <DialogFooter>
-          <DialogClose>Cerrar</DialogClose>
+          <DialogClose asChild>
+            <Button variant="secondary">Cerrar</Button>
+          </DialogClose>
         </DialogFooter>
       </DialogContent>
     </Dialog>
