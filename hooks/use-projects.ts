@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAuth } from '@/components/auth/AuthProvider';
 import { createClient } from '@/lib/supabase/client';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -18,20 +18,27 @@ import type {
   Notebook,
 } from '../types/types';
 import { toast } from 'sonner';
+import { actions } from '@/actions';
+
+import { PROJECTS_ITEMS_PER_PAGE } from '@/lib/constants';
 
 type useProjectsParams = {
   _projects?: ProjectWithMembers[];
+  itemsPerPage?: number;
 };
 
 type useProjectParams = {
   _project: ProjectWithMembersAndNotebooks;
 };
 
-export function useProjects({ _projects = [] }: useProjectsParams = {}) {
+export function useProjects({ _projects = [], itemsPerPage = PROJECTS_ITEMS_PER_PAGE }: useProjectsParams = {}) {
   const supabase = createClient();
   const { user } = useAuth();
 
   const [projects, setProjects] = useState<ProjectWithMembers[]>(_projects);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(_projects.length >= itemsPerPage);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
 
   const form = useForm<FormCreateProjectType>({
     resolver: zodResolver(formCreateProject),
@@ -39,6 +46,28 @@ export function useProjects({ _projects = [] }: useProjectsParams = {}) {
       title: '',
     },
   });
+
+  async function loadMoreProjects() {
+    if (isLoadingMore || !hasMore) return;
+
+    setIsLoadingMore(true);
+    const nextPage = page + 1;
+    const from = (nextPage - 1) * itemsPerPage;
+    const to = from + itemsPerPage - 1;
+
+    const { projects: newProjects, error } = await actions.projects.fetchProjects(from, to);
+
+    if (error) {
+      toast.error('Error al cargar más proyectos');
+    } else {
+      if (newProjects.length < itemsPerPage) {
+        setHasMore(false);
+      }
+      setProjects((prev) => [...prev, ...newProjects]);
+      setPage(nextPage);
+    }
+    setIsLoadingMore(false);
+  }
 
   async function onSubmit(values: FormCreateProjectType) {
     try {
@@ -72,6 +101,9 @@ export function useProjects({ _projects = [] }: useProjectsParams = {}) {
     projects,
     form,
     onSubmit: onSubmitWrapper,
+    loadMoreProjects,
+    hasMore,
+    isLoadingMore,
   };
 }
 

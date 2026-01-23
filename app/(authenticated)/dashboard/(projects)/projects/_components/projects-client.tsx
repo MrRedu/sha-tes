@@ -22,21 +22,25 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card';
 
 interface ProjectsParams {
   _projects: ProjectWithMembers[];
-  _pendingProjectsRequests: RpcPendingProjects;
+  _pendingProjects: RpcPendingProjects;
 }
 
-export const ProjectsClient = ({ _projects, _pendingProjectsRequests }: ProjectsParams) => {
+export const ProjectsClient = ({ _projects, _pendingProjects }: ProjectsParams) => {
   const {
     projects,
     form: formProjects,
     onSubmit: onSubmitProjects,
+    loadMoreProjects,
+    hasMore,
+    isLoadingMore,
   } = useProjects({
     _projects,
+    itemsPerPage: 7,
   });
 
   const pendingCards =
-    _pendingProjectsRequests?.length >= 1
-      ? _pendingProjectsRequests.map((entry, index) => (
+    _pendingProjects?.length >= 1
+      ? _pendingProjects.map((entry, index) => (
           <CardPendingProject
             key={`pending-${index}`}
             name={entry?.project_name || ''}
@@ -46,7 +50,7 @@ export const ProjectsClient = ({ _projects, _pendingProjectsRequests }: Projects
       : null;
 
   // Empty state
-  if (projects?.length === 0 && _pendingProjectsRequests?.length === 0) {
+  if (projects?.length === 0 && _pendingProjects?.length === 0) {
     return (
       <section className="w-full min-h-[calc(100svh-6rem)] grid place-items-center">
         <EmptyState
@@ -75,7 +79,7 @@ export const ProjectsClient = ({ _projects, _pendingProjectsRequests }: Projects
   }
 
   return (
-    <section className="space-y-4 p-4 md:p-6">
+    <section className="space-y-4 p-4 md:p-6 max-w-7xl mx-auto">
       {/* Header */}
       <HeaderProjects formProjects={formProjects} onSubmitProjects={onSubmitProjects} />
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -97,19 +101,30 @@ export const ProjectsClient = ({ _projects, _pendingProjectsRequests }: Projects
           formProjects={formProjects}
           onSubmitProjects={onSubmitProjects}
           triggerComponent={
-            <Card className="h-full cursor-pointer cursor-pointer opacity-50 border-dashed border-2 hover:opacity-100 transition-opacity duration-300 ease-in-out gap-0 h-full text-center">
+            <Card className="h-full min-h-[250px] cursor-pointer opacity-50 border-dashed border-spacing-8 border-2 hover:opacity-100 transition-opacity duration-300 ease-in-out text-center justify-center flex-col-reverse bg-transparent">
               <CardHeader>
-                <h3>Crear proyecto</h3>
+                <h3>Crear nuevo proyecto</h3>
               </CardHeader>
               <CardContent>
-                <PlusIcon />
+                <Button className='rounded-full' variant='secondary' size='icon-lg'>
+                <PlusIcon className='size-6' />
+                </Button>
               </CardContent>
             </Card>
           }
         />
       </div>
+
+      {hasMore && (
+        <div className="flex justify-center pt-4">
+          <Button variant="outline" onClick={loadMoreProjects} disabled={isLoadingMore}>
+            {isLoadingMore ? 'Cargando...' : 'Cargar más'}
+          </Button>
+        </div>
+      )}
+
       {/* Cards */}
-      <div className={cn(`w-full gap-4 grid md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5`)}>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {pendingCards}
       </div>
     </section>
