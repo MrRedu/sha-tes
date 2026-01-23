@@ -39,12 +39,12 @@ export function NavMain({
       {scrollable ? (
         <ScrollArea className="flex-1 px-1 max-h-[calc(50vh)] p-0">
           <SidebarMenu>
-            {items.map((item) => {
+            {items.map((item, index) => {
               const hasItems = item.items && item.items.length > 0;
 
               if (!hasItems) {
                 return (
-                  <SidebarMenuItem key={item.title}>
+                  <SidebarMenuItem key={`${item.title}-${index}`}>
                     <SidebarMenuButton asChild tooltip={item.title}>
                       <Link href={item.url}>
                         {item.icon && <item.icon />}
