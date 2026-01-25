@@ -8,6 +8,7 @@ import { AvatarGroup } from '@/components/molecules/avatar-group';
 import { Typography } from '@/components/ui/typography';
 import Link from 'next/link';
 import { ProjectWithMembers } from '@/types/types';
+
 interface CardProjectProps {
   id: ProjectWithMembers['id'];
   priority: ProjectWithMembers['priority'];
@@ -48,8 +49,9 @@ export const CardProject = ({
           <Badge variant={COLOR_BADGE[priority]} className="uppercase">
             Prioridad {PRIORITY_TEXT[priority]}
           </Badge>
-          {`●`}
+          {`·`}
           <Typography variant="small" className={cn('mt-0')}>
+            Actualizado{' '}
             {formatDistanceToNow(new Date(updated_at), {
               addSuffix: true,
               locale: es,
