@@ -32,7 +32,7 @@ export const CurrentProjects = () => {
   if (error) {
     return (
       <section className="w-full p-4 border border-destructive/50 bg-destructive/10 rounded-lg">
-        <p className="text-destructive text-sm">Error al cargar proyectos</p>
+        <p className="text-destructive text-sm">Error los proyectos recientes</p>
       </section>
     );
   }

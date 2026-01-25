@@ -92,12 +92,12 @@ export const ProjectsClient = () => {
         {/* Skeletons while hydrating/loading to avoid layout shift */}
         {isLoading && projects.length === 0 && (
           <>
-            <Skeleton className="h-[250px] w-full" />
-            <Skeleton className="h-[250px] w-full" />
-            <Skeleton className="h-[250px] w-full" />
-            <Skeleton className="h-[250px] w-full" />
-            <Skeleton className="h-[250px] w-full" />
-            <Skeleton className="h-[250px] w-full" />
+            <Skeleton className="h-[250px] w-full col-span-1 md:col-span-2" />
+            <Skeleton className="h-[250px] w-full col-span-1" />
+            <Skeleton className="h-[250px] w-full col-span-1" />
+            <Skeleton className="h-[250px] w-full col-span-1" />
+            <Skeleton className="h-[250px] w-full col-span-1" />
+            <Skeleton className="h-[250px] w-full col-span-1" />
           </>
         )}
 

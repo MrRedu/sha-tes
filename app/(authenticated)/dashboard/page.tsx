@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function DashboardPage() {
   return (
-    <section className="h-screen grid grid-cols-12">
+    <section className="grid grid-cols-12 max-w-7xl mx-auto">
       <div className="col-span-12 md:col-span-8 bg-background flex flex-col gap-6 p-4 md:p-6">
         <HeaderDashboard />
         <CurrentProjects />
