@@ -35,7 +35,7 @@ export const NavigationDashboard = () => {
 
           {segments.map((segment, index) => {
             if (segment === 'dashboard') return null;
-            if (segment === 'notebooks') return null; // Tu preferencia de ocultar este segmento
+            if (segment === 'notebooks') return null;
 
             const path = `/${segments.slice(0, index + 1).join('/')}`;
             const isLast = index === segments.length - 1;
@@ -51,15 +51,21 @@ export const NavigationDashboard = () => {
               label = labels[segment] || segment.substring(0, 8) + '...';
             }
 
+            const isLongLabel = label.length > 12;
+
             return (
               <div key={path} className="flex items-center">
                 <BreadcrumbSeparator className="hidden md:block [&>svg]:size-4" />
                 <BreadcrumbItem>
                   {isLast ? (
-                    <BreadcrumbPage className="font-bold">{label}</BreadcrumbPage>
+                    <BreadcrumbPage className="font-bold" title={label}>
+                      {isLongLabel ? label.slice(0, 12) + '...' : label}
+                    </BreadcrumbPage>
                   ) : (
                     <BreadcrumbLink asChild>
-                      <Link href={path}>{label}</Link>
+                      <Link href={path} title={label}>
+                        {isLongLabel ? label.slice(0, 12) + '...' : label}
+                      </Link>
                     </BreadcrumbLink>
                   )}
                 </BreadcrumbItem>
