@@ -2,7 +2,7 @@ import { DialogCreateProject } from '@/components/organisms/dialog-create-projec
 import { DialogJoinProject } from '@/components/organisms/dialog-join-project';
 import { Typography } from '@/components/ui/typography';
 import { Input } from '@/components/ui/input';
-import { SearchIcon } from 'lucide-react';
+import { SearchIcon, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useProjectStore } from '@/hooks/use-project-store';
 
@@ -42,11 +42,11 @@ export const HeaderProjects = () => {
             key={filter.value}
             className="rounded-full px-4"
             size="sm"
-            variant={filter.value === statusFilter ? 'default' : 'secondary'}
+            variant={filter.value === statusFilter ? 'default' : 'outline'}
             onClick={() => setStatusFilter(filter.value)}
           >
-            <span className="text-xs">
-              {filter.value === 'featured' && <>{'⭐ '}</>}
+            <span className="text-xs flex items-center gap-2">
+              {filter.value === 'featured' && <Star className="size-4 fill-amber-400" />}
               {filter.label}
             </span>
           </Button>

@@ -5,6 +5,9 @@ import { CardCurrentProject } from './card-current-project';
 import { useQuery } from '@tanstack/react-query';
 import { actions } from '@/actions';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Typography } from '@/components/ui/typography';
+import { DialogCreateProject } from '@/components/organisms/dialog-create-project';
+import { DialogJoinProject } from '@/components/organisms/dialog-join-project';
 
 export const CurrentProjects = () => {
   const { data, isLoading, error } = useQuery({
@@ -32,7 +35,7 @@ export const CurrentProjects = () => {
   if (error) {
     return (
       <section className="w-full p-4 border border-destructive/50 bg-destructive/10 rounded-lg">
-        <p className="text-destructive text-sm">Error al cargar proyectos</p>
+        <p className="text-destructive text-sm">Error los proyectos recientes</p>
       </section>
     );
   }
@@ -47,8 +50,17 @@ export const CurrentProjects = () => {
       </div>
 
       {projects.length === 0 ? (
-        <div className="p-8 border border-dashed rounded-lg text-center">
-          <p className="text-muted-foreground text-sm">No hay proyectos activos todavía.</p>
+        <div className="p-8 border-dashed border-2 rounded-lg text-center min-h-[200px] flex flex-col gap-2 items-center justify-center">
+          <Typography variant="h4" className="text-lg!">
+            No hay proyectos activos todavía.
+          </Typography>
+          <Typography variant="xsmall" className="mt-0!">
+            Comienza creando un nuevo proyecto o uniéndote a uno existente.
+          </Typography>
+          <div className="flex gap-2">
+            <DialogCreateProject />
+            <DialogJoinProject />
+          </div>
         </div>
       ) : (
         <div className="grid md:grid-cols-2 gap-4">

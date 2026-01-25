@@ -1,6 +1,4 @@
 import { create } from 'zustand';
-import { type FormCreateProjectType } from './validations/use-projects.schema';
-import { type UseFormReturn } from 'react-hook-form';
 
 interface ProjectState {
   // Filtering

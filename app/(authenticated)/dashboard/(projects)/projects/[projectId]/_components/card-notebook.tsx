@@ -44,7 +44,7 @@ export const CardNotebook = ({
           {description && <CardDescription className="line-clamp-2">{description}</CardDescription>}
         </CardContent>
         <CardFooter className="mt-auto">
-          <Typography variant="small">
+          <Typography variant="small" className="ml-auto">
             {formatDistanceToNow(new Date(updated_at), {
               locale: es,
               addSuffix: true,
