@@ -36,7 +36,7 @@ export default function DashboardSettings({
   children: React.ReactNode;
 }>) {
   return (
-    <div>
+    <section className="w-full p-4 md:p-6 max-w-7xl mx-auto">
       <div className="space-y-0.5">
         <h1 className="text-2xl font-bold tracking-tight md:text-3xl">Settings</h1>
         <p className="text-muted-foreground">
@@ -52,6 +52,6 @@ export default function DashboardSettings({
         </aside>
         <div className="flex w-full overflow-y-hidden p-1">{children}</div>
       </section>
-    </div>
+    </section>
   );
 }
