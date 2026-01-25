@@ -1,15 +1,19 @@
 'use client';
 
-import { useProjectDetails, useNotebookMutations } from '@/hooks/use-projects';
+import { useProjectDetails } from '@/hooks/use-projects';
 import type { User, Notebook, Project } from '@/types/types';
 import { DialogCreateNotebook } from '@/components/molecules/dialog-create-notebook';
 import { CardNotebook } from './card-notebook';
 import { EmptyState } from '@/components/organisms/empty-state';
-import { FilePlusCorner, Loader2 } from 'lucide-react';
+import { FilePlusCorner, PlusIcon } from 'lucide-react';
 import { notFound } from 'next/navigation';
 import { HeaderProject } from './header-project';
 import { Separator } from '@/components/ui/separator';
 import { SummaryProject } from './summary-project';
+import { Typography } from '@/components/ui/typography';
+import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
+import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
 
 export interface ProjectProps {
   userId: User['id'];
@@ -17,36 +21,27 @@ export interface ProjectProps {
 }
 
 export const ProjectClient = ({ userId, projectId }: ProjectProps) => {
-  const { data: project, isLoading, error } = useProjectDetails(projectId);
-  const { form: formCreateNotebook, onSubmit: onSubmitCreateNotebook } =
-    useNotebookMutations(projectId);
+  const { data: project, error } = useProjectDetails(projectId);
 
-  if (isLoading) {
-    return (
-      <div className="w-full min-h-[400px] flex items-center justify-center">
-        <Loader2 className="size-8 animate-spin text-muted-foreground" />
-      </div>
-    );
-  }
-
-  if (error) return <div>Error al cargar el proyecto</div>;
   if (!project) return notFound();
+  if (error) return <div>Error al cargar el proyecto</div>;
 
   return (
-    <section className="space-y-4 p-4 md:p-6">
+    <section className="space-y-4 p-4 md:p-6 max-w-7xl mx-auto">
       <HeaderProject projectId={projectId} userId={userId} />
       <Separator />
       <SummaryProject projectId={projectId} />
 
+      <Typography variant="h2" className="text-lg">
+        Notebooks
+      </Typography>
       {project.notebooks?.length === 0 && (
-        <section className="w-full flex items-center justify-center min-h-[calc(100vh-200px)]">
+        <section className="w-full flex items-center justify-center min-h-[calc(100vh-400px)]">
           <EmptyState
             icon={FilePlusCorner}
-            title="Sin notebooks aún"
-            description="No has creado ningún notebook dentro de tu proyecto. Comienza creando tu primer notebook."
-            action={
-              <DialogCreateNotebook form={formCreateNotebook} onSubmit={onSubmitCreateNotebook} />
-            }
+            title="Sin bloc de notas aún"
+            description="No has creado ningún bloc de notas dentro de tu proyecto. Comienza creando tu primer bloc de notas."
+            action={<DialogCreateNotebook projectId={projectId} />}
           />
         </section>
       )}
@@ -64,7 +59,30 @@ export const ProjectClient = ({ userId, projectId }: ProjectProps) => {
               count_notes={notebook.count_notes}
             />
           ))}
-          <DialogCreateNotebook form={formCreateNotebook} onSubmit={onSubmitCreateNotebook} />
+          <DialogCreateNotebook
+            projectId={projectId}
+            triggerComponent={
+              <Card
+                className={
+                  'h-full cursor-pointer border-dashed border-2 transition-all duration-300 text-center bg-transparent opacity-50 hover:opacity-100 gap-0 justify-center'
+                }
+              >
+                <CardHeader className="flex items-center justify-center">
+                  <Button className="rounded-full" variant="secondary" size="icon-lg">
+                    <PlusIcon className="size-6" />
+                  </Button>
+                </CardHeader>
+                <CardContent>
+                  <h3>Crear nuevo notebook</h3>
+                </CardContent>
+                <CardFooter className="flex items-center justify-center">
+                  <Typography variant="xsmall" className="mt-0!">
+                    Crea una nueva sección a tu proyecto.
+                  </Typography>
+                </CardFooter>
+              </Card>
+            }
+          />
         </div>
       )}
     </section>

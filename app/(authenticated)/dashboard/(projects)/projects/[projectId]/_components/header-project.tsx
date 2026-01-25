@@ -38,7 +38,7 @@ export const HeaderProject = ({ projectId, userId }: HeaderProjectProps) => {
       <div className="flex flex-col gap-2 w-full">
         <HoverCard openDelay={10} closeDelay={100}>
           <HoverCardTrigger>
-            <Typography variant="h1" className="text-2xl! text-start">
+            <Typography variant="h1" className="text-2xl! text-start text-pretty">
               {project.title}
             </Typography>
           </HoverCardTrigger>
@@ -46,7 +46,7 @@ export const HeaderProject = ({ projectId, userId }: HeaderProjectProps) => {
             <HoverCardContent side="bottom" align="start">
               <Typography
                 variant="p"
-                className="text-sm leading-relaxed text-muted-foreground mt-0! text-pretty"
+                className="text-sm leading-relaxed text-muted-foreground mt-0! text-pretty wrap-break-word"
               >
                 {project.description}
               </Typography>

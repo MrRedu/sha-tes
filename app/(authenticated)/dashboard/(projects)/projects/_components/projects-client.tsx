@@ -18,12 +18,13 @@ import { Button } from '@/components/ui/button';
 import { DialogCreateProject } from '@/components/organisms/dialog-create-project';
 import { DialogJoinProject } from '@/components/organisms/dialog-join-project';
 import { CardPendingProject } from '@/components/molecules/card-pending-project';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 
 import { useQuery } from '@tanstack/react-query';
 import { Skeleton } from '@/components/ui/skeleton';
 import { actions } from '@/actions';
 import { Spinner } from '@/components/ui/spinner';
+import { Typography } from '@/components/ui/typography';
 
 export const ProjectsClient = () => {
   const { projects, isLoading, isSearching, fetchNextPage, hasNextPage, isFetchingNextPage } =
@@ -57,8 +58,10 @@ export const ProjectsClient = () => {
       <section className="w-full min-h-[calc(100svh-6rem)] grid place-items-center">
         <EmptyState
           icon={FolderInput}
-          title="No projects yet"
-          description="Get started by creating a new project or joining an existing one."
+          // title="No projects yet"
+          title="Sin proyectos aún"
+          // description="Get started by creating a new project or joining an existing one."
+          description="Comienza creando un nuevo proyecto o uniéndote a uno existente."
           action={
             <div className="flex gap-2">
               <DialogCreateProject />
@@ -133,22 +136,23 @@ export const ProjectsClient = () => {
         <DialogCreateProject
           triggerComponent={
             <Card
-              className={cn(
-                'h-full min-h-[250px] cursor-pointer border-dashed border-spacing-8 border-2 transition-all duration-300 text-center justify-center flex-col-reverse bg-transparent capitalize!',
-                isLoading && projects.length === 0
-                  ? 'opacity-0 invisible'
-                  : 'opacity-50 hover:opacity-100',
-                projects.length === 0 && !isLoading && 'col-span-1'
-              )}
+              className={
+                'h-full cursor-pointer border-dashed border-2 transition-all duration-300 text-center bg-transparent opacity-50 hover:opacity-100 gap-0 justify-center'
+              }
             >
-              <CardHeader>
-                <h3>Crear nuevo proyecto</h3>
-              </CardHeader>
-              <CardContent>
+              <CardHeader className="flex items-center justify-center">
                 <Button className="rounded-full" variant="secondary" size="icon-lg">
                   <PlusIcon className="size-6" />
                 </Button>
+              </CardHeader>
+              <CardContent>
+                <h3>Crear nuevo proyecto</h3>
               </CardContent>
+              <CardFooter className="flex items-center justify-center">
+                <Typography variant="xsmall" className="mt-0!">
+                  Crea un nuevo proyecto para comenzar a trabajar.
+                </Typography>
+              </CardFooter>
             </Card>
           }
         />

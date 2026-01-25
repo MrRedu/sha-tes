@@ -7,6 +7,7 @@ import type { Member, Project } from '@/types/types';
 import { AvatarGroup } from '@/components/molecules/avatar-group';
 import { STATUS_LABELS } from '@/lib/constants';
 import Link from 'next/link';
+import { Typography } from '@/components/ui/typography';
 
 interface CardCurrentProjectProps {
   id: Project['id'];
@@ -35,17 +36,21 @@ export const CardCurrentProject = ({
           <Badge>{STATUS_LABELS[status]}</Badge>
         </CardHeader>
         <CardContent>
-          <h3 className="font-semibold text-lg">{title}</h3>
-          <p>{description}</p>
+          <Typography variant="large" className="line-clamp-2">
+            {title}
+          </Typography>
+          <Typography variant="small" className="line-clamp-2">
+            {description}
+          </Typography>
         </CardContent>
         <CardFooter className="flex items-center justify-between mt-auto">
           <AvatarGroup members={members} />
-          <p className="text-sm text-muted-foreground">
+          <Typography variant="small" className="text-muted-foreground">
             {formatDistanceToNow(new Date(updatedAt), {
               addSuffix: true,
               locale: es,
             })}
-          </p>
+          </Typography>
         </CardFooter>
       </Card>
     </Link>

@@ -18,59 +18,62 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardFooter, CardHeader } from '../ui/card';
-import { FilePlusCorner } from 'lucide-react';
-import { Typography } from '../ui/typography';
-import { useDisclosure, type UseDisclosureHandlers } from '@/hooks/use-disclosure';
+import { Card, CardContent, CardHeader } from '../ui/card';
+import { PlusIcon } from 'lucide-react';
+import { useDisclosure } from '@/hooks/use-disclosure';
+import { cn } from '@/lib/utils';
 
-const TriggerUI = ({ handleOpen }: { handleOpen: UseDisclosureHandlers['open'] }) => {
-  return (
-    <Card
-      className="cursor-pointer opacity-50 border-dashed border-2 hover:opacity-100 transition-opacity duration-300 ease-in-out gap-0 h-full"
-      onClick={handleOpen}
-    >
-      <CardHeader className="text-center">
-        <Typography variant="large">Crear Notebook</Typography>
-      </CardHeader>
-      <CardContent className="flex items-center justify-center">
-        <FilePlusCorner size={32} />
-      </CardContent>
-      {/* <CardFooter className="flex items-center justify-center text-center">
-        <Typography variant="muted">Crea un nuevo notebook</Typography>
-      </CardFooter> */}
-    </Card>
-  );
-};
+import { useNotebookMutations } from '@/hooks/use-projects';
+
+const DEFAULT_TRIGGER_COMPONENT = (
+  // <Card
+  //   className={cn(
+  //     'h-full min-h-[250px] cursor-pointer border-dashed border-spacing-8 border-2 transition-all duration-300 text-center justify-center flex-col-reverse bg-transparent capitalize! opacity-50 hover:opacity-100'
+  //   )}
+  // >
+  //   <CardHeader>
+  //     <h3>Crear nuevo notebook</h3>
+  //   </CardHeader>
+  //   <CardContent>
+  //     <Button className="rounded-full" variant="secondary" size="icon-lg">
+  //       <PlusIcon className="size-6" />
+  //     </Button>
+  //   </CardContent>
+  // </Card>
+  <Button size="lg">
+    <PlusIcon className="mr-2 " />
+    Crear bloc de notas
+  </Button>
+);
 
 interface DialogCreateNotebookProps {
-  // TODO: fix types
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  form: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  onSubmit: () => void;
+  projectId: string;
+  triggerComponent?: React.ReactNode;
 }
 
-export const DialogCreateNotebook = ({ form, onSubmit }: DialogCreateNotebookProps) => {
-  const [isOpen, { open, close, toggle }] = useDisclosure();
+export const DialogCreateNotebook = ({
+  projectId,
+  triggerComponent = DEFAULT_TRIGGER_COMPONENT,
+}: DialogCreateNotebookProps) => {
+  const [isOpen, { toggle, close }] = useDisclosure();
+  const { form, onSubmit, isCreating } = useNotebookMutations(projectId);
 
-  const handleCreate = () => {
+  const handleOnSubmit = async (e: React.FormEvent) => {
+    await onSubmit(e);
     close();
-    onSubmit();
   };
 
   return (
     <Dialog open={isOpen} onOpenChange={toggle}>
-      <Form {...form}>
-        <form onSubmit={onSubmit} className="w-full max-w-xs">
-          <DialogTrigger asChild>
-            <TriggerUI handleOpen={open} />
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-[425px]">
+      <DialogTrigger asChild>{triggerComponent}</DialogTrigger>
+      <DialogContent className="sm:max-w-[425px]">
+        <Form {...form}>
+          <form onSubmit={handleOnSubmit} className="w-full">
             <DialogHeader>
               <DialogTitle>Crear bloc de notas</DialogTitle>
               <DialogDescription>{`¡Crea tu bloc de notas; rápido y sencillo!`}</DialogDescription>
             </DialogHeader>
-            <div className="grid gap-4">
+            <div className="grid gap-4 py-4">
               <FormField
                 control={form.control}
                 name="name"
@@ -100,15 +103,17 @@ export const DialogCreateNotebook = ({ form, onSubmit }: DialogCreateNotebookPro
             </div>
             <DialogFooter>
               <DialogClose asChild>
-                <Button variant="outline">Cancelar</Button>
+                <Button variant="outline" type="button">
+                  Cancelar
+                </Button>
               </DialogClose>
-              <Button type="submit" onClick={handleCreate}>
-                Crear bloc de notas
+              <Button type="submit" disabled={isCreating}>
+                {isCreating ? 'Creando...' : 'Crear bloc de notas'}
               </Button>
             </DialogFooter>
-          </DialogContent>
-        </form>
-      </Form>
+          </form>
+        </Form>
+      </DialogContent>
     </Dialog>
   );
 };
