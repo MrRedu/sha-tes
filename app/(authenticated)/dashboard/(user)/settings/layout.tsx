@@ -1,6 +1,7 @@
 import { Separator } from '@/components/ui/separator';
 import { Bell, Palette, UserCog, Wrench } from 'lucide-react';
 import { SidebarNavSettings } from '@/components/organisms/sidebar-nav-settings';
+import { Typography } from '@/components/ui/typography';
 
 const sidebarNavItems = [
   {
@@ -38,10 +39,14 @@ export default function DashboardSettings({
   return (
     <section className="w-full p-4 md:p-6 max-w-7xl mx-auto">
       <div className="space-y-0.5">
-        <h1 className="text-2xl font-bold tracking-tight md:text-3xl">Settings</h1>
-        <p className="text-muted-foreground">
-          Manage your account settings and set e-mail preferences.
-        </p>
+        {/* Settings */}
+        <Typography variant="h1" className="text-start tracking-tight md:text-3xl">
+          Configuraciones
+        </Typography>
+        <Typography variant="p" className="mt-0! text-muted-foreground text-pretty">
+          {/* Manage your account settings and set e-mail preferences. */}
+          Gestiona tus configuraciones de cuenta y establece tus preferencias de correo electrónico.
+        </Typography>
       </div>
 
       <Separator className="my-4 lg:my-6" />

@@ -45,13 +45,17 @@ export const NavigationDashboard = () => {
 
             let label = segment;
             if (segment === 'projects') label = 'Proyectos';
+            if (segment === 'settings') label = 'Configuraciones';
+            if (segment === 'account') label = 'Cuenta';
+            if (segment === 'notifications') label = 'Notificaciones';
+            if (segment === 'appearance') label = 'Apariencia';
 
             // Si es un ID, buscamos si ya se registró su nombre en el contexto
             if (isID) {
               label = labels[segment] || segment.substring(0, 8) + '...';
             }
 
-            const isLongLabel = label.length > 12;
+            const isLongLabel = label.length > 16;
 
             return (
               <div key={path} className="flex items-center">
@@ -59,12 +63,12 @@ export const NavigationDashboard = () => {
                 <BreadcrumbItem>
                   {isLast ? (
                     <BreadcrumbPage className="font-bold" title={label}>
-                      {isLongLabel ? label.slice(0, 12) + '...' : label}
+                      {isLongLabel ? label.slice(0, 16) + '...' : label}
                     </BreadcrumbPage>
                   ) : (
                     <BreadcrumbLink asChild>
                       <Link href={path} title={label}>
-                        {isLongLabel ? label.slice(0, 12) + '...' : label}
+                        {isLongLabel ? label.slice(0, 16) + '...' : label}
                       </Link>
                     </BreadcrumbLink>
                   )}
