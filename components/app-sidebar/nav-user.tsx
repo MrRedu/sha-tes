@@ -92,9 +92,11 @@ export function NavUser({
                 <CreditCard />
                 Facturación
               </DropdownMenuItem>
-              <DropdownMenuItem disabled>
-                <Bell />
-                Notificaciones
+              <DropdownMenuItem asChild>
+                <Link href="/dashboard/settings/notifications">
+                  <Bell />
+                  Notificaciones
+                </Link>
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />

@@ -1,10 +1,7 @@
-// interface AppearancePageProps {}
-
 import { Separator } from '@/components/ui/separator';
-import { AppearanceForm } from '@/components/organisms/appearance-form';
+import { AppearanceForm } from './_components/appearance-form';
 
 export default function AppearancePage() {
-  // props: AppearancePageProps
   return (
     <div className="w-full">
       <div className="flex-none">
@@ -21,8 +18,6 @@ export default function AppearancePage() {
       <Separator className="my-4 " />
 
       <AppearanceForm />
-
-      {/* <pre>{JSON.stringify(user, undefined, 2)}</pre> */}
     </div>
   );
 }
