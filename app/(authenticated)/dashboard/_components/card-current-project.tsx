@@ -27,7 +27,7 @@ export const CardCurrentProject = ({
   members,
 }: CardCurrentProjectProps) => {
   return (
-    <Link href={`/dashboard/projects/${id}`}>
+    <Link href={`/dashboard/projects/${id}`} className="w-full">
       <Card className="h-full">
         <CardHeader className="flex items-start justify-between">
           <div className="grid place-items-center w-10 h-10 rounded-lg bg-primary/10">
@@ -39,9 +39,11 @@ export const CardCurrentProject = ({
           <Typography variant="large" className="line-clamp-2">
             {title}
           </Typography>
-          <Typography variant="small" className="line-clamp-2">
-            {description}
-          </Typography>
+          {description && (
+            <Typography variant="small" className="line-clamp-2 break-all">
+              {description}
+            </Typography>
+          )}
         </CardContent>
         <CardFooter className="flex items-center justify-between mt-auto">
           <AvatarGroup members={members} />
